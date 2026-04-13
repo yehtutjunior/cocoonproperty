@@ -1366,11 +1366,12 @@ function saveDB() {
 async function loadDB() {
   let parsed = null;
 
-  // Primary: Supabase
+  // Primary: Supabase (5s timeout)
   if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
     try {
-      const { data: row } = await _supabase
-        .from('cocoon_db').select('data').eq('id', 1).single();
+      const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+      const query = _supabase.from('cocoon_db').select('data').eq('id', 1).single();
+      const { data: row } = await Promise.race([query, timeout]);
       if (row && row.data) parsed = row.data;
     } catch(e) {}
   }
