@@ -2316,7 +2316,15 @@ function applyHeroImages() {
 
 // Hide loader and boot app on DOMContentLoaded — don't wait for external resources
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadDB();
+  // Always hide loader after 3s max — never let DB load block the page
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  }, 3000);
+
+  // Wait for DB but with hard 5s cap
+  await Promise.race([loadDB(), new Promise(r => setTimeout(r, 5000))]);
+
   applyHeroImages();
   applyContact();
 
@@ -2329,12 +2337,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else {
     renderHome();
   }
-
-  // Hide loader after brief brand animation
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if (loader) loader.classList.add('hidden');
-  }, 1800);
 
   // Header scroll
   window.addEventListener('scroll', () => {
