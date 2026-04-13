@@ -1417,12 +1417,23 @@ async function loadDB() {
 let currentPage = 'home';
 let currentDetailId = null;
 
+function slugify(name) {
+  return name.toLowerCase()
+    .replace(/[–—]/g, '-')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function navigate(page, id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   currentPage = page;
 
-  // Clear hash when leaving blog-post
-  if (page !== 'blog-post') {
+  // Update hash for shareable pages, clear for others
+  if (page === 'blog-post') {
+    // hash set later in renderBlogPost
+  } else if (page === 'detail') {
+    // hash set below after we know the property name
+  } else {
     history.replaceState(null, '', window.location.pathname);
   }
 
@@ -1437,6 +1448,8 @@ function navigate(page, id) {
     header.style.display = '';
     renderDetail(id);
     window.scrollTo(0, 0);
+    const prop = DB.properties.find(p => p.id === id);
+    if (prop) history.replaceState(null, '', '#property-' + slugify(prop.name));
   } else if (page === 'blog') {
     document.getElementById('page-blog').classList.add('active');
     header.style.display = '';
@@ -1996,11 +2009,15 @@ function renderDetail(id) {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline;vertical-align:middle;margin-right:0.4rem"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Documents
       </div>
-      ${p.documents.map(d => `
-        <a href="${d.documentUrl}" target="_blank" class="doc-item">
+      ${p.documents.map(d => {
+        const isPlaceholder = !d.documentUrl || d.documentUrl === '#';
+        return `<a href="${isPlaceholder ? 'javascript:void(0)' : d.documentUrl}"
+          ${isPlaceholder ? `onclick="showToast('Document not available yet')"` : `target="_blank"`}
+          class="doc-item" style="${isPlaceholder ? 'opacity:0.45;cursor:not-allowed;' : ''}">
           <span>${d.name}</span>
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </a>`).join('')}
+        </a>`;
+      }).join('')}
     `;
   } else {
     document.getElementById('detailDocuments').style.display = 'none';
@@ -2331,11 +2348,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   applyHeroImages();
   applyContact();
 
-  // Hash-based routing for shareable blog post URLs
+  // Hash-based routing for shareable URLs
   const hash = window.location.hash;
   if (hash && hash.startsWith('#post-')) {
     const postId = parseInt(hash.slice(6));
     if (!isNaN(postId)) { navigate('blog-post', postId); }
+    else { renderHome(); }
+  } else if (hash && hash.startsWith('#property-')) {
+    const slug = hash.slice(10);
+    const prop = DB.properties.find(p => slugify(p.name) === slug);
+    if (prop) { navigate('detail', prop.id); }
     else { renderHome(); }
   } else {
     renderHome();
