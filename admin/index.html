@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocoon Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --cocoon-ivory:     #111110;
+  --cocoon-silk:      #1C1B18;
+  --cocoon-champagne: #6A6860;
+  --cocoon-warm:      #B8A484;
+  --cocoon-gold:      #C9A96E;
+  --cocoon-gold-deep: #D4B88A;
+  --cocoon-gold-line: rgba(201,169,110,0.12);
+  --cocoon-dark:      #F0EDE6;
+  --cocoon-text:      #E8E4DC;
+  --cocoon-text-soft: #888880;
+  --cocoon-white:     #090908;
+  --cocoon-surface:   #0E0E0C;
+  --grid-color:       rgba(201,169,110,0.06);
+  --grid-size:        52px;
+  --line-sukhumvit:   #7CB342;
+  --line-silom:       #388E3C;
+  --line-blue:        #1565C0;
+  --line-purple:      #7B1FA2;
+  --line-yellow:      #F9A825;
+  --line-pink:        #E91E8C;
+  --line-orange:      #EF6C00;
+  --line-red:         #D32F2F;
+  --line-gold:        #C8A951;
+  --line-airport:     #0D47A1;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', 'Helvetica Neue', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--cocoon-text);
+  background-color: var(--cocoon-white);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== LOADER ========== */
+.loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--cocoon-white);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+.loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-brand { text-align: center; opacity: 0; animation: loaderIn 1s 0.2s ease forwards; }
+.loader-brand h1 {
+  font-family: var(--font-display);
+  font-size: 2.8rem; font-weight: 300; letter-spacing: 0.35em;
+  color: var(--cocoon-dark); text-transform: uppercase;
+}
+.loader-brand p {
+  font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.55em;
+  color: var(--cocoon-gold); margin-top: 0.6rem; text-transform: uppercase;
+}
+.loader-line {
+  width: 60px; height: 1px; background: var(--cocoon-gold);
+  margin-top: 2rem; transform: scaleX(0); animation: lineGrow 1.2s 0.6s ease forwards;
+}
+@keyframes loaderIn { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+@keyframes lineGrow { to { transform: scaleX(1); } }
+
+.logo-main {
+  display: block; font-family: var(--font-display); font-size: 1.4rem; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--cocoon-dark);
+}
+.logo-sub {
+  display: block; font-family: var(--font-body); font-size: 0.55rem; font-weight: 400;
+  letter-spacing: 0.45em; text-transform: uppercase; color: var(--cocoon-gold); margin-top: 2px;
+}
+
+/* ========== ADMIN ========== */
+.admin-page {
+  min-height: 100vh; background: #0A0A09; padding-top: 0;
+  display: none;
+}
+.admin-page.active { display: block; }
+.admin-layout { display: flex; min-height: 100vh; }
+.admin-sidebar {
+  width: 240px; background: #050504; flex-shrink: 0;
+  padding: 2rem 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 200;
+  overflow-y: auto;
+}
+.admin-sidebar-logo { padding: 0 1.5rem 2rem; border-bottom: 1px solid rgba(212,197,169,0.15); margin-bottom: 1.5rem; }
+.admin-sidebar-logo .logo-main { font-size: 1.1rem; color: var(--cocoon-ivory); }
+.admin-sidebar-logo .logo-sub { color: var(--cocoon-gold); }
+.admin-nav-item {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.8rem 1.5rem; color: rgba(212,197,169,0.6); text-decoration: none;
+  font-size: 0.75rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+  transition: all 0.3s ease; cursor: pointer; background: none; border: none;
+  width: 100%; font-family: var(--font-body); text-align: left;
+}
+.admin-nav-item:hover { background: rgba(179,155,109,0.1); color: var(--cocoon-champagne); }
+.admin-nav-item.active { background: rgba(179,155,109,0.15); color: var(--cocoon-gold); border-left: 2px solid var(--cocoon-gold); }
+.admin-nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; flex-shrink: 0; }
+.admin-content { margin-left: 240px; flex: 1; }
+.admin-topbar {
+  background: #0E0E0C; border-bottom: 1px solid #1C1B18; padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+}
+.admin-topbar h1 { font-size: 1.3rem; font-weight: 600; color: #E8E4DC; }
+.admin-topbar-sub { font-size: 0.8rem; color: #888880; margin-top: 0.1rem; }
+.admin-body { padding: 2rem; }
+.admin-btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.2rem; background: var(--cocoon-gold); color: #090908; border: none;
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 400; letter-spacing: 0.08em;
+  cursor: pointer; transition: background 0.3s ease;
+}
+.admin-btn-primary:hover { background: var(--cocoon-gold-deep); }
+.admin-btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 1rem; background: transparent; color: #B8B4AC; border: 1px solid #2A2824;
+  font-family: var(--font-body); font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease;
+}
+.admin-btn-secondary:hover { background: #1A1916; }
+.admin-btn-danger {
+  padding: 0.5rem 1rem; background: transparent; color: #f87171; border: 1px solid rgba(248,113,113,0.3);
+  font-family: var(--font-body); font-size: 0.8rem; cursor: pointer; transition: all 0.2s ease;
+}
+.admin-btn-danger:hover { background: rgba(248,113,113,0.06); }
+.admin-table { width: 100%; border-collapse: collapse; background: #0E0E0C; }
+.admin-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #888880; border-bottom: 1px solid #1C1B18; }
+.admin-table td { padding: 1rem; border-bottom: 1px solid #161614; font-size: 0.85rem; color: #C8C4BC; vertical-align: middle; }
+.admin-table tr:hover td { background: #141412; }
+.admin-table-wrap { background: #0E0E0C; border: 1px solid #1C1B18; overflow: hidden; }
+.admin-card { background: #0E0E0C; border: 1px solid #1C1B18; padding: 1.5rem; }
+.admin-grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+.admin-developer-card { background: #0E0E0C; border: 1px solid #1C1B18; padding: 1.5rem; }
+.admin-developer-card img { max-height: 48px; max-width: 120px; object-fit: contain; margin-bottom: 0.8rem; display: block; }
+.admin-developer-name { font-size: 0.95rem; font-weight: 600; color: #E8E4DC; margin-bottom: 0.3rem; }
+.admin-developer-desc { font-size: 0.8rem; color: #888880; line-height: 1.5; }
+.admin-line-card { background: #0E0E0C; border: 1px solid #1C1B18; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+.admin-line-dot { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em; flex-shrink: 0; }
+.admin-line-info h3 { font-size: 0.95rem; font-weight: 600; color: #E8E4DC; }
+.admin-line-info p { font-size: 0.75rem; color: #888880; margin-top: 0.2rem; }
+.admin-back-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.75rem; color: #6b7280; cursor: pointer; background: none; border: none;
+  font-family: var(--font-body); padding: 0; letter-spacing: 0.08em;
+  text-transform: uppercase; transition: color 0.2s ease;
+}
+.admin-back-btn:hover { color: var(--cocoon-dark); }
+.admin-back-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(44,36,23,0.5); z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  opacity: 0; animation: fadeIn 0.2s ease forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+.modal {
+  background: #0E0E0C; width: 100%; max-width: 640px; max-height: 90vh;
+  overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+}
+.modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid #1C1B18; display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 1.1rem; font-weight: 600; color: #E8E4DC; }
+.modal-close { background: none; border: none; cursor: pointer; color: #888880; font-size: 1.4rem; line-height: 1; padding: 0.2rem; transition: color 0.2s ease; }
+.modal-close:hover { color: #E8E4DC; }
+.modal-body { padding: 2rem; }
+.modal-footer { padding: 1rem 2rem; border-top: 1px solid #1C1B18; display: flex; gap: 0.75rem; justify-content: flex-end; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label { display: block; font-size: 0.8rem; font-weight: 500; color: #C8C4BC; margin-bottom: 0.4rem; }
+.form-input {
+  width: 100%; padding: 0.6rem 0.8rem; border: 1px solid #2A2824;
+  font-family: var(--font-body); font-size: 0.85rem; color: #E8E4DC;
+  outline: none; transition: border-color 0.2s ease; background: #141412;
+}
+.form-input:focus { border-color: var(--cocoon-gold); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888880' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.admin-checkbox-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.admin-checkbox-item { display: flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border: 1px solid #2A2824; cursor: pointer; font-size: 0.78rem; color: #B8B4AC; transition: all 0.2s ease; background: #141412; }
+.admin-checkbox-item.selected { background: var(--cocoon-gold); color: #090908; border-color: var(--cocoon-gold); }
+.doc-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.doc-row .form-input { flex: 1; }
+.doc-tag { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.6rem; background: #1A1916; border: 1px solid #2A2824; font-size: 0.75rem; color: #B8B4AC; margin: 0.25rem; }
+.doc-tag button { background: none; border: none; cursor: pointer; color: #888880; font-size: 1rem; line-height: 1; padding: 0; }
+.badge-ready { display: inline-block; padding: 0.2rem 0.6rem; background: #d1fae5; color: #065f46; font-size: 0.7rem; font-weight: 500; border-radius: 2px; }
+.badge-offplan { display: inline-block; padding: 0.2rem 0.6rem; background: #fef3c7; color: #92400e; font-size: 0.7rem; font-weight: 500; border-radius: 2px; }
+.train-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 2px; color: #fff; font-size: 0.65rem; font-weight: 500; margin-right: 0.3rem; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: #888880; }
+.empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; display: block; stroke: #2A2824; fill: none; stroke-width: 1.5; }
+.empty-state p { font-size: 0.9rem; }
+.admin-login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #0A0A09 0%, #111110 100%);
+}
+.admin-login-box { background: #0E0E0C; padding: 3rem; width: 100%; max-width: 420px; border: 1px solid #1C1B18; }
+.admin-login-logo { text-align: center; margin-bottom: 2rem; }
+.admin-login-logo .logo-main { font-size: 1.6rem; }
+.admin-login-logo .logo-sub { margin-top: 4px; }
+.admin-login-divider { text-align: center; font-size: 0.75rem; color: #888880; margin: 1.5rem 0; position: relative; }
+.admin-login-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #1C1B18; }
+.admin-login-divider span { position: relative; background: #0E0E0C; padding: 0 0.75rem; }
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 9000;
+  padding: 1rem 1.5rem; background: var(--cocoon-dark); color: var(--cocoon-ivory);
+  font-size: 0.85rem; font-weight: 300; letter-spacing: 0.05em;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 360px;
+  animation: toastIn 0.3s ease;
+}
+.toast.success { border-left: 3px solid #4ade80; }
+.toast.error { border-left: 3px solid #f87171; }
+@keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+/* ========== ADMIN IMAGE MANAGER ========== */
+.admin-img-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 0.75rem;
+}
+.admin-img-item {
+  position: relative; aspect-ratio: 1; border-radius: 4px; overflow: hidden;
+  background: #1a1a1a; cursor: default;
+}
+.admin-img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.admin-img-remove {
+  position: absolute; top: 4px; right: 4px;
+  background: rgba(0,0,0,0.75); border: none; color: #fff;
+  width: 22px; height: 22px; border-radius: 50%; font-size: 0.85rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s;
+}
+.admin-img-item:hover .admin-img-remove { opacity: 1; }
+.admin-img-cover-btn {
+  position: absolute; bottom: 4px; left: 4px;
+  background: rgba(0,0,0,0.6); border: none; color: rgba(255,255,255,0.55);
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 3px; cursor: pointer;
+  opacity: 0; transition: opacity 0.2s;
+}
+.admin-img-item:hover .admin-img-cover-btn { opacity: 1; }
+.admin-img-cover-badge {
+  position: absolute; top: 4px; left: 4px;
+  background: rgba(184,145,68,0.9); color: #fff;
+  font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 3px; pointer-events: none;
+}
+.admin-img-dropzone {
+  border: 1.5px dashed rgba(184,145,68,0.35); border-radius: 6px;
+  padding: 1.4rem 1rem; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(184,145,68,0.03);
+}
+.admin-img-dropzone:hover, .admin-img-dropzone.drag-over {
+  border-color: rgba(184,145,68,0.75); background: rgba(184,145,68,0.07);
+}
+.admin-img-dropzone svg { width: 28px; height: 28px; stroke: rgba(184,145,68,0.55); fill: none; stroke-width: 1.5; margin-bottom: 0.4rem; }
+.admin-img-dropzone .drop-main { font-size: 0.78rem; color: rgba(255,255,255,0.65); margin: 0 0 0.2rem; }
+.admin-img-dropzone .drop-sub { font-size: 0.68rem; color: rgba(255,255,255,0.35); margin: 0; }
+.admin-img-uploading {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.72rem; color: rgba(255,255,255,0.45); padding: 0.4rem 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .admin-sidebar { width: 200px; }
+  .admin-content { margin-left: 200px; }
+}
+@media (max-width: 900px) {
+  .admin-sidebar { position: relative; width: 100%; height: auto; }
+  .admin-content { margin-left: 0; }
+  .admin-layout { flex-direction: column; }
+}
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-brand">
+    <h1>Cocoon</h1>
+    <p>Admin Portal</p>
+  </div>
+  <div class="loader-line"></div>
+</div>
+
+<!-- ADMIN LOGIN PAGE -->
+<div id="page-admin-login" style="display:none">
+  <div class="admin-login-wrap">
+    <div class="admin-login-box">
+      <div class="admin-login-logo">
+        <span class="logo-main">Cocoon</span>
+        <span class="logo-sub">Admin Portal</span>
+      </div>
+      <p style="text-align:center;font-size:0.85rem;color:#6b7280;margin-bottom:1.5rem;line-height:1.6">Sign in with your admin credentials to manage the property portfolio.</p>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="adminPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') adminLogin()">
+      </div>
+      <button class="admin-btn-primary" style="width:100%;justify-content:center;padding:0.8rem" onclick="adminLogin()">Sign In</button>
+      <div class="admin-login-divider"><span>admin access only</span></div>
+      <button class="admin-btn-secondary" style="width:100%;justify-content:center" onclick="window.location.href='../'">Back to Site</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MAIN -->
+<div class="admin-page" id="page-admin">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-logo">
+        <span class="logo-main" style="font-size:1rem;color:var(--cocoon-ivory)">Cocoon</span>
+        <span class="logo-sub">Admin</span>
+      </div>
+      <button class="admin-nav-item" id="nav-contact" onclick="showAdminTab('contact')">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.66A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Contact
+      </button>
+      <button class="admin-nav-item" id="nav-blog" onclick="showAdminTab('blog')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Blog
+      </button>
+      <button class="admin-nav-item" id="nav-hero" onclick="showAdminTab('hero')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Hero Images
+      </button>
+      <button class="admin-nav-item active" id="nav-properties" onclick="showAdminTab('properties')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Properties
+      </button>
+      <button class="admin-nav-item" id="nav-developers" onclick="showAdminTab('developers')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Developers
+      </button>
+      <button class="admin-nav-item" id="nav-trainlines" onclick="showAdminTab('trainlines')">
+        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 13l2 6h12l2-6"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg>
+        Train Lines
+      </button>
+      <div style="margin-top:auto;padding:1.5rem;">
+        <button class="admin-nav-item" style="color:rgba(212,197,169,0.4);margin-bottom:0.5rem" onclick="window.location.href='../'">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Back to Site
+        </button>
+        <button class="admin-nav-item" style="color:rgba(212,197,169,0.4)" onclick="adminLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </aside>
+    <div class="admin-content">
+      <!-- Contact Tab -->
+      <div id="tab-contact" style="display:none">
+        <div class="admin-topbar">
+          <div>
+            <h1>Contact Info</h1>
+            <p class="admin-topbar-sub">Shown in the CTA section, footer, and WhatsApp button</p>
+          </div>
+        </div>
+        <div class="admin-body">
+          <div style="max-width:560px;display:flex;flex-direction:column;gap:1.25rem">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input class="form-input" id="ctEmail" placeholder="hello@yourdomain.com">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">WhatsApp Number <span style="color:rgba(255,255,255,0.3);font-size:0.7rem">digits only, with country code</span></label>
+                <input class="form-input" id="ctWhatsapp" placeholder="66812345678">
+              </div>
+              <div class="form-group">
+                <label class="form-label">WhatsApp Display</label>
+                <input class="form-input" id="ctWhatsappDisplay" placeholder="+66 81 234 5678">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Line ID</label>
+              <input class="form-input" id="ctLine" placeholder="@yourlineid">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Facebook Page slug</label>
+                <input class="form-input" id="ctFacebook" placeholder="yourpagename">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Facebook Display Name</label>
+                <input class="form-input" id="ctFacebookDisplay" placeholder="Your Page Name">
+              </div>
+            </div>
+            <button class="admin-btn-primary" onclick="saveContact()" style="align-self:flex-start;margin-top:0.5rem">Save Contact Info</button>
+          </div>
+        </div>
+      </div>
+      <!-- Blog Tab -->
+      <div id="tab-blog" style="display:none">
+        <div class="admin-topbar">
+          <div>
+            <h1>Blog</h1>
+            <p class="admin-topbar-sub">Knowledge sharing articles</p>
+          </div>
+          <button class="admin-btn-primary" onclick="openPostModal(null)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Post
+          </button>
+        </div>
+        <div class="admin-body">
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr></thead>
+              <tbody id="adminBlogTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Hero Images Tab -->
+      <div id="tab-hero" style="display:none">
+        <div class="admin-topbar">
+          <div>
+            <h1>Hero Images</h1>
+            <p class="admin-topbar-sub">The full-screen background images on the homepage slideshow</p>
+          </div>
+        </div>
+        <div class="admin-body">
+          <div id="heroImagesGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem"></div>
+        </div>
+      </div>
+      <!-- Properties Tab -->
+      <div id="tab-properties">
+        <div class="admin-topbar">
+          <div>
+            <h1 class="admin-topbar">Properties</h1>
+            <p class="admin-topbar-sub">Manage real estate properties</p>
+          </div>
+          <button class="admin-btn-primary" onclick="openPropertyPage()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Property
+          </button>
+        </div>
+        <div class="admin-body">
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Developer</th>
+                  <th>Location</th>
+                  <th>Train Lines</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminPropertiesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Edit Full Page -->
+      <div id="tab-property-edit" style="display:none">
+        <div class="admin-topbar">
+          <div style="display:flex;align-items:center;gap:1rem">
+            <button class="admin-btn-secondary" onclick="closePropertyPage()" style="display:flex;align-items:center;gap:0.4rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              Back
+            </button>
+            <div>
+              <h1 id="propertyPageTitle">Edit Property</h1>
+              <p class="admin-topbar-sub" id="propertyPageSub"></p>
+            </div>
+          </div>
+          <button class="admin-btn-primary" onclick="window._onPropertySave && window._onPropertySave()">Save Property</button>
+        </div>
+        <div class="admin-body">
+          <div id="propertyPageBody"></div>
+        </div>
+      </div>
+      <!-- Developers Tab -->
+      <div id="tab-developers" style="display:none">
+        <div class="admin-topbar">
+          <div>
+            <h1>Developers</h1>
+            <p class="admin-topbar-sub">Manage real estate developers</p>
+          </div>
+          <button class="admin-btn-primary" onclick="openDeveloperModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Developer
+          </button>
+        </div>
+        <div class="admin-body">
+          <div class="admin-grid-3" id="adminDevelopersGrid"></div>
+        </div>
+      </div>
+      <!-- Train Lines Tab -->
+      <div id="tab-trainlines" style="display:none">
+        <div class="admin-topbar">
+          <div>
+            <h1>Train Lines</h1>
+            <p class="admin-topbar-sub">Manage BTS and MRT lines</p>
+          </div>
+          <button class="admin-btn-primary" onclick="openTrainLineModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Train Line
+          </button>
+        </div>
+        <div class="admin-body">
+          <div class="admin-grid-3" id="adminLinesGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal container -->
+<div id="modalContainer"></div>
+
+<script>
+// ======================== SUPABASE CONFIG ========================
+// Replace these two values after creating your Supabase project
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+let _supabase = null;
+try {
+  if (typeof supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  }
+} catch(e) {}
+
+// ======================== GOOGLE MAPS URL PARSER ========================
+function parseGoogleMapsUrl(url) {
+  if (!url) return {};
+  let m = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+  m = url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+  return {};
+}
+
+// ======================== PROPERTY COORDINATES ========================
+const PROPERTY_COORDS = {
+  1:  { lat: 13.7067, lng: 100.5994 },
+  2:  { lat: 13.7156, lng: 100.5804 },
+  3:  { lat: 13.7625, lng: 100.5373 },
+  4:  { lat: 13.7191, lng: 100.4757 },
+  5:  { lat: 13.7020, lng: 100.5999 },
+  6:  { lat: 13.8140, lng: 100.5590 },
+  7:  { lat: 13.7511, lng: 100.5316 },
+  8:  { lat: 13.7346, lng: 100.4829 },
+  9:  { lat: 13.7222, lng: 100.5538 },
+  10: { lat: 13.6975, lng: 100.5984 },
+  11: { lat: 13.6965, lng: 100.5981 },
+  12: { lat: 13.7220, lng: 100.5089 },
+  13: { lat: 13.7218, lng: 100.5247 },
+  14: { lat: 13.7782, lng: 100.5742 },
+  15: { lat: 13.7564, lng: 100.5580 },
+  16: { lat: 13.7012, lng: 100.5905 },
+  17: { lat: 13.7192, lng: 100.6329 },
+  18: { lat: 13.6480, lng: 100.6011 },
+  19: { lat: 13.6724, lng: 100.6070 },
+  20: { lat: 13.7468, lng: 100.6271 },
+  21: { lat: 13.7485, lng: 100.6183 },
+  22: { lat: 13.7174, lng: 100.5874 },
+  23: { lat: 13.7658, lng: 100.5254 },
+};
+
+// ======================== DATA STORE ========================
+const DB = {
+  properties: [
+    { id:1, name:"Good Day Sukhumvit 93", developerId:1, description:"A modern condominium nestled in the heart of Sukhumvit, offering contemporary living with premium amenities and excellent connectivity to the BTS network.", startingPrice:1.9, location:"Bang Chak, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/GKYTSAHZWbJhmolAhXmAbZD6Nfg/2850x1515/project/156831/screenshot-20241118102318.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[{id:1,name:"Good Day Project",documentUrl:"https://drive.google.com/file/d/1EoJsqYRbH_GSM52eJnq3XwpO9PqB6llm/view?usp=drive_link"}], status:"ready", moveIn:"", type:"ready" },
+    { id:2, name:"Aspire Sukhumvit–Rama 4", developerId:2, description:"Strategically located at the intersection of Sukhumvit and Rama 4, this development offers unmatched accessibility and urban lifestyle.", startingPrice:3.1, location:"Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/LNwxU7HaN_IkML-OQQPPqg5X5Ts/2850x1515/project/114198/01-aspire-skv-4-overall-day.jpg", amenities:JSON.stringify(["Rooftop Pool","Sky Lounge","Fitness Center","Retail Shops","EV Charging"]), trainLineIds:[1], documents:[{id:1,name:"Brochure",documentUrl:"#"},{id:2,name:"Floor Plan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
+    { id:3, name:"Aspire Vibha–Victory", developerId:2, description:"Centrally located near Victory Monument, this high-rise development blends connectivity with upscale design.", startingPrice:3.35, location:"Victory Monument", imageUrl:"https://cdn.fazwaz.com/nw/dS5C5_O89M6lqLxFNpYiloJYJmg/2850x1515/project/157716/overall-building-final-hires.jpg", amenities:JSON.stringify(["Infinity Pool","Gym","Meeting Rooms","Garden Terrace"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:4, name:"Life Sathorn Sierra", developerId:3, description:"Premium living along the BTS Silom line, offering serene surroundings while remaining connected to Bangkok's business districts.", startingPrice:3.69, location:"Talat Phlu, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/2Gs3mwPoKH87ySssuOP_9ttsKQM/2850x1515/project/39245/01-life-sathorn-sierra-welcome-foyer-17.jpg", amenities:JSON.stringify(["Pool","Gym","Kids Club","Library","Shuttle Service"]), trainLineIds:[2], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:5, name:"Aspire Onnut Station", developerId:2, description:"Walk directly to Onnut BTS station from this thoughtfully designed residence, perfect for the urban professional.", startingPrice:4.29, location:"Onnut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/fmUvlgcZqe1_Sh0Y2bj_WY7jdAU/2850x1515/project/117774/e-brochure-aspireonnut-221114-page-0003.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Sky Garden","Smart Home System"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:6, name:"Life Phahon–Ladprao", developerId:3, description:"At the Ha Yaek Lat Phrao interchange, offering direct access to multiple BTS and MRT lines.", startingPrice:4.39, location:"Ha Yaek Lat Phrao", imageUrl:"https://cdn.fazwaz.com/nw/d8FGb0GTq5rCeluSMqM6ROLCK-Y/2850x1515/project/133148/hny01388.jpg", amenities:JSON.stringify(["Grand Lobby","Pool","Gym","Co-Working","Concierge"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:7, name:"The Address Siam–Ratchathewi", developerId:4, description:"Prestigious address in the heart of Bangkok, steps from major shopping centers and entertainment hubs.", startingPrice:7.99, location:"Ratchathewi", imageUrl:"https://cdn.fazwaz.com/nw/A-X6LOm6zwFZMzsvgBXxIjfjuP0/790x400/project/39086/the-address-siam-ratchathewi-1.jpeg", amenities:JSON.stringify(["Lap Pool","Premium Gym","Wine Cellar","Private Theater","Concierge 24/7"]), trainLineIds:[1], documents:[{id:3,name:"Masterplan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
+    { id:8, name:"Aspire Itsaraphap Station", developerId:2, description:"Quality living on the MRT Blue Line, connecting you seamlessly across Bangkok's key districts.", startingPrice:3.29, location:"Itsaraphap, Thonburi", imageUrl:"https://cdn.fazwaz.com/nw/o6zlXbiBaGQLZ0wNZ6whxzuh_M4/0x0/project/155521/240830-drop-off-view-final4-op2.jpg", amenities:JSON.stringify(["Pool","Gym","Garden","24h Security"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:9, name:"Life Rama 4–Asoke", developerId:3, description:"Dual access to MRT Blue Line and expressway makes this one of Bangkok's best-connected luxury addresses.", startingPrice:4.49, location:"Queen Sirikit, Rama 4", imageUrl:"https://cdn.fazwaz.com/nw/ufnV9ajwd_FovNQSJ8LCDam_h74/2850x1515/project/109058/210916-lrm4-heroshot-final-003-large.jpg", amenities:JSON.stringify(["Infinity Pool","Sky Deck","Gym","Smart Locks","EV Parking"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:10, name:"Aspire Sukhumvit 103", developerId:2, description:"Off-plan opportunity in the fast-developing Udomsuk corridor, with strong rental demand from expats and professionals.", startingPrice:3.0, location:"Udomsuk, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/_Bd-GeJf_LOM7zGww74jE6CuWDQ/2850x1515/project/168186/screenshot-2025-11-06-114254.jpg", amenities:JSON.stringify(["Pool","Gym","Co-Working","Retail"]), trainLineIds:[1], documents:[{id:4,name:"E-Brochure",documentUrl:"#"},{id:5,name:"Payment Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
+    { id:11, name:"Life Udomsuk Station", developerId:3, description:"A landmark off-plan development at Udomsuk BTS, designed for modern Bangkok living at accessible price points.", startingPrice:3.89, location:"Udomsuk", imageUrl:"https://cdn.fazwaz.com/nw/v9sqx_IPcilNCsVh2_tPfPqdW_g/790x400/project/165402/overall-view-final-hires_1.jpg", amenities:JSON.stringify(["Rooftop Pool","Fitness","Co-Working","Smart Home"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
+    { id:12, name:"Life Charoennakhon–Sathorn", developerId:3, description:"Riverside district living meets Silom business access — a rare combination in one of Bangkok's most desirable neighborhoods.", startingPrice:3.89, location:"Krungthonburi, Charoen Nakhon", imageUrl:"https://cdn.fazwaz.com/nw/oV3J6GuVZ6MmxcnImTdOGMuKIU8/0x0/project/153371/heroshot-final-1920x1354.jpg", amenities:JSON.stringify(["River View Pool","Gym","Sky Bar","Shuttle to BTS"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
+    { id:13, name:"Life Sathorn–Narathiwas 22", developerId:3, description:"Prime Sathorn location, one of Bangkok's most prestigious business corridors, ideal for investment and self-use.", startingPrice:3.89, location:"Chong Nonsi, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/46PhvBpu3Tgucn9Ef-tlVmO6Sog/2850x1515/project/161328/e-brochure-a4-life-sathorn-nara22-compressed-02.jpg", amenities:JSON.stringify(["Pool","Gym","Meeting Rooms","EV Charging","Concierge"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
+    { id:14, name:"Aspire Huai Khwang", developerId:2, description:"Emerging MRT Blue Line location with strong growth fundamentals and a vibrant local community feel.", startingPrice:3.69, location:"Huai Khwang", imageUrl:"https://cdn.fazwaz.com/nw/_NxtURY0NO_Vef40eSX2zXoanX4/2850x1515/project/150692/aspire-huaikhwang.jpg", amenities:JSON.stringify(["Pool","Fitness Center","Garden","Co-Working"]), trainLineIds:[3], documents:[{id:6,name:"Floor Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"April 2027", type:"offplan" },
+    { id:15, name:"Life Ratchada–Rama 9", developerId:3, description:"Central MRT hub at Phra Ram 9, surrounded by the CBD, entertainment, and world-class hospitals.", startingPrice:3.3, location:"Phra Ram 9, Ratchada", imageUrl:"https://cdn.fazwaz.com/nw/FLFhh6uqWd-O7iPYTWlIfCdLMl0/2850x1515/project/170645/2.png", amenities:JSON.stringify(["Infinity Pool","Sky Gym","Co-Working","Smart Living"]), trainLineIds:[3], documents:[], status:"Off-Plan", moveIn:"Oct 2027", type:"offplan" },
+    { id:16, name:"COZI ONNUT 46 (Srinakarin 38)", developerId:8, description:"A fresh boutique condominium by COZII Property, ideally positioned near BTS On Nut. Compact and intelligently designed units starting at 22 sqm — perfect for investors and first-time buyers seeking a well-connected address in Sukhumvit's eastern corridor.", startingPrice:1.59, size:"22–34.5 sqm", location:"On Nut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/1ISrx-8Mm-OUbmu_khH4Fv5REng/790x400/project/156339/screenshot-2024-10-28-141300.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","Key Card Access","CCTV Security"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"Q3 2027", type:"offplan" },
+    { id:17, name:"Supalai Sense Srinakarin", developerId:7, description:"Supalai's Sense series brings refined modern living to the Srinakarin–Suan Luang Rama 9 corridor. With units ranging 25–53 sqm and direct MRT Yellow Line access, this development offers strong rental potential in a rapidly developing district.", startingPrice:1.89, size:"25–53 sqm", location:"Srinakarin, Suan Luang", imageUrl:"https://cdn.fazwaz.com/nw/k8SX4WObdazv7dRMLkeFC8kuPhM/2850x1515/project/143272/screenshot-2026-02-16-101053.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden","24h Security","Parking"]), trainLineIds:[6], documents:[], status:"Off-Plan", moveIn:"Q2 2026", type:"offplan" },
+    { id:18, name:"Supalai Veranda Sukhumvit 117", developerId:7, description:"Ready-to-move Supalai Veranda development along the BTS Sukhumvit extension near Pu Chao station. Spacious units from 27–65 sqm with a full suite of resort-style amenities in the fast-growing Samut Prakan fringe.", startingPrice:2.04, size:"27–65 sqm", location:"Sukhumvit 117, Samut Prakan fringe", imageUrl:"https://cdn.fazwaz.com/nw/ELOLP1Iqs1nwcdZ993b-QvbcNWs/2850x1515/project/38928/5cc6c0b35a3a6032cd0be346.jpg", amenities:JSON.stringify(["Resort Pool","Clubhouse","Fitness Center","Sky Garden","24h Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:19, name:"Supalai City Resort Sukhumvit 107", developerId:7, description:"Resort-concept living at Sukhumvit 107 near BTS Bearing. Generous unit sizes from 28–69.5 sqm with verdant landscaping and premium facilities make this one of Supalai's best-value ready-to-move addresses on the BTS Sukhumvit Line.", startingPrice:2.29, size:"28–69.5 sqm", location:"Sukhumvit 107, Bearing", imageUrl:"https://cdn.fazwaz.com/nw/DoeGUVTq4adnKsYmci_BEhKZJ8c/2850x1515/project/114840/dji-0100.jpg", amenities:JSON.stringify(["Lagoon Pool","Tropical Garden","Fitness Center","Children's Area","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:20, name:"Supalai Parc Ekkamai–Pattanakarn", developerId:7, description:"Off-plan opportunity in the prestigious Ekkamai–Pattanakarn neighbourhood with ARL Ramkhamhaeng access. Units from 30–56 sqm in a low-rise garden setting, offering a peaceful retreat with excellent connectivity.", startingPrice:2.41, size:"30–56 sqm", location:"Ekkamai–Pattanakarn, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/Mv6gzLBZb8Y-zeHPtkGukU9rTAg/790x400/project/154502/screenshot-2024-08-19-172243.png", amenities:JSON.stringify(["Park & Garden","Swimming Pool","Fitness Center","Co-Working Lounge","EV Charging"]), trainLineIds:[10], documents:[], status:"Off-Plan", moveIn:"Q3 2026", type:"offplan" },
+    { id:21, name:"Supalai Veranda Ramkhamhaeng", developerId:7, description:"Ready-to-move Supalai Veranda project served by the new MRT Orange Line at Ramkhamhaeng. Practical units from 28–44 sqm with resort-style amenities at competitive pricing in one of Bangkok's most improving eastern districts.", startingPrice:2.55, size:"28–44 sqm", location:"Ramkhamhaeng, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/VLHlQGDX-qx_n5Iuruy50upG9IY/0x0/project/41819/180718-overall.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden Terrace","24h Security","Parking"]), trainLineIds:[11], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:22, name:"The Nest Sukhumvit 71", developerId:9, description:"Boutique high-rise by The Nestment, nestled in the quiet leafy enclave of Sukhumvit 71 (Pridi Banomyong). Walking distance to BTS Phra Khanong, with thoughtfully designed 29–45 sqm units and a rooftop sky lounge.", startingPrice:3.54, size:"29–45 sqm", location:"Sukhumvit 71, Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/6GGaTKzO34bcAyor9kbgjBVLHaw/790x400/project/11906/the-nest-sukhumvit-71-buildingthe-nest-building2.jpg", amenities:JSON.stringify(["Sky Lounge","Rooftop Pool","Fitness Center","Key Card Lift","CCTV Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:23, name:"Supalai Premier Samsen–Ratchawat", developerId:7, description:"Supalai's premier flagship development along the BTS Victory Monument corridor. Generous residences from 49–123 sqm in a prime central location, offering unrivalled spaciousness and connectivity for both own-use and investment.", startingPrice:6.41, size:"49–123 sqm", location:"Samsen–Ratchawat, Dusit", imageUrl:"https://cdn.fazwaz.com/nw/HxHpfKrCnuLvDvGiuud6fYZC-YI/2850x1515/project/115306/supalai-ratchawat-hero-shot-hires01-copy.jpg", amenities:JSON.stringify(["Grand Lobby","Infinity Pool","Fully-Equipped Gym","Meeting Rooms","Concierge","EV Charging","Visitor Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+  ],
+  developers: [
+    { id:1, name:"Good Day", logoUrl:"", description:"Boutique developer focused on accessible urban living near key transit nodes." },
+    { id:2, name:"AP Thailand", logoUrl:"", description:"One of Thailand's largest listed developers. Known for the Aspire, Life, and The Address condo brands — all transit-oriented and design-forward." },
+    { id:3, name:"Sansiri", logoUrl:"", description:"Thailand's most awarded developer. Sansiri is celebrated for innovative design, world-class amenities, and landmark projects like IDEO and The Line series." },
+    { id:4, name:"Origin Property", logoUrl:"", description:"Fast-growing listed developer specialising in high-value transit-linked condos. Brands include KnightsBridge, Park Origin, and Origin Plug & Play." },
+    { id:5, name:"Pruksa Real Estate", logoUrl:"", description:"Major SET-listed developer with a large portfolio spanning condos, townhomes and detached houses. Known for strong value and consistent quality." },
+    { id:6, name:"SC Asset", logoUrl:"", description:"Premium developer backed by PTT Group. SC Asset focuses on high-end condominiums and luxury residences in Bangkok's most sought-after locations." },
+    { id:7, name:"Supalai", logoUrl:"", description:"One of Thailand's oldest and most trusted developers. Supalai delivers reliable, affordable-to-mid-range condos across Bangkok's BTS and MRT corridors." },
+    { id:8, name:"COZII Property", logoUrl:"", description:"Rising boutique developer known for compact, design-driven condominiums in Bangkok's up-and-coming residential corridors." },
+    { id:9, name:"The Nestment", logoUrl:"", description:"Modern developer focused on creating comfortable, well-located residences for the new generation of Bangkok urban dwellers." },
+  ],
+  trainLines: [
+    { id:1,  name:"BTS Sukhumvit Line",  type:"bts", color:"#7CB342", description:"Running from Khu Khot to Kheha, the longest BTS line serving Bangkok's eastern corridor via Asoke, Phrom Phong, and On Nut." },
+    { id:2,  name:"BTS Silom Line",      type:"bts", color:"#2E7D32", description:"Connecting National Stadium to Bang Wa, passing through Siam, Sala Daeng, and Bangkok's financial districts." },
+    { id:3,  name:"BTS Gold Line",       type:"bts", color:"#C8A951", description:"A short automated line connecting Krung Thon Buri BTS to ICONSIAM and Khlong San, serving the riverside retail district." },
+    { id:4,  name:"MRT Blue Line",       type:"mrt", color:"#1565C0", description:"Circular MRT line linking Tha Phra and Lak Song via Hua Lamphong, Silom, Asoke, Chatuchak, and Bang Sue." },
+    { id:5,  name:"MRT Purple Line",     type:"mrt", color:"#7B1FA2", description:"Running from Tao Poon to Khlong Bang Phai, connecting Bangkok's northern suburbs to the Bang Sue interchange." },
+    { id:6,  name:"MRT Yellow Line",     type:"mrt", color:"#F9A825", description:"Monorail running from Lat Phrao to Samrong, linking the eastern suburbs through Krungthep Kreetha and Phatthanakan." },
+    { id:7,  name:"MRT Pink Line",       type:"mrt", color:"#E91E8C", description:"Monorail from Khae Rai to Min Buri, connecting Nonthaburi province to Minburi in the northeast via Chaengwattana." },
+    { id:8,  name:"SRT Dark Red Line",   type:"srt", color:"#B71C1C", description:"Commuter rail from Krung Thep Aphiwat (Bang Sue Grand Station) to Rangsit in the north, part of the suburban rail network." },
+    { id:9,  name:"SRT Light Red Line",  type:"srt", color:"#EF5350", description:"Commuter rail from Krung Thep Aphiwat (Bang Sue Grand Station) to Taling Chan in the west." },
+    { id:10, name:"Airport Rail Link",   type:"arl", color:"#EF6C00", description:"Express and city line from Phaya Thai to Suvarnabhumi Airport, covering 28.6 km in approximately 30 minutes." },
+    { id:11, name:"MRT Orange Line",     type:"mrt", color:"#E65100", description:"Under construction line running east–west from Thailand Cultural Centre to Min Buri, with extensions planned to Taling Chan and Bang Khun Non." },
+  ],
+  heroImages: [
+    { url: 'https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80', position: 'center 40%' },
+    { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80', position: 'center 55%' },
+    { url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80', position: 'center 50%' },
+  ],
+  contact: {
+    email: 'hello@cocoonproperty.com',
+    whatsapp: '66800000000',
+    whatsappDisplay: '+66 80 000 0000',
+    line: '@cocoonproperty',
+    facebook: 'cocoonpropertybkk',
+    facebookDisplay: 'Cocoon Property Thailand',
+  },
+  posts: [],
+  nextPostId: 1,
+  nextPropertyId: 24,
+  nextDeveloperId: 10,
+  admin: { loggedIn: false, password: "koutkout431" },
+  _version: 8
+};
+
+// ======================== DB PERSISTENCE (Supabase) ========================
+function saveDB() {
+  const data = JSON.stringify(DB);
+  // Primary: Supabase
+  if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    _supabase.from('cocoon_db')
+      .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() })
+      .catch(() => {});
+  }
+  // Fallback: localStorage
+  try { localStorage.setItem('cocoon_db', data); } catch(e) {}
+}
+
+async function loadDB() {
+  let parsed = null;
+
+  // Primary: Supabase
+  if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    try {
+      const { data: row } = await _supabase
+        .from('cocoon_db').select('data').eq('id', 1).single();
+      if (row && row.data) parsed = row.data;
+    } catch(e) {}
+  }
+
+  // Fallback: localStorage
+  if (!parsed) {
+    try {
+      const saved = localStorage.getItem('cocoon_db');
+      if (saved) parsed = JSON.parse(saved);
+    } catch(e) {}
+  }
+
+  if (!parsed) { saveDB(); return; }
+
+  if (!parsed._version || parsed._version < DB._version) {
+    if (parsed.admin) DB.admin = { ...DB.admin, ...parsed.admin };
+    const savedPropIds = new Set((parsed.properties || []).map(p => p.id));
+    const newProps = DB.properties.filter(p => !savedPropIds.has(p.id));
+    DB.properties = [...(parsed.properties || []), ...newProps];
+    const savedDevIds = new Set((parsed.developers || []).map(d => d.id));
+    const newDevs = DB.developers.filter(d => !savedDevIds.has(d.id));
+    DB.developers = [...(parsed.developers || []), ...newDevs];
+    const savedLineIds = new Set((parsed.trainLines || []).map(l => l.id));
+    const newLines = DB.trainLines.filter(l => !savedLineIds.has(l.id));
+    DB.trainLines = [...(parsed.trainLines || []), ...newLines];
+    DB.nextPropertyId = Math.max(DB.nextPropertyId, parsed.nextPropertyId || 0);
+    DB.nextDeveloperId = Math.max(DB.nextDeveloperId, parsed.nextDeveloperId || 0);
+    if (parsed.heroImages) DB.heroImages = parsed.heroImages;
+    if (parsed.posts) { DB.posts = parsed.posts; DB.nextPostId = parsed.nextPostId || DB.nextPostId; }
+    if (parsed.contact) DB.contact = parsed.contact;
+    saveDB();
+  } else {
+    Object.assign(DB, parsed);
+    saveDB();
+  }
+}
+
+// ======================== ADMIN NAVIGATION ========================
+let currentAdminTab = 'properties';
+
+function navigate(page) {
+  if (page === 'admin') {
+    document.getElementById('page-admin-login').style.display = 'none';
+    document.getElementById('page-admin').classList.add('active');
+    renderAdmin();
+  } else if (page === 'admin-login') {
+    document.getElementById('page-admin-login').style.display = '';
+    document.getElementById('page-admin').classList.remove('active');
+  } else if (page === 'home') {
+    window.location.href = '../cocoon-property-bangkok%203.html';
+  }
+}
+
+function adminLogin() {
+  const pw = document.getElementById('adminPassword').value;
+  if (pw === DB.admin.password) {
+    DB.admin.loggedIn = true;
+    saveDB();
+    navigate('admin');
+  } else {
+    showToast('Incorrect password', 'error');
+  }
+}
+
+function adminLogout() {
+  DB.admin.loggedIn = false;
+  saveDB();
+  navigate('admin-login');
+}
+
+// ======================== TOAST ========================
+function showToast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ======================== ADMIN TABS ========================
+function showAdminTab(tab) {
+  currentAdminTab = tab;
+  document.getElementById('tab-property-edit').style.display = 'none';
+  ['contact','blog','hero','properties','developers','trainlines'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t === tab ? '' : 'none';
+    document.getElementById(`nav-${t}`).classList.toggle('active', t === tab);
+  });
+  renderAdmin();
+}
+
+function renderAdmin() {
+  if (currentAdminTab === 'properties') renderAdminProperties();
+  else if (currentAdminTab === 'developers') renderAdminDevelopers();
+  else if (currentAdminTab === 'trainlines') renderAdminLines();
+  else if (currentAdminTab === 'hero') renderAdminHero();
+  else if (currentAdminTab === 'blog') renderAdminBlog();
+  else if (currentAdminTab === 'contact') renderAdminContact();
+}
+
+function renderAdminContact() {
+  const c = DB.contact || {};
+  document.getElementById('ctEmail').value = c.email || '';
+  document.getElementById('ctWhatsapp').value = c.whatsapp || '';
+  document.getElementById('ctWhatsappDisplay').value = c.whatsappDisplay || '';
+  document.getElementById('ctLine').value = c.line || '';
+  document.getElementById('ctFacebook').value = c.facebook || '';
+  document.getElementById('ctFacebookDisplay').value = c.facebookDisplay || '';
+}
+
+function saveContact() {
+  if (!DB.contact) DB.contact = {};
+  DB.contact.email           = document.getElementById('ctEmail').value.trim();
+  DB.contact.whatsapp        = document.getElementById('ctWhatsapp').value.trim();
+  DB.contact.whatsappDisplay = document.getElementById('ctWhatsappDisplay').value.trim();
+  DB.contact.line            = document.getElementById('ctLine').value.trim();
+  DB.contact.facebook        = document.getElementById('ctFacebook').value.trim();
+  DB.contact.facebookDisplay = document.getElementById('ctFacebookDisplay').value.trim();
+  saveDB();
+  showToast('Contact info saved', 'success');
+}
+
+function renderAdminBlog() {
+  const tbody = document.getElementById('adminBlogTable');
+  const posts = (DB.posts || []).slice().reverse();
+  if (!posts.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#9ca3af;padding:3rem">No posts yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = posts.map(p => `<tr>
+    <td><strong style="color:#e8e4dc">${p.title}</strong></td>
+    <td style="color:#6b7280;font-size:0.78rem">${p.category || '—'}</td>
+    <td style="color:#6b7280">${p.date || '—'}</td>
+    <td>
+      ${p.published === false
+        ? `<span style="font-size:0.7rem;letter-spacing:0.1em;background:rgba(120,100,60,0.2);color:#C9A96E;border-radius:2px;padding:0.2rem 0.5rem">DRAFT</span>`
+        : `<span style="font-size:0.7rem;letter-spacing:0.1em;background:rgba(50,150,80,0.15);color:#5a9;border-radius:2px;padding:0.2rem 0.5rem">LIVE</span>`}
+    </td>
+    <td>
+      <div style="display:flex;gap:0.4rem">
+        <button class="admin-btn-secondary" onclick="openPostModal(${p.id})">Edit</button>
+        <button class="admin-btn-danger" onclick="deletePost(${p.id})">Delete</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+let _quill = null;
+
+function openPostModal(id) {
+  const existing = id ? (DB.posts || []).find(p => p.id == id) : null;
+  const isDraft = existing ? existing.published === false : false;
+  createModal(existing ? 'Edit Post' : 'New Post', `
+    <div class="form-group">
+      <label class="form-label">Headline *</label>
+      <input class="form-input" id="postTitle" value="${existing?.title || ''}" placeholder="e.g., Why Bangkok Condos Are a Smart Investment">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Cover Image URL</label>
+        <input class="form-input" id="postCover" value="${existing?.coverImage || ''}" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <input class="form-input" id="postCategory" value="${existing?.category || ''}" placeholder="e.g., Market News">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" id="postDate" value="${existing?.date || new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}" placeholder="e.g., 9 April 2026">
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-end;gap:0.75rem;padding-bottom:0.25rem">
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;user-select:none">
+          <input type="checkbox" id="postPublished" ${isDraft ? '' : 'checked'} style="width:16px;height:16px;accent-color:var(--cocoon-gold)">
+          <span class="form-label" style="margin:0">Publish (uncheck = Draft)</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Body</label>
+      <div id="quillEditor" style="background:#1a1916;color:#e8e4dc;border-radius:3px;min-height:260px;font-family:'Jost',sans-serif;font-size:0.9rem"></div>
+    </div>
+  `, () => savePost(id));
+
+  // Init Quill after modal renders
+  setTimeout(() => {
+    _quill = new Quill('#quillEditor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ header: [2, 3, false] }],
+          ['bold', 'italic'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link'],
+          ['clean']
+        ]
+      }
+    });
+    // Load existing body
+    const body = existing?.body || '';
+    if (/<[a-z][\s\S]*>/i.test(body)) {
+      _quill.root.innerHTML = body;
+    } else if (body) {
+      _quill.root.innerHTML = body.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    }
+    // Style Quill to match dark theme
+    const qlContainer = document.querySelector('.ql-container');
+    const qlToolbar = document.querySelector('.ql-toolbar');
+    if (qlContainer) { qlContainer.style.border = '1px solid #2A2520'; qlContainer.style.borderTop = 'none'; }
+    if (qlToolbar) { qlToolbar.style.cssText = 'background:#111;border:1px solid #2A2520;border-radius:3px 3px 0 0'; }
+    document.querySelectorAll('.ql-stroke').forEach(el => el.style.stroke = '#8A8478');
+    document.querySelectorAll('.ql-fill').forEach(el => el.style.fill = '#8A8478');
+    document.querySelectorAll('.ql-picker-label').forEach(el => el.style.color = '#8A8478');
+  }, 50);
+}
+
+function savePost(id) {
+  const title = document.getElementById('postTitle').value.trim();
+  if (!title) { showToast('Headline is required', 'error'); return false; }
+  const body = _quill ? _quill.root.innerHTML.replace(/<p><br><\/p>/g, '').trim() : '';
+  const data = {
+    title,
+    coverImage: document.getElementById('postCover').value.trim(),
+    category: document.getElementById('postCategory').value.trim(),
+    date: document.getElementById('postDate').value.trim(),
+    published: document.getElementById('postPublished').checked,
+    body,
+  };
+  if (!DB.posts) DB.posts = [];
+  if (id) {
+    const idx = DB.posts.findIndex(p => p.id == id);
+    if (idx > -1) DB.posts[idx] = { ...DB.posts[idx], ...data };
+    showToast('Post updated', 'success');
+  } else {
+    if (!DB.nextPostId) DB.nextPostId = 1;
+    data.id = DB.nextPostId++;
+    DB.posts.push(data);
+    showToast('Post published', 'success');
+  }
+  saveDB();
+  closeModal();
+  renderAdminBlog();
+  return true;
+}
+
+function deletePost(id) {
+  if (!confirm('Delete this post?')) return;
+  DB.posts = (DB.posts || []).filter(p => p.id != id);
+  saveDB();
+  renderAdminBlog();
+  showToast('Post deleted', 'success');
+}
+
+function renderAdminHero() {
+  const grid = document.getElementById('heroImagesGrid');
+  if (!grid) return;
+  grid.innerHTML = (DB.heroImages || []).map((h, i) => `
+    <div style="background:#0E0E0C;border:1px solid #1C1B18;border-radius:6px;overflow:hidden">
+      <div style="position:relative;width:100%;aspect-ratio:16/9;background:#111">
+        <img src="${h.url}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.opacity='0.2'">
+        <span style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.65);color:rgba(255,255,255,0.6);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;padding:3px 7px;border-radius:3px">Slide ${i+1}</span>
+        <button onclick="removeHeroSlide(${i})" title="Remove slide" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.65);border:none;color:rgba(255,255,255,0.7);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center">×</button>
+      </div>
+      <div style="padding:1rem;display:flex;flex-direction:column;gap:0.5rem">
+        <label style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#888880">Image URL</label>
+        <input class="form-input" id="hero-url-${i}" value="${h.url}" placeholder="https://...">
+        <label style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:#888880;margin-top:0.25rem">Position</label>
+        <input class="form-input" id="hero-pos-${i}" value="${h.position || 'center center'}" placeholder="e.g. center 40%">
+        <button class="admin-btn-primary" onclick="saveHeroImage(${i})" style="margin-top:0.25rem">Save</button>
+      </div>
+    </div>
+  `).join('') + `
+    <div onclick="addHeroSlide()" style="background:#0E0E0C;border:1px dashed rgba(184,145,68,0.3);border-radius:6px;aspect-ratio:auto;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;cursor:pointer;transition:border-color 0.2s,background 0.2s" onmouseover="this.style.borderColor='rgba(184,145,68,0.7)';this.style.background='rgba(184,145,68,0.05)'" onmouseout="this.style.borderColor='rgba(184,145,68,0.3)';this.style.background='#0E0E0C'">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(184,145,68,0.5)" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(184,145,68,0.6)">Add Slide</span>
+    </div>
+  `;
+}
+
+function addHeroSlide() {
+  if (!DB.heroImages) DB.heroImages = [];
+  DB.heroImages.push({ url: '', position: 'center center' });
+  renderAdminHero();
+}
+
+function removeHeroSlide(i) {
+  if (DB.heroImages.length <= 1) { showToast('Need at least one slide', 'error'); return; }
+  if (!confirm(`Remove slide ${i + 1}?`)) return;
+  DB.heroImages.splice(i, 1);
+  saveDB();
+  renderAdminHero();
+  showToast(`Slide ${i + 1} removed`, 'success');
+}
+
+function saveHeroImage(i) {
+  const url = document.getElementById(`hero-url-${i}`).value.trim();
+  const position = document.getElementById(`hero-pos-${i}`).value.trim() || 'center center';
+  if (!url) { showToast('Enter an image URL', 'error'); return; }
+  DB.heroImages[i] = { url, position };
+  saveDB();
+  renderAdminHero();
+  showToast(`Slide ${i+1} updated`, 'success');
+}
+
+function renderAdminProperties() {
+  const tbody = document.getElementById('adminPropertiesTable');
+  if (!DB.properties.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:3rem">No properties yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = DB.properties.map(p => {
+    const dev = DB.developers.find(d => d.id === p.developerId);
+    const lines = DB.trainLines.filter(l => p.trainLineIds.includes(l.id));
+    const coverUrl = (() => { try { const imgs = JSON.parse(p.images || '[]'); return imgs[0] || p.imageUrl || ''; } catch(e) { return p.imageUrl || ''; } })();
+    return `<tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          ${coverUrl
+            ? `<img src="${coverUrl}" style="width:44px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0;border:1px solid rgba(255,255,255,0.08)" onerror="this.style.display='none'">`
+            : `<div style="width:44px;height:44px;border-radius:3px;flex-shrink:0;background:#1a1a18;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
+          <strong style="color:#e8e4dc">${p.name}</strong>
+        </div>
+      </td>
+      <td>${dev?.name || '—'}</td>
+      <td style="color:#6b7280">${p.location || '—'}</td>
+      <td>${lines.map(l => `<span class="train-badge" style="background:${l.color}">${l.type.toUpperCase()}</span>`).join('')}</td>
+      <td style="font-weight:500">฿${p.startingPrice.toFixed(2)} MB</td>
+      <td>${p.type === 'offplan' ? `<span class="badge-offplan">Off-Plan</span>` : `<span class="badge-ready">Ready</span>`}</td>
+      <td>
+        <div style="display:flex;gap:0.4rem">
+          <button class="admin-btn-secondary" onclick="openPropertyPage(${p.id})">Edit</button>
+          <button class="admin-btn-danger" onclick="deleteProperty(${p.id})">Delete</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAdminDevelopers() {
+  const grid = document.getElementById('adminDevelopersGrid');
+  grid.innerHTML = DB.developers.map(d => `
+    <div class="admin-developer-card">
+      ${d.logoUrl ? `<img src="${d.logoUrl}" alt="${d.name}">` : ''}
+      <div class="admin-developer-name">${d.name}</div>
+      ${d.description ? `<div class="admin-developer-desc">${d.description}</div>` : ''}
+      <div style="display:flex;gap:0.5rem;margin-top:1rem">
+        <button class="admin-btn-secondary" onclick="openDeveloperModal(${d.id})">Edit</button>
+        <button class="admin-btn-danger" onclick="deleteDeveloper(${d.id})">Delete</button>
+      </div>
+    </div>
+  `).join('') || `<div class="empty-state" style="grid-column:1/-1"><p>No developers yet.</p></div>`;
+}
+
+function renderAdminLines() {
+  const grid = document.getElementById('adminLinesGrid');
+  if (!DB.trainLines.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="13" rx="2"/><path d="M4 13l2 6h12l2-6"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg>
+      <p>No train lines yet. Add one to get started.</p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = DB.trainLines.map(l => `
+    <div class="admin-line-card" style="flex-direction:column;align-items:flex-start;gap:1rem">
+      <div style="display:flex;align-items:center;gap:1rem;width:100%">
+        <div class="admin-line-dot" style="background:${l.color}">${l.type.toUpperCase()}</div>
+        <div class="admin-line-info" style="flex:1">
+          <h3>${l.name}</h3>
+          <p style="display:flex;align-items:center;gap:0.4rem;margin-top:0.2rem">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${l.color}"></span>
+            ${l.type.toUpperCase()} · <span style="font-family:monospace;font-size:0.8rem">${l.color}</span>
+          </p>
+        </div>
+      </div>
+      ${l.description ? `<p style="font-size:0.8rem;color:#6b7280;line-height:1.5;padding-top:0.5rem;border-top:1px solid #f3f4f6;width:100%">${l.description}</p>` : ''}
+      <div style="display:flex;gap:0.5rem;margin-top:auto;padding-top:0.5rem;border-top:1px solid #f3f4f6;width:100%">
+        <button class="admin-btn-secondary" onclick="openTrainLineModal(${l.id})">Edit</button>
+        <button class="admin-btn-danger" onclick="deleteTrainLine(${l.id})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ======================== TRAIN LINE MODAL ========================
+function openTrainLineModal(id) {
+  const existing = id ? DB.trainLines.find(l => l.id == id) : null;
+  const title = existing ? 'Edit Train Line' : 'Add Train Line';
+
+  createModal(title, `
+    <div class="form-group">
+      <label class="form-label">Line Name *</label>
+      <input class="form-input" id="lName" value="${existing?.name || ''}" placeholder="e.g., BTS Sukhumvit, MRT Blue Line">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Type *</label>
+        <select class="form-input form-select" id="lType" onchange="updateColorPreview()">
+          <option value="bts" ${existing?.type === 'bts' ? 'selected' : ''}>BTS</option>
+          <option value="mrt" ${existing?.type === 'mrt' ? 'selected' : ''}>MRT</option>
+          <option value="srt" ${existing?.type === 'srt' ? 'selected' : ''}>SRT</option>
+          <option value="arl" ${existing?.type === 'arl' ? 'selected' : ''}>ARL</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color *</label>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <input class="form-input" id="lColor" value="${existing?.color || '#7CB342'}" placeholder="#7CB342" style="flex:1" oninput="updateColorPreview()">
+          <input type="color" id="lColorPicker" value="${existing?.color || '#7CB342'}" style="width:40px;height:38px;border:1px solid #d1d5db;cursor:pointer;padding:2px;background:none" oninput="syncColorInput()">
+        </div>
+        <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem">
+          <div id="lColorSwatch" style="width:32px;height:32px;border-radius:50%;background:${existing?.color || '#7CB342'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.55rem;font-weight:700;letter-spacing:0.04em">${(existing?.type || 'bts').toUpperCase()}</div>
+          <span style="font-size:0.75rem;color:#6b7280">Preview</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input form-textarea" id="lDesc">${existing?.description || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Quick Color Presets</label>
+      <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem">
+        ${[
+          ['#7CB342','BTS Sukhumvit'],['#388E3C','BTS Silom'],['#1565C0','MRT Blue'],
+          ['#7B1FA2','MRT Purple'],['#F9A825','MRT Yellow'],['#EF6C00','ARL Orange'],
+          ['#D32F2F','SRT Red'],['#0D47A1','ARL Airport'],['#E91E8C','MRT Pink'],['#C8A951','Gold Line'],
+        ].map(([c,n]) => `
+          <button type="button" title="${n}" onclick="applyPresetColor('${c}')"
+            style="width:24px;height:24px;border-radius:50%;background:${c};border:2px solid transparent;cursor:pointer;transition:transform 0.2s"
+            onmouseover="this.style.transform='scale(1.25)'" onmouseout="this.style.transform='scale(1)'">
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `, () => saveTrainLine(id));
+}
+
+function updateColorPreview() {
+  const val = document.getElementById('lColor').value.trim();
+  const picker = document.getElementById('lColorPicker');
+  const swatch = document.getElementById('lColorSwatch');
+  const type = document.getElementById('lType').value;
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    swatch.style.background = val;
+    picker.value = val;
+  }
+  swatch.textContent = type.toUpperCase();
+}
+
+function syncColorInput() {
+  const val = document.getElementById('lColorPicker').value;
+  document.getElementById('lColor').value = val;
+  document.getElementById('lColorSwatch').style.background = val;
+}
+
+function applyPresetColor(color) {
+  document.getElementById('lColor').value = color;
+  document.getElementById('lColorPicker').value = color;
+  document.getElementById('lColorSwatch').style.background = color;
+}
+
+function saveTrainLine(id) {
+  const name = document.getElementById('lName').value.trim();
+  const type = document.getElementById('lType').value;
+  const color = document.getElementById('lColor').value.trim();
+  const desc = document.getElementById('lDesc').value.trim();
+
+  if (!name) { showToast('Line name is required', 'error'); return false; }
+  if (!/^#[0-9A-Fa-f]{6}$/.test(color)) { showToast('Enter a valid hex color (e.g. #7CB342)', 'error'); return false; }
+
+  const data = { name, type, color, description: desc };
+
+  if (id) {
+    const idx = DB.trainLines.findIndex(l => l.id == id);
+    if (idx > -1) DB.trainLines[idx] = { ...DB.trainLines[idx], ...data };
+    showToast('Train line updated', 'success');
+  } else {
+    data.id = Math.max(0, ...DB.trainLines.map(l => l.id)) + 1;
+    DB.trainLines.push(data);
+    showToast('Train line added', 'success');
+  }
+  saveDB();
+  closeModal();
+  renderAdmin();
+  return true;
+}
+
+function deleteTrainLine(id) {
+  const line = DB.trainLines.find(l => l.id == id);
+  const usedBy = DB.properties.filter(p => p.trainLineIds.includes(id));
+  if (usedBy.length) {
+    if (!confirm(`"${line?.name}" is used by ${usedBy.length} propert${usedBy.length > 1 ? 'ies' : 'y'}. Delete anyway?`)) return;
+    DB.properties.forEach(p => { p.trainLineIds = p.trainLineIds.filter(x => x !== id); });
+  } else {
+    if (!confirm(`Delete "${line?.name}"?`)) return;
+  }
+  DB.trainLines = DB.trainLines.filter(l => l.id != id);
+  saveDB();
+  renderAdmin();
+  showToast('Train line deleted', 'success');
+}
+
+// ======================== PROPERTY MODAL ========================
+function openPropertyPage(id) {
+  const existing = id ? DB.properties.find(p => p.id == id) : null;
+  const title = existing ? 'Edit Property' : 'Add Property';
+  let selectedTrainLines = existing ? [...existing.trainLineIds] : [];
+  let documents = existing ? [...(existing.documents || [])] : [];
+  let propertyImages = [];
+  try { propertyImages = JSON.parse(existing?.images || '[]'); } catch(e) {}
+  if (!propertyImages.length && existing?.imageUrl) propertyImages = [existing.imageUrl];
+
+  // Show property edit tab, hide properties list tab
+  document.getElementById('tab-properties').style.display = 'none';
+  document.getElementById('tab-property-edit').style.display = '';
+  document.getElementById('propertyPageTitle').textContent = title;
+  document.getElementById('propertyPageSub').textContent = existing ? existing.name : 'New Property';
+
+  document.getElementById('propertyPageBody').innerHTML = buildPropertyForm(existing, selectedTrainLines, documents, propertyImages);
+
+  window._currentDocuments = documents;
+  window._currentTrainLines = selectedTrainLines;
+  window._currentImages = propertyImages;
+  window._onPropertySave = () => { if (saveProperty(id, documents, selectedTrainLines, propertyImages) !== false) closePropertyPage(); };
+
+  renderImageGrid();
+  initImageDropzone();
+}
+
+function closePropertyPage() {
+  document.getElementById('tab-property-edit').style.display = 'none';
+  document.getElementById('tab-properties').style.display = '';
+  renderAdminProperties();
+}
+
+function buildPropertyForm(existing, selectedTrainLines, documents, propertyImages) {
+  return `
+    <div style="max-width:860px">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Property Name *</label>
+        <input class="form-input" id="pName" value="${existing?.name || ''}" placeholder="e.g., Aspire Sukhumvit 103">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Developer *</label>
+        <select class="form-input form-select" id="pDev">
+          <option value="">Select developer</option>
+          ${DB.developers.map(d => `<option value="${d.id}" ${existing?.developerId == d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Starting Price (MB) *</label>
+        <input class="form-input" id="pPrice" type="number" step="0.01" value="${existing?.startingPrice || ''}" placeholder="3.50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" id="pLocation" value="${existing?.location || ''}" placeholder="Sukhumvit, Bangkok">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input class="form-input" id="pCity" value="${existing?.city || 'Bangkok'}" placeholder="Bangkok">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Building Type</label>
+        <select class="form-input form-select" id="pFloors">
+          <option value="">— Select —</option>
+          <option value="6" ${existing?.floors && existing.floors <= 8 ? 'selected' : ''}>Low Rise</option>
+          <option value="30" ${existing?.floors && existing.floors >= 25 ? 'selected' : ''}>High Rise</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Unit Size Range</label>
+        <input class="form-input" id="pSize" value="${existing?.size || ''}" placeholder="e.g., 28–65 sqm">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-input form-select" id="pStatus">
+          <option value="ready" ${existing?.type === 'ready' ? 'selected' : ''}>Ready to Move</option>
+          <option value="offplan" ${existing?.type === 'offplan' ? 'selected' : ''}>Off-Plan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Move-In Date (if off-plan)</label>
+        <input class="form-input" id="pMoveIn" value="${existing?.moveIn || ''}" placeholder="e.g., July 2028">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Google Maps Link <span style="color:rgba(255,255,255,0.3);font-weight:normal;font-size:0.7rem">— paste the share URL, coordinates are extracted automatically</span></label>
+      <input class="form-input" id="pMapLink" value="${existing?.mapLink || ''}" placeholder="https://www.google.com/maps/place/...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Images — first image is the cover card thumbnail</label>
+      <div class="admin-img-grid" id="pImagesGrid"></div>
+      <div class="admin-img-dropzone" id="pDropzone" onclick="document.getElementById('pFileInput').click()">
+        <input type="file" id="pFileInput" accept="image/*" multiple style="display:none" onchange="handleImageFiles(this.files)">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p class="drop-main">Drop images here or click to browse</p>
+        <p class="drop-sub">JPG, PNG, WebP · uploads via Cloudinary</p>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.6rem">
+        <input class="form-input" id="pImageUrl" placeholder="Or paste an image URL">
+        <button class="admin-btn-secondary" onclick="addImageUrl()" style="white-space:nowrap">Add URL</button>
+      </div>
+      <div id="pUploadStatus"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input form-textarea" id="pDesc">${existing?.description || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Amenities (comma-separated)</label>
+      <input class="form-input" id="pAmenities" value="${(() => { try { return JSON.parse(existing?.amenities || '[]').join(', '); } catch(e) { return ''; } })()} " placeholder="Pool, Gym, Parking">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Train Lines</label>
+      <div class="admin-checkbox-group" id="pLines">
+        ${DB.trainLines.map(l => `
+          <div class="admin-checkbox-item ${selectedTrainLines.includes(l.id) ? 'selected' : ''}" onclick="toggleTrainLine(this, ${l.id})" data-id="${l.id}">
+            <span style="width:8px;height:8px;border-radius:50%;background:${l.color};display:inline-block"></span>
+            ${l.name}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Documents</label>
+      <div id="pDocsList">${documents.map(d => `
+        <div class="doc-tag" id="doc-${d.id}">${d.name} <button onclick="removeDoc(${d.id})">×</button></div>
+      `).join('')}</div>
+      <div class="doc-row" style="margin-top:0.5rem">
+        <input class="form-input" id="pDocName" placeholder="Document name">
+        <input class="form-input" id="pDocUrl" placeholder="URL (https://...)">
+        <button class="admin-btn-secondary" onclick="addDoc()">Add</button>
+      </div>
+    </div>
+    </div>
+  `;
+}
+
+function openPropertyModal_UNUSED(id) {
+  const existing = id ? DB.properties.find(p => p.id == id) : null;
+  const title = existing ? 'Edit Property' : 'Add Property';
+  let selectedTrainLines = existing ? [...existing.trainLineIds] : [];
+  let documents = existing ? [...(existing.documents || [])] : [];
+  let propertyImages = [];
+  try { propertyImages = JSON.parse(existing?.images || '[]'); } catch(e) {}
+  if (!propertyImages.length && existing?.imageUrl) propertyImages = [existing.imageUrl];
+
+  const modal = createModal(title, `
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Property Name *</label>
+        <input class="form-input" id="pName" value="${existing?.name || ''}" placeholder="e.g., Aspire Sukhumvit 103">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Developer *</label>
+        <select class="form-input form-select" id="pDev">
+          <option value="">Select developer</option>
+          ${DB.developers.map(d => `<option value="${d.id}" ${existing?.developerId == d.id ? 'selected' : ''}>${d.name}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Starting Price (MB) *</label>
+        <input class="form-input" id="pPrice" type="number" step="0.01" value="${existing?.startingPrice || ''}" placeholder="3.50">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" id="pLocation" value="${existing?.location || ''}" placeholder="Sukhumvit, Bangkok">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input class="form-input" id="pCity" value="${existing?.city || 'Bangkok'}" placeholder="Bangkok">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Building Type</label>
+        <select class="form-input form-select" id="pFloors">
+          <option value="">— Select —</option>
+          <option value="6" ${existing?.floors <= 8 && existing?.floors ? 'selected' : ''}>Low Rise</option>
+          <option value="30" ${existing?.floors >= 25 ? 'selected' : ''}>High Rise</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Unit Size Range</label>
+        <input class="form-input" id="pSize" value="${existing?.size || ''}" placeholder="e.g., 28–65 sqm">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-input form-select" id="pStatus">
+          <option value="ready" ${existing?.type === 'ready' ? 'selected' : ''}>Ready to Move</option>
+          <option value="offplan" ${existing?.type === 'offplan' ? 'selected' : ''}>Off-Plan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Move-In Date (if off-plan)</label>
+        <input class="form-input" id="pMoveIn" value="${existing?.moveIn || ''}" placeholder="e.g., July 2028">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Google Maps Link <span style="color:rgba(255,255,255,0.3);font-weight:normal;font-size:0.7rem">— paste the share URL, coordinates are extracted automatically</span></label>
+      <input class="form-input" id="pMapLink" value="${existing?.mapLink || ''}" placeholder="https://www.google.com/maps/place/...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Images — first image is the cover card thumbnail</label>
+      <div class="admin-img-grid" id="pImagesGrid"></div>
+      <div class="admin-img-dropzone" id="pDropzone" onclick="document.getElementById('pFileInput').click()">
+        <input type="file" id="pFileInput" accept="image/*" multiple style="display:none" onchange="handleImageFiles(this.files)">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p class="drop-main">Drop images here or click to browse</p>
+        <p class="drop-sub">JPG, PNG, WebP · uploads via Cloudinary</p>
+      </div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.6rem">
+        <input class="form-input" id="pImageUrl" placeholder="Or paste an image URL">
+        <button class="admin-btn-secondary" onclick="addImageUrl()" style="white-space:nowrap">Add URL</button>
+      </div>
+      <div id="pUploadStatus"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input form-textarea" id="pDesc">${existing?.description || ''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Amenities (comma-separated)</label>
+      <input class="form-input" id="pAmenities" value="${(() => { try { return JSON.parse(existing?.amenities || '[]').join(', '); } catch(e) { return ''; } })()} " placeholder="Pool, Gym, Parking">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Train Lines</label>
+      <div class="admin-checkbox-group" id="pLines">
+        ${DB.trainLines.map(l => `
+          <div class="admin-checkbox-item ${selectedTrainLines.includes(l.id) ? 'selected' : ''}" onclick="toggleTrainLine(this, ${l.id})" data-id="${l.id}">
+            <span style="width:8px;height:8px;border-radius:50%;background:${l.color};display:inline-block"></span>
+            ${l.name}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Documents</label>
+      <div id="pDocsList">${documents.map(d => `
+        <div class="doc-tag" id="doc-${d.id}">${d.name} <button onclick="removeDoc(${d.id})">×</button></div>
+      `).join('')}</div>
+      <div class="doc-row" style="margin-top:0.5rem">
+        <input class="form-input" id="pDocName" placeholder="Document name">
+        <input class="form-input" id="pDocUrl" placeholder="URL (https://...)">
+        <button class="admin-btn-secondary" onclick="addDoc()">Add</button>
+      </div>
+    </div>
+  `, () => saveProperty(id, documents, selectedTrainLines, propertyImages));
+
+  // Store references
+  window._currentDocuments = documents;
+  window._currentTrainLines = selectedTrainLines;
+  window._currentImages = propertyImages;
+
+  // Init image UI after modal DOM is ready
+  renderImageGrid();
+  initImageDropzone();
+}
+
+function renderImageGrid() {
+  const grid = document.getElementById('pImagesGrid');
+  if (!grid) return;
+  const imgs = window._currentImages || [];
+  if (!imgs.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = imgs.map((url, i) => `
+    <div class="admin-img-item">
+      <img src="${url}" alt="Image ${i+1}" onerror="this.style.opacity='0.3'">
+      ${i === 0 ? '<span class="admin-img-cover-badge">Cover</span>' : `<button class="admin-img-cover-btn" onclick="setCoverImage(${i})">Set cover</button>`}
+      <button class="admin-img-remove" onclick="removeImage(${i})" title="Remove">×</button>
+    </div>
+  `).join('');
+}
+
+function addImageUrl() {
+  const input = document.getElementById('pImageUrl');
+  const url = input.value.trim();
+  if (!url) { showToast('Enter an image URL', 'error'); return; }
+  window._currentImages.push(url);
+  input.value = '';
+  renderImageGrid();
+}
+
+function removeImage(i) {
+  window._currentImages.splice(i, 1);
+  renderImageGrid();
+}
+
+function setCoverImage(i) {
+  const [moved] = window._currentImages.splice(i, 1);
+  window._currentImages.unshift(moved);
+  renderImageGrid();
+}
+
+function initImageDropzone() {
+  const zone = document.getElementById('pDropzone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('drag-over'); });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+    if (files.length) handleImageFiles(files);
+  });
+}
+
+function handleImageFiles(files) {
+  const cfg = getCloudinaryConfig();
+  if (!cfg) { promptCloudinaryConfig(); return; }
+  [...files].forEach(file => uploadToCloudinary(file, cfg));
+}
+
+function uploadToCloudinary(file, cfg) {
+  const status = document.getElementById('pUploadStatus');
+  const uid = Date.now() + Math.random();
+  const row = document.createElement('div');
+  row.className = 'admin-img-uploading';
+  row.id = `up-${uid}`;
+  row.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="rgba(184,145,68,0.7)" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> Uploading ${file.name}…`;
+  status.appendChild(row);
+
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', cfg.uploadPreset);
+
+  fetch(`https://api.cloudinary.com/v1_1/${cfg.cloudName}/image/upload`, { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById(`up-${uid}`)?.remove();
+      if (data.secure_url) {
+        window._currentImages.push(data.secure_url);
+        renderImageGrid();
+      } else {
+        showToast('Upload failed: ' + (data.error?.message || 'unknown'), 'error');
+      }
+    })
+    .catch(() => {
+      document.getElementById(`up-${uid}`)?.remove();
+      showToast('Upload failed — check Cloudinary config', 'error');
+    });
+}
+
+function getCloudinaryConfig() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem('cocoon_cloudinary') || 'null');
+    return (cfg?.cloudName && cfg?.uploadPreset) ? cfg : null;
+  } catch(e) { return null; }
+}
+
+function promptCloudinaryConfig() {
+  const existing = getCloudinaryConfig() || {};
+  createModal('Connect Cloudinary', `
+    <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:1.5rem">
+      One-time setup to enable direct image uploads.<br>
+      1. Create a free account at <strong style="color:rgba(184,145,68,0.75)">cloudinary.com</strong><br>
+      2. Go to <strong style="color:rgba(184,145,68,0.75)">Settings → Upload → Upload presets</strong><br>
+      3. Add a new preset, set signing mode to <strong style="color:rgba(184,145,68,0.75)">Unsigned</strong><br>
+      4. Paste your Cloud Name and preset name below
+    </p>
+    <div class="form-group">
+      <label class="form-label">Cloud Name</label>
+      <input class="form-input" id="cfgCloud" value="${existing.cloudName || ''}" placeholder="e.g., my-cloud-abc123">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Upload Preset (unsigned)</label>
+      <input class="form-input" id="cfgPreset" value="${existing.uploadPreset || ''}" placeholder="e.g., cocoon_uploads">
+    </div>
+  `, () => {
+    const cloudName = document.getElementById('cfgCloud').value.trim();
+    const uploadPreset = document.getElementById('cfgPreset').value.trim();
+    if (!cloudName || !uploadPreset) { showToast('Both fields required', 'error'); return false; }
+    localStorage.setItem('cocoon_cloudinary', JSON.stringify({ cloudName, uploadPreset }));
+    showToast('Cloudinary connected! Try uploading again.', 'success');
+    return true;
+  });
+}
+
+function toggleTrainLine(el, id) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    window._currentTrainLines.push(id);
+  } else {
+    window._currentTrainLines = window._currentTrainLines.filter(x => x !== id);
+  }
+}
+
+function addDoc() {
+  const name = document.getElementById('pDocName').value.trim();
+  const url = document.getElementById('pDocUrl').value.trim();
+  if (!name || !url) { showToast('Enter both name and URL', 'error'); return; }
+  const newDoc = { id: Date.now(), name, documentUrl: url };
+  window._currentDocuments.push(newDoc);
+  const list = document.getElementById('pDocsList');
+  const tag = document.createElement('div');
+  tag.className = 'doc-tag';
+  tag.id = `doc-${newDoc.id}`;
+  tag.innerHTML = `${name} <button onclick="removeDoc(${newDoc.id})">×</button>`;
+  list.appendChild(tag);
+  document.getElementById('pDocName').value = '';
+  document.getElementById('pDocUrl').value = '';
+}
+
+function removeDoc(docId) {
+  const idx = window._currentDocuments.findIndex(d => d.id === docId);
+  if (idx > -1) window._currentDocuments.splice(idx, 1);
+  const tag = document.getElementById(`doc-${docId}`);
+  if (tag) tag.remove();
+}
+
+function saveProperty(id, documents, trainLines, images) {
+  const name = document.getElementById('pName').value.trim();
+  const devId = parseInt(document.getElementById('pDev').value);
+  const price = parseFloat(document.getElementById('pPrice').value);
+  if (!name || !devId || isNaN(price)) { showToast('Fill all required fields', 'error'); return false; }
+
+  const amenitiesRaw = document.getElementById('pAmenities').value;
+  const amenities = JSON.stringify(amenitiesRaw.split(',').map(a => a.trim()).filter(Boolean));
+  const statusVal = document.getElementById('pStatus').value;
+
+  const data = {
+    name,
+    developerId: devId,
+    startingPrice: price,
+    location: document.getElementById('pLocation').value.trim(),
+    city: document.getElementById('pCity').value.trim() || 'Bangkok',
+    floors: document.getElementById('pFloors').value ? parseInt(document.getElementById('pFloors').value) : null,
+    size: document.getElementById('pSize').value.trim(),
+    description: document.getElementById('pDesc').value.trim(),
+    images: JSON.stringify(window._currentImages || []),
+    imageUrl: (window._currentImages && window._currentImages[0]) || '',
+    amenities,
+    trainLineIds: [...window._currentTrainLines],
+    documents: [...window._currentDocuments],
+    status: statusVal === 'offplan' ? 'Off-Plan' : 'Ready to Move',
+    moveIn: document.getElementById('pMoveIn').value.trim(),
+    ...parseGoogleMapsUrl(document.getElementById('pMapLink').value.trim()),
+    mapLink: document.getElementById('pMapLink').value.trim(),
+    type: statusVal,
+  };
+
+  if (id) {
+    const idx = DB.properties.findIndex(p => p.id == id);
+    if (idx > -1) DB.properties[idx] = { ...DB.properties[idx], ...data };
+    showToast('Property updated successfully', 'success');
+  } else {
+    data.id = DB.nextPropertyId++;
+    DB.properties.push(data);
+    showToast('Property created successfully', 'success');
+  }
+
+  saveDB();
+  closeModal();
+  renderAdmin();
+  return true;
+}
+
+function deleteProperty(id) {
+  if (!confirm('Delete this property? This cannot be undone.')) return;
+  DB.properties = DB.properties.filter(p => p.id != id);
+  saveDB();
+  renderAdmin();
+  showToast('Property deleted', 'success');
+}
+
+// ======================== DEVELOPER MODAL ========================
+function openDeveloperModal(id) {
+  const existing = id ? DB.developers.find(d => d.id == id) : null;
+  createModal(existing ? 'Edit Developer' : 'Add Developer', `
+    <div class="form-group">
+      <label class="form-label">Developer Name *</label>
+      <input class="form-input" id="dName" value="${existing?.name || ''}" placeholder="e.g., Supalai, AP Thailand">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Logo URL</label>
+      <input class="form-input" id="dLogo" value="${existing?.logoUrl || ''}" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input form-textarea" id="dDesc">${existing?.description || ''}</textarea>
+    </div>
+  `, () => saveDeveloper(id));
+}
+
+function saveDeveloper(id) {
+  const name = document.getElementById('dName').value.trim();
+  if (!name) { showToast('Developer name is required', 'error'); return false; }
+  const data = {
+    name,
+    logoUrl: document.getElementById('dLogo').value.trim(),
+    description: document.getElementById('dDesc').value.trim(),
+  };
+  if (id) {
+    const idx = DB.developers.findIndex(d => d.id == id);
+    if (idx > -1) DB.developers[idx] = { ...DB.developers[idx], ...data };
+    showToast('Developer updated', 'success');
+  } else {
+    data.id = DB.nextDeveloperId++;
+    DB.developers.push(data);
+    showToast('Developer added', 'success');
+  }
+  saveDB();
+  closeModal();
+  renderAdmin();
+  return true;
+}
+
+function deleteDeveloper(id) {
+  if (!confirm('Delete this developer?')) return;
+  DB.developers = DB.developers.filter(d => d.id != id);
+  saveDB();
+  renderAdmin();
+  showToast('Developer deleted', 'success');
+}
+
+// ======================== MODAL HELPERS ========================
+function createModal(title, body, onSave) {
+  const container = document.getElementById('modalContainer');
+  container.innerHTML = `
+    <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">${title}</div>
+          <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">${body}</div>
+        <div class="modal-footer">
+          <button class="admin-btn-secondary" onclick="closeModal()">Cancel</button>
+          <button class="admin-btn-primary" onclick="window._onModalSave && window._onModalSave()">Save</button>
+        </div>
+      </div>
+    </div>
+  `;
+  window._onModalSave = () => { if (onSave() !== false) {} };
+}
+
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
+}
+
+// ======================== INIT ========================
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadDB();
+
+  // Hide loader
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  }, 800);
+
+  if (DB.admin.loggedIn) {
+    navigate('admin');
+  } else {
+    navigate('admin-login');
+  }
+});
+</script>
+</body>
+</html>
