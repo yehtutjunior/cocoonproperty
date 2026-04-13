@@ -438,10 +438,9 @@ nav a:hover::after { width: 100%; }
 .detail-layout { display: grid; grid-template-columns: 1fr 360px; gap: 3rem; padding: 3rem 0; }
 .detail-gallery { position: relative; margin-bottom: 2rem; }
 .detail-gallery-main {
-  width: 100%; height: 420px; overflow: hidden; background: var(--cocoon-ivory);
-  display: flex; align-items: center; justify-content: center;
+  width: 100%; overflow: hidden; background: var(--cocoon-ivory);
 }
-.detail-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.detail-gallery-main img { width: 100%; height: auto; display: block; }
 .detail-gallery-placeholder { text-align: center; }
 .detail-gallery-placeholder svg { width: 56px; height: 56px; stroke: var(--cocoon-champagne); fill: none; stroke-width: 1; margin-bottom: 1rem; }
 .detail-gallery-placeholder span { display: block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-champagne); }
@@ -833,8 +832,7 @@ footer { padding: 4rem 0 2rem; border-top: 1px solid var(--cocoon-silk); backgro
   /* Detail page */
   .detail-section { padding: 1.2rem; }
   .detail-sidebar-card { padding: 1.2rem; }
-  .detail-gallery-main { height: 220px; }
-  .detail-gallery-thumb { height: 160px; }
+  .detail-gallery-thumb { height: 120px; }
   /* Blog post cover */
   .blog-post-cover { height: 220px; }
   .blog-post-cover-placeholder { height: 160px; }
@@ -855,10 +853,10 @@ footer { padding: 4rem 0 2rem; border-top: 1px solid var(--cocoon-silk); backgro
   .hero-filter-menu { min-width: 140px; max-width: 80vw; }
 }
 @media (max-width: 480px) {
-  /* Filter bar — full width per item on very small screens */
-  .hb-col { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  /* Filter bar — 2 columns on small screens */
+  .hb-col { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); }
   /* Hero padding */
-  .hero-content { padding-top: 60px; padding-bottom: 80px; }
+  .hero-content { padding-top: 60px; padding-bottom: 40px; }
 }
 </style>
 </head>
