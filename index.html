@@ -1355,9 +1355,12 @@ function saveDB() {
   const data = JSON.stringify(DB);
   // Primary: Supabase
   if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-    _supabase.from('cocoon_db')
-      .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() })
-      .catch(() => {});
+    (async () => {
+      try {
+        await _supabase.from('cocoon_db')
+          .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() });
+      } catch(e) {}
+    })();
   }
   // Fallback: localStorage
   try { localStorage.setItem('cocoon_db', data); } catch(e) {}
@@ -2323,7 +2326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 3000);
 
   // Wait for DB but with hard 5s cap
-  await Promise.race([loadDB(), new Promise(r => setTimeout(r, 5000))]);
+  try { await Promise.race([loadDB(), new Promise(r => setTimeout(r, 5000))]); } catch(e) {}
 
   applyHeroImages();
   applyContact();
