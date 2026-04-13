@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocoon Property Thailand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  /* Dark luxury — near-black 60% · cream text 30% · gold 10% */
+  --cocoon-ivory:     #EDE7DC;
+  --cocoon-silk:      #2A2520;
+  --cocoon-champagne: #5A5248;
+  --cocoon-warm:      #3A3228;
+  --cocoon-gold:      #C9A96E;
+  --cocoon-gold-deep: #A07830;
+  --cocoon-gold-line: rgba(201,169,110,0.18);
+  --cocoon-dark:      #F0EDE6;
+  --cocoon-text:      #E8E4DA;
+  --cocoon-text-soft: #8A8478;
+  --cocoon-white:     #090908;
+  --cocoon-surface:   #0E0E0C;
+  /* Grid background */
+  --grid-color:       rgba(201,169,110,0.07);
+  --grid-size:        52px;
+  --line-sukhumvit:   #7CB342;
+  --line-silom:       #388E3C;
+  --line-blue:        #1565C0;
+  --line-purple:      #7B1FA2;
+  --line-yellow:      #F9A825;
+  --line-pink:        #E91E8C;
+  --line-orange:      #EF6C00;
+  --line-red:         #D32F2F;
+  --line-gold:        #C8A951;
+  --line-airport:     #0D47A1;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', 'Helvetica Neue', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--cocoon-text);
+  background-color: var(--cocoon-white);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== LOADER ========== */
+.loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--cocoon-white);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+.loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-brand { text-align: center; opacity: 0; animation: loaderIn 1s 0.2s ease forwards; }
+.loader-brand h1 {
+  font-family: var(--font-display);
+  font-size: 2.8rem; font-weight: 300; letter-spacing: 0.35em;
+  color: var(--cocoon-dark); text-transform: uppercase;
+}
+.loader-brand p {
+  font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.55em;
+  color: var(--cocoon-gold); margin-top: 0.6rem; text-transform: uppercase;
+}
+.loader-line {
+  width: 60px; height: 1px; background: var(--cocoon-gold);
+  margin-top: 2rem; transform: scaleX(0); animation: lineGrow 1.2s 0.6s ease forwards;
+}
+@keyframes loaderIn { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+@keyframes lineGrow { to { transform: scaleX(1); } }
+
+/* ========== HEADER ========== */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 110;
+  padding: 1.4rem 0; transition: all 0.4s ease;
+  background: rgba(9,9,8,0.88); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--grid-color);
+}
+header.scrolled {
+  background: rgba(9,9,8,0.99);
+  box-shadow: 0 1px 0 var(--cocoon-silk); padding: 0.9rem 0;
+}
+.header-inner {
+  max-width: 1340px; margin: 0 auto; padding: 0 2.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { text-decoration: none; line-height: 1; }
+.logo-main {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--cocoon-dark); display: block;
+}
+.logo-sub {
+  font-family: var(--font-body); font-size: 0.5rem; font-weight: 300;
+  letter-spacing: 0.5em; color: var(--cocoon-gold); text-transform: uppercase; display: block; margin-top: 2px;
+}
+nav { display: flex; align-items: center; gap: 2rem; }
+nav a {
+  font-size: 0.72rem; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--cocoon-text-soft); text-decoration: none; position: relative; transition: color 0.3s ease;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--cocoon-gold); transition: width 0.3s ease;
+}
+nav a:hover { color: var(--cocoon-dark); }
+nav a:hover::after { width: 100%; }
+.hamburger { display: none; background: none; border: none; cursor: pointer; width: 28px; height: 20px; position: relative; z-index: 110; }
+.hamburger span { display: block; width: 100%; height: 1.5px; background: var(--cocoon-dark); position: absolute; left: 0; transition: all 0.35s ease; }
+.hamburger span:nth-child(1) { top: 0; }
+.hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.hamburger span:nth-child(3) { bottom: 0; }
+.hamburger.open span:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: translateY(-50%) scaleX(0); }
+.hamburger.open span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+
+/* Mobile nav drawer */
+.mobile-nav {
+  display: none; position: fixed; top: 0; right: 0; bottom: 0;
+  width: 280px; background: #090908; z-index: 105;
+  padding: 6rem 2.5rem 3rem;
+  transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  border-left: 1px solid var(--cocoon-silk);
+  flex-direction: column; gap: 0;
+}
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a, .mobile-nav button {
+  display: block; width: 100%; text-align: left;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 400;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--cocoon-text-soft); text-decoration: none;
+  padding: 1.1rem 0; border-bottom: 1px solid var(--cocoon-silk);
+  background: none; border-top: none; border-left: none; border-right: none;
+  cursor: pointer; transition: color 0.3s ease;
+}
+.mobile-nav a:hover, .mobile-nav button:hover { color: var(--cocoon-gold); }
+.mobile-nav-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6); z-index: 104;
+  opacity: 0; transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.mobile-nav-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* ========== PAGES ========== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  position: relative; overflow: visible; padding: 0;
+}
+
+/* ---- Slideshow ---- */
+.hero-slides { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-slide {
+  position: absolute; inset: -6%; opacity: 0;
+  background-size: cover; background-position: center 60%;
+  transition: opacity 1.6s ease;
+  animation: heroZoom 26s ease-in-out infinite alternate;
+}
+.hero-slide.active { opacity: 1; }
+.hero-slide:nth-child(2) { animation-delay: -8s; }
+.hero-slide:nth-child(3) { animation-delay: -16s; }
+@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+/* ---- Overlays ---- */
+.hero-bg {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.20) 55%, rgba(0,0,0,0.10) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.10) 50%, rgba(0,0,0,0.45) 80%, rgba(10,8,5,0.82) 100%);
+}
+.hero-threads { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; opacity: 0.4; }
+
+/* ---- Content — left aligned ---- */
+.hero-content {
+  position: relative; z-index: 3;
+  max-width: 1340px; width: 100%; margin: 0 auto;
+  padding: 0 2.5rem; padding-top: 120px; padding-bottom: 160px;
+  opacity: 0; animation: heroFade 1.2s 1.8s ease forwards;
+}
+@keyframes heroFade { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.hero-text { max-width: 600px; }
+.hero-eyebrow {
+  font-family: var(--font-body); font-size: 0.65rem; font-weight: 400;
+  letter-spacing: 0.55em; text-transform: uppercase; color: var(--cocoon-gold);
+  margin-bottom: 1.4rem; display: flex; align-items: center; gap: 1rem;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--cocoon-gold); flex-shrink: 0; }
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+  font-weight: 300; letter-spacing: 0.06em; color: #fff; line-height: 1.08;
+}
+.hero h1 em { font-style: italic; color: var(--cocoon-gold); font-weight: 300; }
+.hero-divider {
+  width: 40px; height: 1px; background: var(--cocoon-gold);
+  margin: 2rem 0; position: relative;
+}
+.hero-divider::before, .hero-divider::after {
+  content: ''; position: absolute; top: -1.5px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--cocoon-gold);
+}
+.hero-divider::before { left: -6px; }
+.hero-divider::after { right: -6px; }
+.hero-desc {
+  font-size: 0.9rem; font-weight: 300; color: rgba(255,255,255,0.65);
+  letter-spacing: 0.04em; line-height: 1.85; max-width: 460px; margin-bottom: 2.5rem;
+}
+
+/* ---- Slide dots ---- */
+.hero-dots { display: flex; gap: 0.5rem; align-items: center; }
+.hero-dot {
+  width: 20px; height: 2px; background: rgba(255,255,255,0.3);
+  border: none; cursor: pointer; padding: 0; transition: all 0.4s ease;
+}
+.hero-dot.active { width: 40px; background: var(--cocoon-gold); }
+
+/* ---- Bottom search bar ---- */
+.hero-bottom-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+  background: rgba(9,9,8,0.88); backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(201,169,110,0.20);
+}
+.hero-bottom-inner {
+  max-width: 1340px; margin: 0 auto; padding: 0 2.5rem;
+  display: flex; align-items: stretch;
+}
+/* Search col */
+.hb-search {
+  display: flex; align-items: center; gap: 0.75rem;
+  flex: 1.5; padding: 1.1rem 1.5rem 1.1rem 0;
+  border-right: 1px solid rgba(201,169,110,0.15);
+}
+.hb-search svg { width: 16px; height: 16px; stroke: var(--cocoon-gold); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+.hb-search input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 300;
+  color: #fff; letter-spacing: 0.04em;
+}
+.hb-search input::placeholder { color: rgba(255,255,255,0.3); }
+/* Filter cols */
+.hb-col {
+  position: relative; flex: 1; min-width: 0;
+  border-right: 1px solid rgba(201,169,110,0.15);
+}
+.hb-btn {
+  display: flex; flex-direction: column; justify-content: center;
+  width: 100%; height: 100%; padding: 0.85rem 1.2rem;
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background 0.2s ease;
+}
+.hb-btn:hover { background: rgba(201,169,110,0.06); }
+.hb-label {
+  font-family: var(--font-body); font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin-bottom: 0.25rem;
+}
+.hb-val {
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 300;
+  color: #fff; display: flex; align-items: center; gap: 0.4rem;
+}
+.hb-val svg { width: 10px; height: 10px; stroke: var(--cocoon-gold); fill: none; stroke-width: 2.5; flex-shrink: 0; transition: transform 0.2s ease; }
+.hb-btn.open .hb-val svg { transform: rotate(180deg); }
+/* Dropdown — opens UPWARD */
+.hero-filter-menu {
+  position: absolute; bottom: calc(100% + 6px); left: 0;
+  background: #0E0E0C; border: 1px solid rgba(201,169,110,0.18);
+  min-width: 160px; z-index: 200; box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+  display: none;
+}
+.hero-filter-menu.open { display: block; }
+.hero-filter-menu button {
+  display: block; width: 100%; text-align: left;
+  padding: 0.65rem 1.1rem; background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 300;
+  color: var(--cocoon-text); transition: background 0.15s ease;
+  white-space: nowrap; border-bottom: 1px solid rgba(201,169,110,0.08);
+}
+.hero-filter-menu button:last-child { border-bottom: none; }
+.hero-filter-menu button:hover { background: rgba(201,169,110,0.08); color: #fff; }
+.hero-filter-menu button.selected { color: var(--cocoon-gold); font-weight: 400; }
+/* Search button col */
+.hb-search-btn {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  padding: 0 2rem; background: var(--cocoon-gold); border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.7rem; font-weight: 400;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #090908;
+  transition: background 0.3s ease; gap: 0.5rem; white-space: nowrap;
+}
+.hb-search-btn:hover { background: var(--cocoon-gold-deep); }
+.hb-search-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+/* Results count */
+.hb-results {
+  position: absolute; bottom: calc(100% + 6px); right: 0;
+  font-size: 0.68rem; color: var(--cocoon-gold); letter-spacing: 0.1em;
+  font-family: var(--font-body); white-space: nowrap; padding: 0.3rem 0;
+}
+/* Clear */
+.hero-clear {
+  position: absolute; top: -1.6rem; right: 0;
+  padding: 0; background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.62rem; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); transition: color 0.2s ease; display: none;
+}
+.hero-clear.visible { display: block; }
+.hero-clear:hover { color: var(--cocoon-gold); }
+/* Compat aliases */
+.hero-filter-dd { position: relative; }
+@media (max-width: 900px) {
+  .hero-bottom-inner { flex-wrap: wrap; }
+  .hb-col { flex: 0 0 50%; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  .hb-search { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  .hb-search-btn { flex: 0 0 100%; padding: 1rem; }
+  .hero-text { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .hb-col { flex: 0 0 50%; }
+  .hero h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
+}
+
+/* ========== STATS BAR ========== */
+.stats-bar {
+  background: var(--cocoon-surface); padding: 3rem 0;
+  border-top: 1px solid var(--cocoon-silk); border-bottom: 1px solid var(--cocoon-silk);
+  position: relative;
+}
+.stats-bar::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cocoon-gold), transparent);
+}
+.stats-inner { display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; }
+.stat-item { text-align: center; position: relative; }
+.stat-item:not(:last-child)::after {
+  content: ''; position: absolute; right: -2.5rem; top: 50%; transform: translateY(-50%);
+  width: 1px; height: 36px; background: var(--cocoon-silk);
+}
+.stat-number { font-family: var(--font-display); font-size: 2.8rem; font-weight: 300; color: var(--cocoon-gold-deep); letter-spacing: 0.05em; }
+.stat-label { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cocoon-text-soft); margin-top: 0.3rem; }
+
+/* ========== BRAND SECTION ========== */
+.brand-section { background: var(--cocoon-ivory); padding: 6rem 0; }
+.section-header { text-align: center; margin-bottom: 4rem; }
+.section-eyebrow { font-size: 0.63rem; font-weight: 400; letter-spacing: 0.5em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 0.8rem; }
+.section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.06em; }
+.section-line { width: 36px; height: 1px; background: var(--cocoon-gold); margin: 1.2rem auto 0; }
+.container { max-width: 1340px; margin: 0 auto; padding: 0 2.5rem; }
+.brand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; margin-top: 3rem; background: var(--cocoon-silk); }
+.brand-card {
+  text-align: center; padding: 2.5rem 2rem; background: var(--cocoon-surface);
+  transition: all 0.4s ease;
+}
+.brand-card:hover { background: var(--cocoon-white); transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.04); }
+.brand-icon { width: 44px; height: 44px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; }
+.brand-icon svg { width: 100%; height: 100%; }
+.brand-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; letter-spacing: 0.06em; color: var(--cocoon-dark); margin-bottom: 0.8rem; }
+.brand-card p { font-size: 0.84rem; font-weight: 300; color: var(--cocoon-text-soft); line-height: 1.8; }
+
+/* ========== PORTFOLIO ========== */
+.portfolio-section { padding: 6rem 0; }
+.line-legend { display: none; }
+.filter-bar { display: none; }
+.filter-dot { display: none; }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5px; background: var(--cocoon-silk); }
+
+/* ========== PROJECT CARD ========== */
+.project-card {
+  background: var(--cocoon-surface); border: none;
+  overflow: hidden; cursor: pointer; transition: all 0.45s ease;
+}
+.project-card:hover { background: var(--cocoon-white); box-shadow: 0 20px 60px rgba(0,0,0,0.07); transform: translateY(-5px); z-index: 2; position: relative; }
+.project-card.hide { display: none; }
+.card-image { position: relative; height: 220px; overflow: hidden; background: var(--cocoon-ivory); }
+.card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.project-card:hover .card-image img { transform: scale(1.04); }
+.card-image-placeholder {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.8rem;
+  background: var(--cocoon-ivory);
+}
+.card-image-placeholder svg { width: 40px; height: 40px; }
+.card-image-placeholder span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-champagne); }
+.card-line-badge {
+  position: absolute; top: 1rem; left: 1rem;
+  padding: 0.25rem 0.65rem; color: #fff;
+  font-size: 0.58rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.card-status {
+  position: absolute; top: 1rem; right: 1rem;
+  padding: 0.25rem 0.65rem; background: rgba(255,255,255,0.88);
+  color: var(--cocoon-text-soft); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid var(--cocoon-silk);
+}
+.card-status.offplan-tag { background: rgba(201,169,110,0.15); color: var(--cocoon-gold-deep); border-color: rgba(201,169,110,0.3); }
+.card-body { padding: 1.8rem; }
+.card-brand { font-size: 0.62rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 0.4rem; }
+.card-name { font-family: var(--font-display); font-size: 1.35rem; font-weight: 400; color: var(--cocoon-dark); letter-spacing: 0.04em; margin-bottom: 0.8rem; line-height: 1.2; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem; }
+.card-meta-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 300; color: var(--cocoon-text-soft); }
+.card-meta-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+.card-footer { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 1.2rem; border-top: 1px solid var(--cocoon-silk); }
+.card-price { display: flex; align-items: baseline; gap: 0.2rem; }
+.card-price-label { font-size: 0.58rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cocoon-text-soft); }
+.card-price-value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; color: var(--cocoon-dark); }
+.card-price-unit { font-size: 0.74rem; font-weight: 300; color: var(--cocoon-text-soft); }
+.card-size { font-size: 0.65rem; font-weight: 400; letter-spacing: 0.06em; color: var(--cocoon-text-soft); margin-bottom: 0.55rem; display: flex; align-items: center; gap: 0.3rem; }
+.card-movein { font-size: 0.58rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cocoon-text-soft); text-align: right; line-height: 1.4; }
+.card-movein strong { display: block; font-weight: 500; color: var(--cocoon-gold-deep); }
+
+/* ========== PROPERTY DETAIL ========== */
+.detail-page { padding-top: 80px; min-height: 100vh; }
+.detail-header { padding: 2rem 0; border-bottom: 1px solid var(--cocoon-silk); }
+.detail-back {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--cocoon-text-soft); text-decoration: none; cursor: pointer;
+  transition: color 0.3s ease; margin-bottom: 1rem; background: none; border: none;
+  font-family: var(--font-body);
+}
+.detail-back:hover { color: var(--cocoon-gold); }
+.detail-back svg { width: 14px; height: 14px; }
+.detail-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 3rem); font-weight: 300; letter-spacing: 0.08em; color: var(--cocoon-dark); }
+.detail-subtitle { font-size: 0.78rem; font-weight: 300; color: var(--cocoon-gold); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.3rem; }
+.detail-layout { display: grid; grid-template-columns: 1fr 360px; gap: 3rem; padding: 3rem 0; }
+.detail-gallery { position: relative; margin-bottom: 2rem; }
+.detail-gallery-main {
+  width: 100%; height: 420px; overflow: hidden; background: var(--cocoon-ivory);
+  display: flex; align-items: center; justify-content: center;
+}
+.detail-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+.detail-gallery-placeholder { text-align: center; }
+.detail-gallery-placeholder svg { width: 56px; height: 56px; stroke: var(--cocoon-champagne); fill: none; stroke-width: 1; margin-bottom: 1rem; }
+.detail-gallery-placeholder span { display: block; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-champagne); }
+.detail-section { background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); padding: 2.5rem; margin-bottom: 1.5rem; }
+.detail-section-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.06em; margin-bottom: 1.5rem; }
+.detail-desc { font-size: 0.88rem; font-weight: 300; color: var(--cocoon-text-soft); line-height: 1.95; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.detail-field-label { font-size: 0.58rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: var(--cocoon-champagne); margin-bottom: 0.4rem; }
+.detail-field-value { font-family: var(--font-display); font-size: 1.3rem; font-weight: 300; color: var(--cocoon-dark); }
+.detail-amenity-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.detail-amenity-tag {
+  padding: 0.3rem 0.85rem; border: 1px solid var(--cocoon-silk);
+  font-size: 0.68rem; font-weight: 300; letter-spacing: 0.08em;
+  color: var(--cocoon-text-soft); background: var(--cocoon-surface);
+}
+/* Sidebar */
+.detail-sidebar-card { background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); padding: 2rem; margin-bottom: 1.5rem; }
+.detail-sidebar-title { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cocoon-dark); margin-bottom: 1.2rem; }
+.detail-price-hero { font-family: var(--font-display); font-size: 2.8rem; font-weight: 300; color: var(--cocoon-gold-deep); letter-spacing: 0.04em; }
+.detail-price-unit { font-size: 1rem; font-weight: 300; color: var(--cocoon-text-soft); }
+.detail-cta-btn {
+  display: block; width: 100%; padding: 0.9rem; margin-top: 1.5rem;
+  background: var(--cocoon-gold); color: var(--cocoon-white); border: 1px solid var(--cocoon-gold);
+  font-family: var(--font-body); font-size: 0.7rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; text-align: center;
+  transition: all 0.4s ease; text-decoration: none;
+}
+.detail-cta-btn:hover { background: transparent; color: var(--cocoon-gold); }
+.train-line-chip {
+  display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 1rem;
+  border: 1px solid var(--cocoon-silk); margin-bottom: 0.5rem; background: var(--cocoon-surface);
+}
+.train-line-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.55rem; font-weight: 600; letter-spacing: 0.05em; flex-shrink: 0; }
+.train-line-name { font-size: 0.8rem; font-weight: 300; color: var(--cocoon-text); }
+.developer-logo { max-height: 48px; max-width: 140px; object-fit: contain; margin-bottom: 0.8rem; }
+.developer-name-text { font-size: 0.88rem; font-weight: 300; color: var(--cocoon-dark); }
+.developer-desc-text { font-size: 0.78rem; font-weight: 300; color: var(--cocoon-text-soft); line-height: 1.65; margin-top: 0.4rem; }
+.doc-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 0; border-bottom: 1px solid var(--cocoon-silk);
+  text-decoration: none; color: var(--cocoon-text); transition: color 0.3s ease;
+}
+.doc-item:last-child { border-bottom: none; }
+.doc-item:hover { color: var(--cocoon-gold); }
+.doc-item span { font-size: 0.82rem; font-weight: 300; }
+.doc-item svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+/* ========== CTA SECTION ========== */
+.cta-section { padding: 7rem 0; text-align: center; background: var(--cocoon-surface); border-top: 1px solid var(--cocoon-silk); border-bottom: 1px solid var(--cocoon-silk); }
+.cta-section h2 { font-family: var(--font-display); font-size: clamp(2rem,4vw,3.2rem); font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.06em; margin-bottom: 1rem; }
+.cta-section p { font-size: 0.92rem; font-weight: 300; color: var(--cocoon-text-soft); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.8; }
+.cta-btn { display: inline-block; padding: 1rem 3rem; background: var(--cocoon-gold); color: var(--cocoon-white); font-family: var(--font-body); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--cocoon-gold); transition: all 0.4s ease; cursor: pointer; }
+.cta-btn:hover { background: transparent; color: var(--cocoon-gold); }
+.contact-channels { display: flex; justify-content: center; gap: 1.5px; flex-wrap: wrap; margin-top: 1rem; background: var(--cocoon-silk); }
+.contact-channel {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.4rem 2.2rem; background: var(--cocoon-surface);
+  text-decoration: none; min-width: 220px; transition: all 0.35s ease; cursor: pointer;
+}
+.contact-channel:hover { background: var(--cocoon-white); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,0.06); }
+.contact-channel-icon {
+  width: 40px; height: 40px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.contact-channel-icon svg { width: 20px; height: 20px; }
+.contact-channel-info { text-align: left; }
+.contact-channel-label { font-size: 0.58rem; font-weight: 400; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cocoon-champagne); margin-bottom: 0.2rem; }
+.contact-channel-value { font-size: 0.86rem; font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.03em; }
+
+/* ========== FOOTER ========== */
+footer { padding: 4rem 0 2rem; border-top: 1px solid var(--cocoon-silk); background: var(--cocoon-surface); }
+.footer-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem; margin-bottom: 3rem; }
+.footer-brand p { font-size: 0.8rem; font-weight: 300; color: var(--cocoon-text-soft); margin-top: 0.8rem; max-width: 280px; line-height: 1.7; }
+.footer-links h4 { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cocoon-dark); margin-bottom: 1rem; }
+.footer-links a { display: block; font-size: 0.82rem; font-weight: 300; color: var(--cocoon-text-soft); text-decoration: none; margin-bottom: 0.5rem; transition: color 0.3s ease; cursor: pointer; }
+.footer-links a:hover { color: var(--cocoon-gold); }
+.footer-bottom { padding-top: 2rem; border-top: 1px solid var(--cocoon-silk); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-bottom p { font-size: 0.68rem; font-weight: 300; color: var(--cocoon-champagne); letter-spacing: 0.1em; }
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(44,36,23,0.5); z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  opacity: 0; animation: fadeIn 0.2s ease forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+.modal {
+  background: #0E0E0C; width: 100%; max-width: 640px; max-height: 90vh;
+  overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+}
+.modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--cocoon-silk); display: flex; justify-content: space-between; align-items: center; }
+.modal-title { font-size: 1.1rem; font-weight: 600; color: #E8E4DC; }
+.modal-close { background: none; border: none; cursor: pointer; color: #888880; font-size: 1.4rem; line-height: 1; padding: 0.2rem; transition: color 0.2s ease; }
+.modal-close:hover { color: #E8E4DC; }
+.modal-body { padding: 2rem; }
+.modal-footer { padding: 1rem 2rem; border-top: 1px solid var(--cocoon-silk); display: flex; gap: 0.75rem; justify-content: flex-end; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label { display: block; font-size: 0.8rem; font-weight: 500; color: #C8C4BC; margin-bottom: 0.4rem; }
+.form-input {
+  width: 100%; padding: 0.6rem 0.8rem; border: 1px solid #2A2824;
+  font-family: var(--font-body); font-size: 0.85rem; color: #E8E4DC;
+  outline: none; transition: border-color 0.2s ease; background: #090908;
+}
+.form-input:focus { border-color: var(--cocoon-gold); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888880' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--cocoon-text-soft); }
+.empty-state p { font-size: 0.9rem; }
+.badge-ready { display: inline-block; padding: 0.2rem 0.6rem; background: #d1fae5; color: #065f46; font-size: 0.7rem; font-weight: 500; border-radius: 2px; }
+.badge-offplan { display: inline-block; padding: 0.2rem 0.6rem; background: #fef3c7; color: #92400e; font-size: 0.7rem; font-weight: 500; border-radius: 2px; }
+.train-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 2px; color: #fff; font-size: 0.65rem; font-weight: 500; margin-right: 0.3rem; }
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 9000;
+  padding: 1rem 1.5rem; background: #1A1816; color: var(--cocoon-dark);
+  font-size: 0.85rem; font-weight: 300; letter-spacing: 0.05em;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-width: 360px;
+  animation: toastIn 0.3s ease;
+}
+.toast.success { border-left: 3px solid #4ade80; }
+.toast.error { border-left: 3px solid #f87171; }
+@keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+/* ========== BLOG ========== */
+.blog-page { min-height: 100vh; background: var(--cocoon-white); padding: 7rem 0 5rem; }
+.blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+@media (max-width: 900px) { .blog-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .blog-grid { grid-template-columns: 1fr; } }
+.blog-card {
+  background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk);
+  cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.blog-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+.blog-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #1a1a18; }
+.blog-card-cover-placeholder { width: 100%; aspect-ratio: 16/9; background: #1a1a18; display: flex; align-items: center; justify-content: center; }
+.blog-card-body { padding: 1.5rem; }
+.blog-card-date { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 0.6rem; }
+.blog-card-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.04em; line-height: 1.4; margin-bottom: 0.75rem; }
+.blog-card-excerpt { font-size: 0.83rem; color: var(--cocoon-text-soft); line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-empty { text-align: center; padding: 5rem 0; color: var(--cocoon-text-soft); }
+.blog-empty svg { width: 48px; height: 48px; stroke: var(--cocoon-silk); fill: none; margin-bottom: 1rem; }
+
+/* Blog post page */
+.blog-post-page { min-height: 100vh; background: var(--cocoon-white); padding-bottom: 5rem; }
+.blog-post-cover { width: 100%; height: 480px; object-fit: cover; display: block; }
+.blog-post-cover-placeholder { width: 100%; height: 320px; background: #1a1a18; }
+.blog-post-inner { max-width: 760px; margin: 0 auto; padding: 3rem 2rem 0; }
+.blog-post-back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cocoon-text-soft); cursor: pointer; margin-bottom: 2rem; background: none; border: none; padding: 0; transition: color 0.2s; }
+.blog-post-back:hover { color: var(--cocoon-gold); }
+.blog-post-date { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 1rem; }
+.blog-post-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; color: var(--cocoon-dark); letter-spacing: 0.04em; line-height: 1.2; margin-bottom: 2.5rem; }
+.blog-post-divider { width: 48px; height: 1px; background: var(--cocoon-gold); margin-bottom: 2.5rem; }
+.blog-post-body { font-size: 1rem; color: var(--cocoon-text-soft); line-height: 1.9; }
+.blog-post-body p { margin-bottom: 1.5rem; }
+
+/* Blog controls */
+.blog-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2.5rem; margin-bottom: -0.5rem; }
+.blog-search-wrap { position: relative; flex: 1; min-width: 200px; }
+.blog-search-wrap svg { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; stroke: var(--cocoon-text-soft); fill: none; stroke-width: 1.5; pointer-events: none; }
+.blog-search { width: 100%; background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); border-radius: 3px; padding: 0.6rem 0.9rem 0.6rem 2.4rem; font-family: var(--font-body); font-size: 0.82rem; color: var(--cocoon-dark); outline: none; transition: border-color 0.2s; }
+.blog-search::placeholder { color: var(--cocoon-text-soft); }
+.blog-search:focus { border-color: var(--cocoon-gold); }
+.blog-cat-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.blog-cat-tab { background: none; border: 1px solid var(--cocoon-silk); border-radius: 2px; padding: 0.4rem 0.9rem; font-family: var(--font-body); font-size: 0.68rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cocoon-text-soft); cursor: pointer; transition: all 0.2s; }
+.blog-cat-tab:hover { border-color: var(--cocoon-gold); color: var(--cocoon-gold); }
+.blog-cat-tab.active { background: var(--cocoon-gold); border-color: var(--cocoon-gold); color: #090908; }
+
+/* Blog card meta */
+.blog-card-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+.blog-card-cat { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; background: rgba(201,169,110,0.12); color: var(--cocoon-gold); border-radius: 2px; padding: 0.2rem 0.5rem; }
+.blog-card-read-time { font-size: 0.65rem; letter-spacing: 0.08em; color: var(--cocoon-text-soft); }
+
+/* Blog post meta row */
+.blog-post-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+.blog-post-cat { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(201,169,110,0.12); color: var(--cocoon-gold); border-radius: 2px; padding: 0.25rem 0.6rem; }
+.blog-post-read-time { font-size: 0.68rem; letter-spacing: 0.08em; color: var(--cocoon-text-soft); }
+
+/* Share buttons */
+.blog-share { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--cocoon-silk); }
+.blog-share-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-text-soft); margin-bottom: 0.8rem; }
+.blog-share-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.blog-share-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; border-radius: 3px; font-family: var(--font-body); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border: 1px solid var(--cocoon-silk); background: var(--cocoon-surface); color: var(--cocoon-text-soft); transition: all 0.2s; text-decoration: none; }
+.blog-share-btn:hover { border-color: var(--cocoon-gold); color: var(--cocoon-gold); }
+.blog-share-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+.blog-share-btn.facebook:hover { border-color: #1877F2; color: #1877F2; }
+.blog-share-btn.whatsapp:hover { border-color: #25D366; color: #25D366; }
+.blog-share-btn.line:hover { border-color: #06C755; color: #06C755; }
+
+/* Related posts */
+.blog-related { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--cocoon-silk); }
+.blog-related-title { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-text-soft); margin-bottom: 1.5rem; }
+.blog-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+@media (max-width: 700px) { .blog-related-grid { grid-template-columns: 1fr; } }
+.blog-related-card { background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); border-radius: 4px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+.blog-related-card:hover { border-color: var(--cocoon-gold); }
+.blog-related-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--cocoon-white); display: block; }
+.blog-related-cover-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--cocoon-white); }
+.blog-related-body { padding: 0.8rem 1rem; }
+.blog-related-date { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 0.3rem; }
+.blog-related-title-text { font-family: var(--font-display); font-size: 0.95rem; color: var(--cocoon-dark); line-height: 1.4; }
+
+/* Prev/Next */
+.blog-post-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--cocoon-silk); margin-bottom: 4rem; }
+.blog-post-nav-item { background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); border-radius: 4px; padding: 1.2rem 1.4rem; cursor: pointer; transition: border-color 0.2s; }
+.blog-post-nav-item:hover { border-color: var(--cocoon-gold); }
+.blog-post-nav-item.next { text-align: right; }
+.blog-post-nav-dir { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cocoon-text-soft); margin-bottom: 0.4rem; }
+.blog-post-nav-title { font-family: var(--font-display); font-size: 1rem; color: var(--cocoon-dark); line-height: 1.3; }
+.blog-post-nav-empty { /* placeholder to keep grid layout */ }
+
+/* ========== IMAGE GALLERY ========== */
+.detail-gallery-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-bottom: 2rem;
+}
+.detail-gallery-thumb {
+  position: relative; overflow: hidden; cursor: pointer;
+  background: var(--cocoon-ivory); height: 220px;
+}
+.detail-gallery-thumb:first-child:last-child {
+  grid-column: 1 / -1; height: 420px;
+}
+.detail-gallery-thumb:first-child:nth-last-child(odd):not(:last-child) {
+  grid-column: 1 / -1; height: 320px;
+}
+.detail-gallery-thumb img {
+  width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; display: block;
+}
+.detail-gallery-thumb:hover img { transform: scale(1.05); }
+.detail-gallery-thumb-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s ease;
+}
+.detail-gallery-thumb:hover .detail-gallery-thumb-overlay { background: rgba(0,0,0,0.35); }
+.detail-gallery-thumb-overlay svg {
+  opacity: 0; transition: opacity 0.3s ease;
+  width: 36px; height: 36px; stroke: #fff; fill: none; stroke-width: 1.2;
+}
+.detail-gallery-thumb:hover .detail-gallery-thumb-overlay svg { opacity: 1; }
+.gallery-placeholder {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.8rem;
+}
+.gallery-placeholder svg { width: 40px; height: 40px; }
+.gallery-placeholder span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cocoon-champagne); }
+
+
+/* ========== PROPERTY COMPARISON ========== */
+.card-compare-btn {
+  position: absolute; bottom: 0.75rem; right: 0.75rem; z-index: 3;
+  background: rgba(9,9,8,0.92); border: 1px solid rgba(201,169,110,0.35);
+  color: var(--cocoon-champagne); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.3rem 0.65rem; cursor: pointer; font-family: var(--font-body);
+  transition: all 0.2s ease;
+}
+.card-compare-btn:hover { background: rgba(179,155,109,0.2); border-color: var(--cocoon-gold); color: var(--cocoon-gold); }
+.card-compare-btn.active { background: var(--cocoon-gold); color: #090908; border-color: var(--cocoon-gold); }
+
+.compare-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+  background: #0E0E0C; border-top: 2px solid var(--cocoon-gold);
+  padding: 0.9rem 2.5rem; display: flex; align-items: center; gap: 2rem;
+  transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.compare-bar.visible { transform: translateY(0); }
+.compare-bar-slots { display: flex; gap: 0.75rem; flex: 1; align-items: center; }
+.compare-bar-slot {
+  width: 54px; height: 40px; border: 1px dashed rgba(212,197,169,0.25);
+  position: relative; overflow: hidden; flex-shrink: 0; background: #E8E0D0;
+}
+.compare-bar-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.compare-bar-slot-empty { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: rgba(212,197,169,0.25); letter-spacing: 0.1em; }
+.compare-bar-slot-x {
+  position: absolute; top: 1px; right: 2px; background: rgba(0,0,0,0.75); border: none;
+  color: #fff; width: 14px; height: 14px; font-size: 0.65rem; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center; padding: 0;
+}
+.compare-bar-label { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cocoon-champagne); white-space: nowrap; }
+.compare-go-btn {
+  padding: 0.6rem 1.6rem; background: var(--cocoon-gold); color: #090908; border: none;
+  font-family: var(--font-body); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.2s; white-space: nowrap;
+}
+.compare-go-btn:hover { background: var(--cocoon-gold-deep); }
+.compare-go-btn:disabled { opacity: 0.4; cursor: default; }
+.compare-clear-btn { background: none; border: none; color: var(--cocoon-text-soft); font-size: 0.65rem; cursor: pointer; font-family: var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem; transition: color 0.2s; }
+.compare-clear-btn:hover { color: var(--cocoon-dark); }
+
+/* Compare Page */
+.compare-page { min-height: 100vh; background: var(--cocoon-white); padding: 7rem 0 5rem; }
+.compare-cols { display: grid; gap: 1.5rem; margin-top: 2rem; }
+.compare-col { background: var(--cocoon-surface); border: 1px solid var(--cocoon-silk); }
+.compare-col-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #1a1a18; }
+.compare-col-img-ph { width: 100%; height: 180px; background: #1a1a18; display: flex; align-items: center; justify-content: center; color: var(--cocoon-champagne); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; }
+.compare-col-body { padding: 1.5rem; }
+.compare-col-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 300; color: var(--cocoon-dark); margin-bottom: 0.3rem; letter-spacing: 0.04em; cursor: pointer; transition: color 0.2s; }
+.compare-col-name:hover { color: var(--cocoon-gold); }
+.compare-col-dev { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 1.2rem; }
+.compare-row { display: flex; flex-direction: column; padding: 0.75rem 1.5rem; border-top: 1px solid var(--cocoon-silk); }
+.compare-row-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cocoon-champagne); margin-bottom: 0.25rem; }
+.compare-row-val { font-size: 0.9rem; color: var(--cocoon-dark); font-weight: 400; }
+.compare-row-val.price { font-family: var(--font-display); font-size: 1.3rem; color: var(--cocoon-gold-deep); font-weight: 300; }
+.compare-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
+.compare-tag { font-size: 0.65rem; padding: 0.2rem 0.5rem; background: rgba(212,197,169,0.08); border: 1px solid var(--cocoon-silk); color: var(--cocoon-text-soft); }
+
+/* ========== LIGHTBOX ========== */
+.lightbox {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.96);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+.lightbox-img {
+  max-width: 88vw; max-height: 88vh; object-fit: contain;
+  box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+.lightbox-close {
+  position: fixed; top: 1.5rem; right: 2rem;
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.7); font-size: 2rem; line-height: 1;
+  transition: color 0.2s ease; font-family: var(--font-body);
+}
+.lightbox-close:hover { color: #fff; }
+.lightbox-nav {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer; color: #fff; padding: 1rem 0.75rem;
+  transition: background 0.2s ease; line-height: 0;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.18); }
+.lightbox-nav.prev { left: 1.5rem; }
+.lightbox-nav.next { right: 1.5rem; }
+.lightbox-nav svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
+.lightbox-counter {
+  position: fixed; bottom: 1.8rem; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.4); font-size: 0.7rem; letter-spacing: 0.25em;
+  font-family: var(--font-body);
+}
+.lightbox-gold-line {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cocoon-gold), transparent);
+}
+
+/* ========== FLOATING WHATSAPP ========== */
+.fab-whatsapp {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #25D366; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+}
+.fab-whatsapp:hover { transform: scale(1.12); box-shadow: 0 6px 28px rgba(37,211,102,0.5); }
+.fab-whatsapp svg { width: 26px; height: 26px; fill: #fff; }
+.fab-whatsapp-tooltip {
+  position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+  background: var(--cocoon-surface); color: var(--cocoon-text);
+  font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.08em;
+  white-space: nowrap; padding: 0.4rem 0.8rem; border: 1px solid var(--cocoon-silk);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+}
+.fab-whatsapp:hover .fab-whatsapp-tooltip { opacity: 1; }
+
+/* ========== ANIMATIONS ========== */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .detail-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  nav { display: none; }
+  .hamburger { display: block; }
+  .mobile-nav { display: flex; }
+  .mobile-nav-overlay { display: block; }
+  .brand-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+  .stats-inner { gap: 2.5rem; }
+  .footer-inner { flex-direction: column; }
+}
+@media (max-width: 600px) {
+  .projects-grid { grid-template-columns: 1fr; }
+  .filter-bar { gap: 0.4rem; }
+  .filter-btn { padding: 0.45rem 0.8rem; font-size: 0.65rem; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  /* Detail page */
+  .detail-section { padding: 1.2rem; }
+  .detail-sidebar-card { padding: 1.2rem; }
+  .detail-gallery-main { height: 220px; }
+  .detail-gallery-thumb { height: 160px; }
+  /* Blog post cover */
+  .blog-post-cover { height: 220px; }
+  .blog-post-cover-placeholder { height: 160px; }
+  .blog-post-inner { padding: 1.5rem 1rem 0; }
+  /* Blog prev/next nav */
+  .blog-post-nav { grid-template-columns: 1fr; }
+  /* Blog search */
+  .blog-search-wrap { min-width: 0; }
+  .blog-controls { gap: 0.75rem; }
+  /* Compare columns — stack on mobile */
+  .compare-cols { grid-template-columns: 1fr !important; }
+  /* Compare bar */
+  .compare-bar { padding: 0.6rem 1rem; gap: 0.6rem; }
+  .compare-bar-label { display: none; }
+  /* Modal */
+  .modal { max-height: 95vh; }
+  /* Filter dropdown — prevent overflow */
+  .hero-filter-menu { min-width: 140px; max-width: 80vw; }
+}
+@media (max-width: 480px) {
+  /* Filter bar — full width per item on very small screens */
+  .hb-col { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  /* Hero padding */
+  .hero-content { padding-top: 60px; padding-bottom: 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-brand">
+    <h1>Cocoon</h1>
+    <p>Property Thailand</p>
+  </div>
+  <div class="loader-line"></div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="header-inner">
+    <a class="logo" onclick="navigate('home')" style="cursor:pointer">
+      <span class="logo-main">Cocoon</span>
+      <span class="logo-sub">Property Thailand</span>
+    </a>
+    <nav>
+      <a href="#portfolio" onclick="navigate('home'); scrollToEl('#portfolio')" style="cursor:pointer">Portfolio</a>
+      <a onclick="navigate('blog')" style="cursor:pointer">Blog</a>
+      <a href="#contact" onclick="navigate('home'); scrollToEl('#contact')" style="cursor:pointer">Contact</a>
+    </nav>
+    <button class="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- MOBILE NAV OVERLAY -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
+
+<!-- MOBILE NAV DRAWER -->
+<nav class="mobile-nav" id="mobileNav">
+  <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#portfolio')">Portfolio</a>
+  <a onclick="closeMobileNav(); navigate('blog')">Blog</a>
+  <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#contact')">Contact</a>
+
+</nav>
+
+<!-- ======================== HOME PAGE ======================== -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- Slideshow backgrounds — 3 luxury property images -->
+    <div class="hero-slides">
+      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80');background-position:center 40%"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');background-position:center 55%"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80');background-position:center 50%"></div>
+    </div>
+
+    <!-- Gradient overlay -->
+    <div class="hero-bg"></div>
+
+    <!-- Gold thread accent lines -->
+    <svg class="hero-threads" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="#C9A96E" stroke-width="0.8" fill="none">
+        <line x1="0" y1="200" x2="480" y2="450"/>
+        <line x1="480" y1="450" x2="1440" y2="180"/>
+        <line x1="0" y1="700" x2="350" y2="520"/>
+        <line x1="350" y1="520" x2="860" y2="640"/>
+        <line x1="860" y1="640" x2="1440" y2="380"/>
+      </g>
+      <g fill="#C9A96E" opacity="0.6">
+        <circle cx="480" cy="450" r="2.5"/>
+        <circle cx="350" cy="520" r="2.5"/>
+        <circle cx="860" cy="640" r="2.5"/>
+      </g>
+    </svg>
+
+    <!-- Left-aligned text content -->
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="hero-eyebrow">Curated Condominium Portfolio · Thailand</p>
+        <h1>Your second<br>home <em>awaits.</em></h1>
+        <div class="hero-divider"></div>
+        <p class="hero-desc">A handpicked collection of premium condominiums along Bangkok's BTS &amp; MRT transit lines — selected for location, value, and lifestyle.</p>
+        <div class="hero-dots" id="heroDots">
+          <button class="hero-dot active" onclick="goToSlide(0)"></button>
+          <button class="hero-dot" onclick="goToSlide(1)"></button>
+          <button class="hero-dot" onclick="goToSlide(2)"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom search/filter bar -->
+    <div class="hero-bottom-bar">
+      <div class="hero-bottom-inner">
+
+        <!-- Keyword search -->
+        <div class="hb-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="heroSearch" placeholder="Search by name, area or keyword…" oninput="applyFilters()">
+          <button class="hero-clear" id="clearBtn" onclick="clearFilters()">✕ Clear</button>
+        </div>
+
+        <!-- City -->
+        <div class="hb-col hero-filter-dd" id="dd-city">
+          <button class="hb-btn" onclick="toggleDD('city')" id="btn-city">
+            <span class="hb-label">City</span>
+            <span class="hb-val"><span id="val-city">All Cities</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-city">
+            <button onclick="setFilter('city','all','All Cities')" class="selected">All Cities</button>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="hb-col hero-filter-dd" id="dd-price">
+          <button class="hb-btn" onclick="toggleDD('price')" id="btn-price">
+            <span class="hb-label">Price (MB)</span>
+            <span class="hb-val"><span id="val-price">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-price">
+            <button onclick="setFilter('price','any','Any')" class="selected">Any Price</button>
+            <button onclick="setFilter('price','0-2','0–2 MB')">0 – 2 MB</button>
+            <button onclick="setFilter('price','2-5','2–5 MB')">2 – 5 MB</button>
+            <button onclick="setFilter('price','5-10','5–10 MB')">5 – 10 MB</button>
+            <button onclick="setFilter('price','10+','10+ MB')">10+ MB</button>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="hb-col hero-filter-dd" id="dd-status">
+          <button class="hb-btn" onclick="toggleDD('status')" id="btn-status">
+            <span class="hb-label">Status</span>
+            <span class="hb-val"><span id="val-status">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-status">
+            <button onclick="setFilter('status','any','Any')" class="selected">Any Status</button>
+            <button onclick="setFilter('status','ready','Ready to Move')">Ready to Move</button>
+            <button onclick="setFilter('status','offplan','Off-Plan')">Off-Plan</button>
+          </div>
+        </div>
+
+        <!-- Train Line -->
+        <div class="hb-col hero-filter-dd" id="dd-line">
+          <button class="hb-btn" onclick="toggleDD('line')" id="btn-line">
+            <span class="hb-label">Train Line</span>
+            <span class="hb-val"><span id="val-line">All Lines</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-line">
+            <button onclick="setFilter('line','all','All Lines')" class="selected">All Lines</button>
+          </div>
+        </div>
+
+        <!-- Developer -->
+        <div class="hb-col hero-filter-dd" id="dd-dev">
+          <button class="hb-btn" onclick="toggleDD('dev')" id="btn-dev">
+            <span class="hb-label">Developer</span>
+            <span class="hb-val"><span id="val-dev">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-dev">
+            <button onclick="setFilter('dev','all','All')" class="selected">All Developers</button>
+          </div>
+        </div>
+
+        <!-- Sort -->
+        <div class="hb-col hero-filter-dd" id="dd-type">
+          <button class="hb-btn" onclick="toggleDD('type')" id="btn-type">
+            <span class="hb-label">TYPE</span>
+            <span class="hb-val"><span id="val-type">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </button>
+          <div class="hero-filter-menu" id="menu-type">
+            <button onclick="setFilter('type','all','All')" class="selected">All Types</button>
+            <button onclick="setFilter('type','low-rise','Low Rise')">Low Rise (≤8 floors)</button>
+            <button onclick="setFilter('type','high-rise','High Rise')">High Rise (25+ floors)</button>
+          </div>
+        </div>
+
+        <!-- Search CTA -->
+        <button class="hb-search-btn" onclick="scrollToEl('#portfolio')">
+          View Properties
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+      </div>
+      <div class="hb-results" id="heroResults"></div>
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-number" id="statProjects">0</div><div class="stat-label">Projects</div></div>
+      <div class="stat-item"><div class="stat-number" id="statLines">0</div><div class="stat-label">Train Lines</div></div>
+      <div class="stat-item"><div class="stat-number" id="statDevelopers">0</div><div class="stat-label">Developers</div></div>
+      <div class="stat-item"><div class="stat-number" id="statRange">—</div><div class="stat-label">MB. Price Range</div></div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio" class="portfolio-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Portfolio</p>
+        <h2 class="section-title">Our Property Collection</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <h2 class="reveal">Interested in a Project?</h2>
+      <p class="reveal">Get in touch for unit availability, floor plans, and exclusive offers for overseas buyers.</p>
+      <div class="contact-channels reveal" id="contactChannels"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="logo" onclick="navigate('home')" style="cursor:pointer">
+            <span class="logo-main" style="font-size:1.2rem">Cocoon</span>
+            <span class="logo-sub">Property Thailand</span>
+          </a>
+          <p>A curated collection of premium condominiums along Bangkok's BTS &amp; MRT transit lines.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <a onclick="scrollToEl('#portfolio')" style="cursor:pointer">Portfolio</a>
+          <a onclick="navigate('blog')" style="cursor:pointer">Blog</a>
+          <a onclick="scrollToEl('#contact')" style="cursor:pointer">Contact</a>
+        </div>
+        <div class="footer-links">
+          <h4>Train Lines</h4>
+          <div id="footerLinesContainer"></div>
+        </div>
+        <div class="footer-links">
+          <h4>Contact</h4>
+          <div id="footerContact"></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Cocoon Property Thailand. All rights reserved.</p>
+        <p>Curated with care.</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ======================== PROPERTY DETAIL PAGE ======================== -->
+<div class="page" id="page-detail">
+  <div class="detail-page">
+    <div class="container">
+      <div class="detail-header">
+        <button class="detail-back" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Properties
+        </button>
+        <h1 class="detail-title" id="detailTitle"></h1>
+        <p class="detail-subtitle" id="detailSubtitle"></p>
+      </div>
+      <div class="detail-layout">
+        <div>
+          <div class="detail-gallery-grid" id="detailGallery"></div>
+          <div class="detail-section">
+            <h2 class="detail-section-title">About This Project</h2>
+            <p class="detail-desc" id="detailDescription"></p>
+          </div>
+          <div class="detail-section" id="detailMapSection" style="display:none">
+            <h2 class="detail-section-title">Location</h2>
+            <div id="detailMap"></div>
+          </div>
+          <div class="detail-section">
+            <h2 class="detail-section-title">Property Details</h2>
+            <div class="detail-grid" id="detailGrid"></div>
+            <div id="detailAmenities"></div>
+          </div>
+        </div>
+        <div>
+          <div class="detail-sidebar-card" id="detailPriceCard"></div>
+          <div class="detail-sidebar-card" id="detailDeveloper"></div>
+          <div class="detail-sidebar-card" id="detailTrainLines"></div>
+          <div class="detail-sidebar-card" id="detailDocuments" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE BAR -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-label">Compare</div>
+  <div class="compare-bar-slots" id="compareBarSlots"></div>
+  <button class="compare-go-btn" id="compareGoBtn" onclick="navigate('compare')" disabled>Compare Now</button>
+  <button class="compare-clear-btn" onclick="clearCompare()">Clear</button>
+</div>
+
+<!-- COMPARE PAGE -->
+<div class="page" id="page-compare">
+  <div class="compare-page">
+    <div class="container">
+      <button class="detail-back" onclick="navigate('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Properties
+      </button>
+      <p class="section-eyebrow" style="margin-top:2rem">Side by Side</p>
+      <h2 class="section-title">Property Comparison</h2>
+      <div id="compareCols"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin moved to admin/index.html -->
+
+<!-- ======================== BLOG LISTING PAGE ======================== -->
+<div class="page" id="page-blog">
+  <div class="blog-page">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Knowledge &amp; Insights</p>
+        <h2 class="section-title">The Cocoon Blog</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="blog-controls">
+        <div class="blog-search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="blog-search" id="blogSearchInput" placeholder="Search posts…" oninput="blogSearch=this.value;renderBlog()">
+        </div>
+        <div class="blog-cat-tabs" id="blogCatTabs"></div>
+      </div>
+      <div class="blog-grid" id="blogGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== BLOG POST PAGE ======================== -->
+<div class="page" id="page-blog-post">
+  <div class="blog-post-page">
+    <div id="blogPostCoverWrap"></div>
+    <div class="blog-post-inner">
+      <button class="blog-post-back" onclick="navigate('blog')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Blog
+      </button>
+      <div class="blog-post-meta">
+        <span class="blog-post-cat" id="blogPostCat" style="display:none"></span>
+        <span class="blog-post-read-time" id="blogPostReadTime"></span>
+      </div>
+      <div class="blog-post-date" id="blogPostDate"></div>
+      <h1 class="blog-post-title" id="blogPostTitle"></h1>
+      <div class="blog-post-divider"></div>
+      <div class="blog-post-body" id="blogPostBody"></div>
+      <div id="blogPostShare"></div>
+      <div id="blogPostRelated"></div>
+      <div id="blogPostNav"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal container -->
+<div id="modalContainer"></div>
+
+<!-- Floating WhatsApp Button -->
+<a class="fab-whatsapp" id="fabWhatsapp" href="https://wa.me/66800000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <span class="fab-whatsapp-tooltip">Chat on WhatsApp</span>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+// ======================== SUPABASE CONFIG ========================
+// Replace these two values after creating your Supabase project
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+let _supabase = null;
+try {
+  if (typeof supabase !== 'undefined' && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  }
+} catch(e) {}
+
+// ======================== GOOGLE MAPS URL PARSER ========================
+function parseGoogleMapsUrl(url) {
+  if (!url) return {};
+  // Format: /place/Name/@lat,lng,zoom  OR  ?q=lat,lng  OR  @lat,lng
+  let m = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+  m = url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+  return {};
+}
+
+// ======================== PROPERTY COORDINATES (seed — admin can override per property) ========================
+const PROPERTY_COORDS = {
+  1:  { lat: 13.7067, lng: 100.5994 }, // Good Day Sukhumvit 93 — BTS Bang Chak
+  2:  { lat: 13.7156, lng: 100.5804 }, // Aspire Sukhumvit–Rama 4 — BTS Phra Khanong
+  3:  { lat: 13.7625, lng: 100.5373 }, // Aspire Vibha–Victory — BTS Victory Monument
+  4:  { lat: 13.7191, lng: 100.4757 }, // Life Sathorn Sierra — BTS Talat Phlu
+  5:  { lat: 13.7020, lng: 100.5999 }, // Aspire Onnut Station — BTS On Nut
+  6:  { lat: 13.8140, lng: 100.5590 }, // Life Phahon–Ladprao — Ha Yaek Lat Phrao BTS
+  7:  { lat: 13.7511, lng: 100.5316 }, // The Address Siam–Ratchathewi — BTS Ratchathewi
+  8:  { lat: 13.7346, lng: 100.4829 }, // Aspire Itsaraphap Station — MRT Itsaraphap
+  9:  { lat: 13.7222, lng: 100.5538 }, // Life Rama 4–Asoke — MRT Queen Sirikit
+  10: { lat: 13.6975, lng: 100.5984 }, // Aspire Sukhumvit 103 — BTS Udomsuk
+  11: { lat: 13.6965, lng: 100.5981 }, // Life Udomsuk Station — BTS Udomsuk
+  12: { lat: 13.7220, lng: 100.5089 }, // Life Charoennakhon–Sathorn — BTS Krung Thon Buri
+  13: { lat: 13.7218, lng: 100.5247 }, // Life Sathorn–Narathiwas 22 — BTS Chong Nonsi
+  14: { lat: 13.7782, lng: 100.5742 }, // Aspire Huai Khwang — MRT Huai Khwang
+  15: { lat: 13.7564, lng: 100.5580 }, // Life Ratchada–Rama 9 — MRT Phra Ram 9
+  16: { lat: 13.7012, lng: 100.5905 }, // COZI ONNUT 46 — BTS On Nut / Srinakarin
+  17: { lat: 13.7192, lng: 100.6329 }, // Supalai Sense Srinakarin — MRT Yellow Line
+  18: { lat: 13.6480, lng: 100.6011 }, // Supalai Veranda Sukhumvit 117 — BTS extension
+  19: { lat: 13.6724, lng: 100.6070 }, // Supalai City Resort Sukhumvit 107 — BTS Bearing
+  20: { lat: 13.7468, lng: 100.6271 }, // Supalai Parc Ekkamai–Pattanakarn — ARL Ramkhamhaeng
+  21: { lat: 13.7485, lng: 100.6183 }, // Supalai Veranda Ramkhamhaeng — MRT Orange Line
+  22: { lat: 13.7174, lng: 100.5874 }, // The Nest Sukhumvit 71 — BTS Phra Khanong
+  23: { lat: 13.7658, lng: 100.5254 }, // Supalai Premier Samsen–Ratchawat — BTS Victory Monument
+};
+
+// ======================== DATA STORE ========================
+const DB = {
+  properties: [
+    { id:1, name:"Good Day Sukhumvit 93", developerId:1, description:"A modern condominium nestled in the heart of Sukhumvit, offering contemporary living with premium amenities and excellent connectivity to the BTS network.", startingPrice:1.9, location:"Bang Chak, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/GKYTSAHZWbJhmolAhXmAbZD6Nfg/2850x1515/project/156831/screenshot-20241118102318.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[{id:1,name:"Good Day Project",documentUrl:"https://drive.google.com/file/d/1EoJsqYRbH_GSM52eJnq3XwpO9PqB6llm/view?usp=drive_link"}], status:"ready", moveIn:"", type:"ready" },
+    { id:2, name:"Aspire Sukhumvit–Rama 4", developerId:2, description:"Strategically located at the intersection of Sukhumvit and Rama 4, this development offers unmatched accessibility and urban lifestyle.", startingPrice:3.1, location:"Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/LNwxU7HaN_IkML-OQQPPqg5X5Ts/2850x1515/project/114198/01-aspire-skv-4-overall-day.jpg", amenities:JSON.stringify(["Rooftop Pool","Sky Lounge","Fitness Center","Retail Shops","EV Charging"]), trainLineIds:[1], documents:[{id:1,name:"Brochure",documentUrl:"#"},{id:2,name:"Floor Plan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
+    { id:3, name:"Aspire Vibha–Victory", developerId:2, description:"Centrally located near Victory Monument, this high-rise development blends connectivity with upscale design.", startingPrice:3.35, location:"Victory Monument", imageUrl:"https://cdn.fazwaz.com/nw/dS5C5_O89M6lqLxFNpYiloJYJmg/2850x1515/project/157716/overall-building-final-hires.jpg", amenities:JSON.stringify(["Infinity Pool","Gym","Meeting Rooms","Garden Terrace"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:4, name:"Life Sathorn Sierra", developerId:3, description:"Premium living along the BTS Silom line, offering serene surroundings while remaining connected to Bangkok's business districts.", startingPrice:3.69, location:"Talat Phlu, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/2Gs3mwPoKH87ySssuOP_9ttsKQM/2850x1515/project/39245/01-life-sathorn-sierra-welcome-foyer-17.jpg", amenities:JSON.stringify(["Pool","Gym","Kids Club","Library","Shuttle Service"]), trainLineIds:[2], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:5, name:"Aspire Onnut Station", developerId:2, description:"Walk directly to Onnut BTS station from this thoughtfully designed residence, perfect for the urban professional.", startingPrice:4.29, location:"Onnut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/fmUvlgcZqe1_Sh0Y2bj_WY7jdAU/2850x1515/project/117774/e-brochure-aspireonnut-221114-page-0003.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Sky Garden","Smart Home System"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:6, name:"Life Phahon–Ladprao", developerId:3, description:"At the Ha Yaek Lat Phrao interchange, offering direct access to multiple BTS and MRT lines.", startingPrice:4.39, location:"Ha Yaek Lat Phrao", imageUrl:"https://cdn.fazwaz.com/nw/d8FGb0GTq5rCeluSMqM6ROLCK-Y/2850x1515/project/133148/hny01388.jpg", amenities:JSON.stringify(["Grand Lobby","Pool","Gym","Co-Working","Concierge"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:7, name:"The Address Siam–Ratchathewi", developerId:4, description:"Prestigious address in the heart of Bangkok, steps from major shopping centers and entertainment hubs.", startingPrice:7.99, location:"Ratchathewi", imageUrl:"https://cdn.fazwaz.com/nw/A-X6LOm6zwFZMzsvgBXxIjfjuP0/790x400/project/39086/the-address-siam-ratchathewi-1.jpeg", amenities:JSON.stringify(["Lap Pool","Premium Gym","Wine Cellar","Private Theater","Concierge 24/7"]), trainLineIds:[1], documents:[{id:3,name:"Masterplan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
+    { id:8, name:"Aspire Itsaraphap Station", developerId:2, description:"Quality living on the MRT Blue Line, connecting you seamlessly across Bangkok's key districts.", startingPrice:3.29, location:"Itsaraphap, Thonburi", imageUrl:"https://cdn.fazwaz.com/nw/o6zlXbiBaGQLZ0wNZ6whxzuh_M4/0x0/project/155521/240830-drop-off-view-final4-op2.jpg", amenities:JSON.stringify(["Pool","Gym","Garden","24h Security"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:9, name:"Life Rama 4–Asoke", developerId:3, description:"Dual access to MRT Blue Line and expressway makes this one of Bangkok's best-connected luxury addresses.", startingPrice:4.49, location:"Queen Sirikit, Rama 4", imageUrl:"https://cdn.fazwaz.com/nw/ufnV9ajwd_FovNQSJ8LCDam_h74/2850x1515/project/109058/210916-lrm4-heroshot-final-003-large.jpg", amenities:JSON.stringify(["Infinity Pool","Sky Deck","Gym","Smart Locks","EV Parking"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
+    { id:10, name:"Aspire Sukhumvit 103", developerId:2, description:"Off-plan opportunity in the fast-developing Udomsuk corridor, with strong rental demand from expats and professionals.", startingPrice:3.0, location:"Udomsuk, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/_Bd-GeJf_LOM7zGww74jE6CuWDQ/2850x1515/project/168186/screenshot-2025-11-06-114254.jpg", amenities:JSON.stringify(["Pool","Gym","Co-Working","Retail"]), trainLineIds:[1], documents:[{id:4,name:"E-Brochure",documentUrl:"#"},{id:5,name:"Payment Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
+    { id:11, name:"Life Udomsuk Station", developerId:3, description:"A landmark off-plan development at Udomsuk BTS, designed for modern Bangkok living at accessible price points.", startingPrice:3.89, location:"Udomsuk", imageUrl:"https://cdn.fazwaz.com/nw/v9sqx_IPcilNCsVh2_tPfPqdW_g/790x400/project/165402/overall-view-final-hires_1.jpg", amenities:JSON.stringify(["Rooftop Pool","Fitness","Co-Working","Smart Home"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
+    { id:12, name:"Life Charoennakhon–Sathorn", developerId:3, description:"Riverside district living meets Silom business access — a rare combination in one of Bangkok's most desirable neighborhoods.", startingPrice:3.89, location:"Krungthonburi, Charoen Nakhon", imageUrl:"https://cdn.fazwaz.com/nw/oV3J6GuVZ6MmxcnImTdOGMuKIU8/0x0/project/153371/heroshot-final-1920x1354.jpg", amenities:JSON.stringify(["River View Pool","Gym","Sky Bar","Shuttle to BTS"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
+    { id:13, name:"Life Sathorn–Narathiwas 22", developerId:3, description:"Prime Sathorn location, one of Bangkok's most prestigious business corridors, ideal for investment and self-use.", startingPrice:3.89, location:"Chong Nonsi, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/46PhvBpu3Tgucn9Ef-tlVmO6Sog/2850x1515/project/161328/e-brochure-a4-life-sathorn-nara22-compressed-02.jpg", amenities:JSON.stringify(["Pool","Gym","Meeting Rooms","EV Charging","Concierge"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
+    { id:14, name:"Aspire Huai Khwang", developerId:2, description:"Emerging MRT Blue Line location with strong growth fundamentals and a vibrant local community feel.", startingPrice:3.69, location:"Huai Khwang", imageUrl:"https://cdn.fazwaz.com/nw/_NxtURY0NO_Vef40eSX2zXoanX4/2850x1515/project/150692/aspire-huaikhwang.jpg", amenities:JSON.stringify(["Pool","Fitness Center","Garden","Co-Working"]), trainLineIds:[3], documents:[{id:6,name:"Floor Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"April 2027", type:"offplan" },
+    { id:15, name:"Life Ratchada–Rama 9", developerId:3, description:"Central MRT hub at Phra Ram 9, surrounded by the CBD, entertainment, and world-class hospitals.", startingPrice:3.3, location:"Phra Ram 9, Ratchada", imageUrl:"https://cdn.fazwaz.com/nw/FLFhh6uqWd-O7iPYTWlIfCdLMl0/2850x1515/project/170645/2.png", amenities:JSON.stringify(["Infinity Pool","Sky Gym","Co-Working","Smart Living"]), trainLineIds:[3], documents:[], status:"Off-Plan", moveIn:"Oct 2027", type:"offplan" },
+    { id:16, name:"COZI ONNUT 46 (Srinakarin 38)", developerId:8, description:"A fresh boutique condominium by COZII Property, ideally positioned near BTS On Nut. Compact and intelligently designed units starting at 22 sqm — perfect for investors and first-time buyers seeking a well-connected address in Sukhumvit's eastern corridor.", startingPrice:1.59, size:"22–34.5 sqm", location:"On Nut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/1ISrx-8Mm-OUbmu_khH4Fv5REng/790x400/project/156339/screenshot-2024-10-28-141300.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","Key Card Access","CCTV Security"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"Q3 2027", type:"offplan" },
+    { id:17, name:"Supalai Sense Srinakarin", developerId:7, description:"Supalai's Sense series brings refined modern living to the Srinakarin–Suan Luang Rama 9 corridor. With units ranging 25–53 sqm and direct MRT Yellow Line access, this development offers strong rental potential in a rapidly developing district.", startingPrice:1.89, size:"25–53 sqm", location:"Srinakarin, Suan Luang", imageUrl:"https://cdn.fazwaz.com/nw/k8SX4WObdazv7dRMLkeFC8kuPhM/2850x1515/project/143272/screenshot-2026-02-16-101053.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden","24h Security","Parking"]), trainLineIds:[6], documents:[], status:"Off-Plan", moveIn:"Q2 2026", type:"offplan" },
+    { id:18, name:"Supalai Veranda Sukhumvit 117", developerId:7, description:"Ready-to-move Supalai Veranda development along the BTS Sukhumvit extension near Pu Chao station. Spacious units from 27–65 sqm with a full suite of resort-style amenities in the fast-growing Samut Prakan fringe.", startingPrice:2.04, size:"27–65 sqm", location:"Sukhumvit 117, Samut Prakan fringe", imageUrl:"https://cdn.fazwaz.com/nw/ELOLP1Iqs1nwcdZ993b-QvbcNWs/2850x1515/project/38928/5cc6c0b35a3a6032cd0be346.jpg", amenities:JSON.stringify(["Resort Pool","Clubhouse","Fitness Center","Sky Garden","24h Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:19, name:"Supalai City Resort Sukhumvit 107", developerId:7, description:"Resort-concept living at Sukhumvit 107 near BTS Bearing. Generous unit sizes from 28–69.5 sqm with verdant landscaping and premium facilities make this one of Supalai's best-value ready-to-move addresses on the BTS Sukhumvit Line.", startingPrice:2.29, size:"28–69.5 sqm", location:"Sukhumvit 107, Bearing", imageUrl:"https://cdn.fazwaz.com/nw/DoeGUVTq4adnKsYmci_BEhKZJ8c/2850x1515/project/114840/dji-0100.jpg", amenities:JSON.stringify(["Lagoon Pool","Tropical Garden","Fitness Center","Children's Area","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:20, name:"Supalai Parc Ekkamai–Pattanakarn", developerId:7, description:"Off-plan opportunity in the prestigious Ekkamai–Pattanakarn neighbourhood with ARL Ramkhamhaeng access. Units from 30–56 sqm in a low-rise garden setting, offering a peaceful retreat with excellent connectivity.", startingPrice:2.41, size:"30–56 sqm", location:"Ekkamai–Pattanakarn, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/Mv6gzLBZb8Y-zeHPtkGukU9rTAg/790x400/project/154502/screenshot-2024-08-19-172243.png", amenities:JSON.stringify(["Park & Garden","Swimming Pool","Fitness Center","Co-Working Lounge","EV Charging"]), trainLineIds:[10], documents:[], status:"Off-Plan", moveIn:"Q3 2026", type:"offplan" },
+    { id:21, name:"Supalai Veranda Ramkhamhaeng", developerId:7, description:"Ready-to-move Supalai Veranda project served by the new MRT Orange Line at Ramkhamhaeng. Practical units from 28–44 sqm with resort-style amenities at competitive pricing in one of Bangkok's most improving eastern districts.", startingPrice:2.55, size:"28–44 sqm", location:"Ramkhamhaeng, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/VLHlQGDX-qx_n5Iuruy50upG9IY/0x0/project/41819/180718-overall.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden Terrace","24h Security","Parking"]), trainLineIds:[11], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:22, name:"The Nest Sukhumvit 71", developerId:9, description:"Boutique high-rise by The Nestment, nestled in the quiet leafy enclave of Sukhumvit 71 (Pridi Banomyong). Walking distance to BTS Phra Khanong, with thoughtfully designed 29–45 sqm units and a rooftop sky lounge.", startingPrice:3.54, size:"29–45 sqm", location:"Sukhumvit 71, Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/6GGaTKzO34bcAyor9kbgjBVLHaw/790x400/project/11906/the-nest-sukhumvit-71-buildingthe-nest-building2.jpg", amenities:JSON.stringify(["Sky Lounge","Rooftop Pool","Fitness Center","Key Card Lift","CCTV Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:23, name:"Supalai Premier Samsen–Ratchawat", developerId:7, description:"Supalai's premier flagship development along the BTS Victory Monument corridor. Generous residences from 49–123 sqm in a prime central location, offering unrivalled spaciousness and connectivity for both own-use and investment.", startingPrice:6.41, size:"49–123 sqm", location:"Samsen–Ratchawat, Dusit", imageUrl:"https://cdn.fazwaz.com/nw/HxHpfKrCnuLvDvGiuud6fYZC-YI/2850x1515/project/115306/supalai-ratchawat-hero-shot-hires01-copy.jpg", amenities:JSON.stringify(["Grand Lobby","Infinity Pool","Fully-Equipped Gym","Meeting Rooms","Concierge","EV Charging","Visitor Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+  ],
+  developers: [
+    { id:1, name:"Good Day", logoUrl:"", description:"Boutique developer focused on accessible urban living near key transit nodes." },
+    { id:2, name:"AP Thailand", logoUrl:"", description:"One of Thailand's largest listed developers. Known for the Aspire, Life, and The Address condo brands — all transit-oriented and design-forward." },
+    { id:3, name:"Sansiri", logoUrl:"", description:"Thailand's most awarded developer. Sansiri is celebrated for innovative design, world-class amenities, and landmark projects like IDEO and The Line series." },
+    { id:4, name:"Origin Property", logoUrl:"", description:"Fast-growing listed developer specialising in high-value transit-linked condos. Brands include KnightsBridge, Park Origin, and Origin Plug & Play." },
+    { id:5, name:"Pruksa Real Estate", logoUrl:"", description:"Major SET-listed developer with a large portfolio spanning condos, townhomes and detached houses. Known for strong value and consistent quality." },
+    { id:6, name:"SC Asset", logoUrl:"", description:"Premium developer backed by PTT Group. SC Asset focuses on high-end condominiums and luxury residences in Bangkok's most sought-after locations." },
+    { id:7, name:"Supalai", logoUrl:"", description:"One of Thailand's oldest and most trusted developers. Supalai delivers reliable, affordable-to-mid-range condos across Bangkok's BTS and MRT corridors." },
+    { id:8, name:"COZII Property", logoUrl:"", description:"Rising boutique developer known for compact, design-driven condominiums in Bangkok's up-and-coming residential corridors." },
+    { id:9, name:"The Nestment", logoUrl:"", description:"Modern developer focused on creating comfortable, well-located residences for the new generation of Bangkok urban dwellers." },
+  ],
+  trainLines: [
+    { id:1,  name:"BTS Sukhumvit Line",  type:"bts", color:"#7CB342", description:"Running from Khu Khot to Kheha, the longest BTS line serving Bangkok's eastern corridor via Asoke, Phrom Phong, and On Nut." },
+    { id:2,  name:"BTS Silom Line",      type:"bts", color:"#2E7D32", description:"Connecting National Stadium to Bang Wa, passing through Siam, Sala Daeng, and Bangkok's financial districts." },
+    { id:3,  name:"BTS Gold Line",       type:"bts", color:"#C8A951", description:"A short automated line connecting Krung Thon Buri BTS to ICONSIAM and Khlong San, serving the riverside retail district." },
+    { id:4,  name:"MRT Blue Line",       type:"mrt", color:"#1565C0", description:"Circular MRT line linking Tha Phra and Lak Song via Hua Lamphong, Silom, Asoke, Chatuchak, and Bang Sue." },
+    { id:5,  name:"MRT Purple Line",     type:"mrt", color:"#7B1FA2", description:"Running from Tao Poon to Khlong Bang Phai, connecting Bangkok's northern suburbs to the Bang Sue interchange." },
+    { id:6,  name:"MRT Yellow Line",     type:"mrt", color:"#F9A825", description:"Monorail running from Lat Phrao to Samrong, linking the eastern suburbs through Krungthep Kreetha and Phatthanakan." },
+    { id:7,  name:"MRT Pink Line",       type:"mrt", color:"#E91E8C", description:"Monorail from Khae Rai to Min Buri, connecting Nonthaburi province to Minburi in the northeast via Chaengwattana." },
+    { id:8,  name:"SRT Dark Red Line",   type:"srt", color:"#B71C1C", description:"Commuter rail from Krung Thep Aphiwat (Bang Sue Grand Station) to Rangsit in the north, part of the suburban rail network." },
+    { id:9,  name:"SRT Light Red Line",  type:"srt", color:"#EF5350", description:"Commuter rail from Krung Thep Aphiwat (Bang Sue Grand Station) to Taling Chan in the west." },
+    { id:10, name:"Airport Rail Link",   type:"arl", color:"#EF6C00", description:"Express and city line from Phaya Thai to Suvarnabhumi Airport, covering 28.6 km in approximately 30 minutes." },
+    { id:11, name:"MRT Orange Line",     type:"mrt", color:"#E65100", description:"Under construction line running east–west from Thailand Cultural Centre to Min Buri, with extensions planned to Taling Chan and Bang Khun Non." },
+  ],
+  heroImages: [
+    { url: 'https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80', position: 'center 40%' },
+    { url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80', position: 'center 55%' },
+    { url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80', position: 'center 50%' },
+  ],
+  contact: {
+    email: 'hello@cocoonproperty.com',
+    whatsapp: '66800000000',
+    whatsappDisplay: '+66 80 000 0000',
+    line: '@cocoonproperty',
+    facebook: 'cocoonpropertybkk',
+    facebookDisplay: 'Cocoon Property Thailand',
+  },
+  posts: [],
+  nextPostId: 1,
+  nextPropertyId: 24,
+  nextDeveloperId: 10,
+  admin: { loggedIn: false, password: "admin123" },
+  _version: 8
+};
+
+// ======================== DB PERSISTENCE (Supabase) ========================
+function saveDB() {
+  const data = JSON.stringify(DB);
+  // Primary: Supabase
+  if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    _supabase.from('cocoon_db')
+      .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() })
+      .catch(() => {});
+  }
+  // Fallback: localStorage
+  try { localStorage.setItem('cocoon_db', data); } catch(e) {}
+}
+
+async function loadDB() {
+  let parsed = null;
+
+  // Primary: Supabase
+  if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+    try {
+      const { data: row } = await _supabase
+        .from('cocoon_db').select('data').eq('id', 1).single();
+      if (row && row.data) parsed = row.data;
+    } catch(e) {}
+  }
+
+  // Fallback: localStorage
+  if (!parsed) {
+    try {
+      const saved = localStorage.getItem('cocoon_db');
+      if (saved) parsed = JSON.parse(saved);
+    } catch(e) {}
+  }
+
+  if (!parsed) { saveDB(); return; }
+
+  // Version guard — if stored version is older, merge carefully
+  if (!parsed._version || parsed._version < DB._version) {
+    if (parsed.admin) DB.admin = { ...DB.admin, ...parsed.admin };
+    const savedPropIds = new Set((parsed.properties || []).map(p => p.id));
+    const newProps = DB.properties.filter(p => !savedPropIds.has(p.id));
+    DB.properties = [...(parsed.properties || []), ...newProps];
+    const savedDevIds = new Set((parsed.developers || []).map(d => d.id));
+    const newDevs = DB.developers.filter(d => !savedDevIds.has(d.id));
+    DB.developers = [...(parsed.developers || []), ...newDevs];
+    const savedLineIds = new Set((parsed.trainLines || []).map(l => l.id));
+    const newLines = DB.trainLines.filter(l => !savedLineIds.has(l.id));
+    DB.trainLines = [...(parsed.trainLines || []), ...newLines];
+    DB.nextPropertyId = Math.max(DB.nextPropertyId, parsed.nextPropertyId || 0);
+    DB.nextDeveloperId = Math.max(DB.nextDeveloperId, parsed.nextDeveloperId || 0);
+    if (parsed.heroImages) DB.heroImages = parsed.heroImages;
+    if (parsed.posts) { DB.posts = parsed.posts; DB.nextPostId = parsed.nextPostId || DB.nextPostId; }
+    if (parsed.contact) DB.contact = parsed.contact;
+    saveDB();
+  } else {
+    Object.assign(DB, parsed);
+    saveDB();
+  }
+}
+
+// ======================== NAVIGATION ========================
+let currentPage = 'home';
+let currentDetailId = null;
+
+function navigate(page, id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  currentPage = page;
+
+  // Clear hash when leaving blog-post
+  if (page !== 'blog-post') {
+    history.replaceState(null, '', window.location.pathname);
+  }
+
+  const header = document.getElementById('header');
+  if (page === 'home') {
+    document.getElementById('page-home').classList.add('active');
+    header.style.display = '';
+    window.scrollTo(0, 0);
+  } else if (page === 'detail') {
+    currentDetailId = id;
+    document.getElementById('page-detail').classList.add('active');
+    header.style.display = '';
+    renderDetail(id);
+    window.scrollTo(0, 0);
+  } else if (page === 'blog') {
+    document.getElementById('page-blog').classList.add('active');
+    header.style.display = '';
+    renderBlog();
+    window.scrollTo(0, 0);
+  } else if (page === 'blog-post') {
+    document.getElementById('page-blog-post').classList.add('active');
+    header.style.display = '';
+    renderBlogPost(id);
+    window.scrollTo(0, 0);
+  } else if (page === 'compare') {
+    document.getElementById('page-compare').classList.add('active');
+    header.style.display = '';
+    renderComparePage();
+    window.scrollTo(0, 0);
+  }
+}
+
+function readingTime(body) {
+  const text = (body || '').replace(/<[^>]+>/g, '');
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+let blogSearch = '';
+let blogCat = 'all';
+
+function renderBlog() {
+  const grid = document.getElementById('blogGrid');
+  const allPosts = (DB.posts || []).slice().reverse().filter(p => p.published !== false);
+
+  // Build category tabs
+  const cats = ['all', ...new Set(allPosts.map(p => p.category).filter(Boolean))];
+  const tabsEl = document.getElementById('blogCatTabs');
+  if (tabsEl) {
+    tabsEl.innerHTML = cats.map(c => `
+      <button class="blog-cat-tab${blogCat === c ? ' active' : ''}" onclick="blogCat='${c.replace(/'/g,"\\'")}';renderBlog()">
+        ${c === 'all' ? 'All' : c}
+      </button>`).join('');
+  }
+
+  // Filter
+  const q = blogSearch.toLowerCase();
+  const posts = allPosts.filter(p => {
+    const matchCat = blogCat === 'all' || p.category === blogCat;
+    const matchSearch = !q || p.title.toLowerCase().includes(q) || (p.body || '').toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  if (!posts.length) {
+    grid.innerHTML = `<div class="blog-empty" style="grid-column:1/-1">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <p>No posts found.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = posts.map(post => {
+    const rt = readingTime(post.body);
+    return `
+    <div class="blog-card" onclick="navigate('blog-post', ${post.id})">
+      ${post.coverImage
+        ? `<img class="blog-card-cover" src="${post.coverImage}" alt="${post.title}" loading="lazy">`
+        : `<div class="blog-card-cover-placeholder"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          ${post.category ? `<span class="blog-card-cat">${post.category}</span>` : ''}
+          <span class="blog-card-read-time">${rt} min read</span>
+        </div>
+        <div class="blog-card-date">${post.date || ''}</div>
+        <div class="blog-card-title">${post.title}</div>
+        <div class="blog-card-excerpt">${(post.body || '').replace(/<[^>]+>/g, '').replace(/\n/g, ' ').slice(0, 180)}${(post.body || '').length > 180 ? '…' : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderBlogPost(id) {
+  const post = (DB.posts || []).find(p => p.id == id);
+  if (!post) { navigate('blog'); return; }
+
+  // Update URL hash for sharing
+  history.replaceState(null, '', '#post-' + id);
+
+  document.getElementById('blogPostCoverWrap').innerHTML = post.coverImage
+    ? `<img class="blog-post-cover" src="${post.coverImage}" alt="${post.title}">`
+    : `<div class="blog-post-cover-placeholder"></div>`;
+
+  // Category & reading time
+  const catEl = document.getElementById('blogPostCat');
+  if (post.category) { catEl.textContent = post.category; catEl.style.display = ''; }
+  else { catEl.style.display = 'none'; }
+  document.getElementById('blogPostReadTime').textContent = readingTime(post.body) + ' min read';
+
+  document.getElementById('blogPostDate').textContent = post.date || '';
+  document.getElementById('blogPostTitle').textContent = post.title;
+
+  // Body — render HTML if contains tags, else paragraph-split
+  const bodyHtml = /<[a-z][\s\S]*>/i.test(post.body)
+    ? post.body
+    : (post.body || '').split(/\n\n+/).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+  document.getElementById('blogPostBody').innerHTML = bodyHtml;
+
+  // Share buttons
+  const shareUrl = window.location.origin + window.location.pathname + '#post-' + id;
+  const shareTitle = encodeURIComponent(post.title);
+  const shareUrlEnc = encodeURIComponent(shareUrl);
+  document.getElementById('blogPostShare').innerHTML = `
+    <div class="blog-share">
+      <div class="blog-share-label">Share this article</div>
+      <div class="blog-share-btns">
+        <a class="blog-share-btn facebook" href="https://www.facebook.com/sharer/sharer.php?u=${shareUrlEnc}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          Facebook
+        </a>
+        <a class="blog-share-btn whatsapp" href="https://wa.me/?text=${shareTitle}%20${shareUrlEnc}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+        <a class="blog-share-btn line" href="https://social-plugins.line.me/lineit/share?url=${shareUrlEnc}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M19.365 9.89c.50 0 .906.41.906.91s-.406.91-.906.91h-2.43v1.44h2.43c.5 0 .906.41.906.91s-.406.91-.906.91h-3.337c-.5 0-.906-.41-.906-.91V8.98c0-.5.406-.91.906-.91h3.337zm-9.455 4.16c.268.35.21.847-.134 1.116a.793.793 0 01-.49.168.793.793 0 01-.625-.302L6.39 12.67v2.27c0 .5-.406.91-.907.91-.5 0-.906-.41-.906-.91V8.98c0-.5.406-.91.906-.91.284 0 .536.132.7.34l2.27 2.84V8.98c0-.5.406-.91.906-.91.5 0 .906.41.906.91v4.96zM4.386 15.85H3.48c-.5 0-.906-.41-.906-.91V8.98c0-.5.406-.91.906-.91.5 0 .906.41.906.91v5.96h-.001zM12 2C6.477 2 2 6.145 2 11.245c0 4.488 3.27 8.238 7.713 9.064.337.065.796.199.912.457.104.234.068.6.033.836l-.148.854c-.045.262-.21 1.026.9.56 1.11-.467 5.996-3.53 8.183-6.044C21.218 14.85 22 13.126 22 11.245 22 6.145 17.523 2 12 2z"/></svg>
+          Line
+        </a>
+        <button class="blog-share-btn" onclick="navigator.clipboard.writeText('${shareUrl.replace(/'/g, "\\'")}');showToast('Link copied!')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
+    </div>`;
+
+  // Related posts
+  const allPosts = (DB.posts || []).filter(p => p.id != id && p.published !== false);
+  const related = post.category
+    ? allPosts.filter(p => p.category === post.category).slice(-3).reverse()
+    : allPosts.slice(-3).reverse();
+  if (related.length) {
+    document.getElementById('blogPostRelated').innerHTML = `
+      <div class="blog-related">
+        <div class="blog-related-title">Related Articles</div>
+        <div class="blog-related-grid">
+          ${related.map(r => `
+            <div class="blog-related-card" onclick="navigate('blog-post', ${r.id})">
+              ${r.coverImage
+                ? `<img class="blog-related-cover" src="${r.coverImage}" alt="${r.title}" loading="lazy">`
+                : `<div class="blog-related-cover-placeholder"></div>`}
+              <div class="blog-related-body">
+                <div class="blog-related-date">${r.date || ''}</div>
+                <div class="blog-related-title-text">${r.title}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('blogPostRelated').innerHTML = '';
+  }
+
+  // Prev / Next
+  const allChron = (DB.posts || []).filter(p => p.published !== false);
+  const idx = allChron.findIndex(p => p.id == id);
+  const prev = idx > 0 ? allChron[idx - 1] : null;
+  const next = idx < allChron.length - 1 ? allChron[idx + 1] : null;
+  document.getElementById('blogPostNav').innerHTML = `
+    <div class="blog-post-nav">
+      ${prev ? `<div class="blog-post-nav-item prev" onclick="navigate('blog-post', ${prev.id})">
+        <div class="blog-post-nav-dir">← Previous</div>
+        <div class="blog-post-nav-title">${prev.title}</div>
+      </div>` : '<div class="blog-post-nav-empty"></div>'}
+      ${next ? `<div class="blog-post-nav-item next" onclick="navigate('blog-post', ${next.id})">
+        <div class="blog-post-nav-dir">Next →</div>
+        <div class="blog-post-nav-title">${next.title}</div>
+      </div>` : '<div class="blog-post-nav-empty"></div>'}
+    </div>`;
+}
+
+// ======================== HERO SLIDESHOW ========================
+let _slideIndex = 0;
+let _slideTimer = null;
+
+function goToSlide(i) {
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+  if (!slides.length) return;
+  slides[_slideIndex].classList.remove('active');
+  dots[_slideIndex]?.classList.remove('active');
+  _slideIndex = (i + slides.length) % slides.length;
+  slides[_slideIndex].classList.add('active');
+  dots[_slideIndex]?.classList.add('active');
+}
+
+function initSlideshow() {
+  const slides = document.querySelectorAll('.hero-slide');
+  if (slides.length < 2) return;
+  _slideTimer = setInterval(() => goToSlide(_slideIndex + 1), 6000);
+}
+
+// ======================== MOBILE NAV ========================
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  const overlay = document.getElementById('mobileNavOverlay');
+  const burger = document.querySelector('.hamburger');
+  const isOpen = nav.classList.contains('open');
+  nav.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+  burger.classList.toggle('open', !isOpen);
+}
+
+function closeMobileNav() {
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('mobileNavOverlay').classList.remove('open');
+  document.querySelector('.hamburger').classList.remove('open');
+}
+
+function scrollToEl(selector) {
+  setTimeout(() => {
+    const el = document.querySelector(selector);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+
+// ======================== FILTERS ========================
+let activeFilter = 'all';
+let priceFilter = 'any';
+let statusFilter = 'any';
+let lineFilter = 'all';
+let moreFilter = 'any';
+let sortFilter = 'popular';
+let searchQuery = '';
+
+const filterState = { price:'any', status:'any', line:'all', more:'any', type:'all', dev:'all', city:'all' };
+const filterLabels = { price:'Any', status:'Any', line:'All Lines', more:'All', type:'All', dev:'All' };
+
+function toggleDD(name) {
+  const menu = document.getElementById(`menu-${name}`);
+  const btn = document.getElementById(`btn-${name}`);
+  const isOpen = menu.classList.contains('open');
+  document.querySelectorAll('.hero-filter-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.hb-btn, .hero-filter-btn').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { menu.classList.add('open'); btn.classList.add('open'); }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.hero-filter-dd') && !e.target.closest('.hb-col')) {
+    document.querySelectorAll('.hero-filter-menu').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.hb-btn, .hero-filter-btn').forEach(b => b.classList.remove('open'));
+  }
+});
+
+function setFilter(name, value, label) {
+  filterState[name] = value;
+  filterLabels[name] = label;
+  document.getElementById(`val-${name}`).textContent = label;
+  // update selected state in menu
+  document.querySelectorAll(`#menu-${name} button`).forEach(b => {
+    b.classList.toggle('selected', b.textContent.trim() === label);
+  });
+  document.querySelectorAll('.hero-filter-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.hero-filter-btn').forEach(b => b.classList.remove('open'));
+  updateClearBtn();
+  applyFilters();
+}
+
+function clearFilters() {
+  filterState.price = 'any'; filterLabels.price = 'Any';
+  filterState.status = 'any'; filterLabels.status = 'Any';
+  filterState.line = 'all'; filterLabels.line = 'All Lines';
+  filterState.more = 'any'; filterLabels.more = 'All';
+  filterState.type = 'all'; filterLabels.type = 'All';
+  filterState.dev = 'all'; filterLabels.dev = 'All';
+  filterState.city = 'all'; filterLabels.city = 'All Cities';
+  ['price','status','line','type','dev','city'].forEach(n => {
+    const el = document.getElementById(`val-${n}`);
+    if (el) el.textContent = filterLabels[n];
+    document.querySelectorAll(`#menu-${n} button`).forEach((b,i) => b.classList.toggle('selected', i===0));
+  });
+  document.getElementById('heroSearch').value = '';
+  searchQuery = '';
+  updateClearBtn();
+  applyFilters();
+}
+
+function updateClearBtn() {
+  const hasActive = searchQuery || filterState.price !== 'any' || filterState.status !== 'any' || filterState.line !== 'all' || filterState.more !== 'any' || filterState.dev !== 'all' || filterState.city !== 'all' || filterState.type !== 'all';
+  document.getElementById('clearBtn').classList.toggle('visible', !!hasActive);
+}
+
+function applyFilters() {
+  searchQuery = document.getElementById('heroSearch')?.value.toLowerCase() || '';
+  updateClearBtn();
+
+  let data = DB.properties.filter(p => {
+    const dev = DB.developers.find(d => d.id === p.developerId);
+    // Search
+    const matchSearch = !searchQuery ||
+      p.name.toLowerCase().includes(searchQuery) ||
+      (p.location || '').toLowerCase().includes(searchQuery) ||
+      (dev?.name || '').toLowerCase().includes(searchQuery) ||
+      String(p.id).includes(searchQuery);
+    // Price
+    const price = p.startingPrice;
+    const matchPrice = filterState.price === 'any' ? true :
+      filterState.price === '0-2' ? price <= 2 :
+      filterState.price === '2-5' ? price > 2 && price <= 5 :
+      filterState.price === '5-10' ? price > 5 && price <= 10 :
+      filterState.price === '10+' ? price > 10 : true;
+    // Status
+    const matchStatus = filterState.status === 'any' ? true :
+      filterState.status === 'ready' ? p.type === 'ready' :
+      filterState.status === 'offplan' ? p.type === 'offplan' : true;
+    // Line
+    const matchLine = filterState.line === 'all' ? true :
+      p.trainLineIds.includes(parseInt(filterState.line));
+    // More
+    const matchMore = filterState.more === 'any' ? true :
+      filterState.more === 'has-docs' ? (p.documents?.length > 0) :
+      filterState.more === 'has-image' ? !!p.imageUrl : true;
+
+    // Developer
+    const matchDev = filterState.dev === 'all' ? true :
+      p.developerId === parseInt(filterState.dev);
+
+    // City
+    const pCity = (p.city || 'Bangkok').toLowerCase();
+    const matchCity = filterState.city === 'all' ? true :
+      pCity === filterState.city.toLowerCase();
+
+    // Type (Low Rise / High Rise)
+    const floors = parseInt(p.floors) || 0;
+    const matchType = filterState.type === 'all' ? true :
+      filterState.type === 'low-rise' ? (floors > 0 && floors <= 8) :
+      filterState.type === 'high-rise' ? (floors >= 25) : true;
+
+    return matchSearch && matchPrice && matchStatus && matchLine && matchMore && matchDev && matchCity && matchType;
+  });
+
+  const hasFilter = searchQuery || filterState.price !== 'any' || filterState.status !== 'any' || filterState.line !== 'all' || filterState.more !== 'any' || filterState.type !== 'all';
+  const resultsEl = document.getElementById('heroResults');
+  if (resultsEl) resultsEl.textContent = hasFilter
+    ? `${data.length} ${data.length === 1 ? 'property' : 'properties'} found`
+    : '';
+
+  renderProjectsGrid(data);
+}
+
+// ======================== RENDER HOME ========================
+function renderHome() {
+  // Stats
+  const prices = DB.properties.map(p => p.startingPrice);
+  document.getElementById('statProjects').textContent = DB.properties.length;
+  document.getElementById('statLines').textContent = DB.trainLines.length;
+  document.getElementById('statDevelopers').textContent = DB.developers.length;
+  document.getElementById('statRange').textContent = prices.length ? `${Math.min(...prices)} – ${Math.max(...prices)}` : '—';
+
+  // Populate train line dropdown
+  const lineMenu = document.getElementById('menu-line');
+  if (lineMenu) {
+    lineMenu.innerHTML = `<button onclick="setFilter('line','all','All')" class="${filterState.line === 'all' ? 'selected' : ''}">All Lines</button>` +
+      DB.trainLines.map(l => `
+        <button onclick="setFilter('line','${l.id}','${l.name}')" class="${filterState.line == l.id ? 'selected' : ''}">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${l.color};margin-right:0.4rem;vertical-align:middle"></span>${l.name}
+        </button>`).join('');
+  }
+
+  // Populate city dropdown
+  const cityMenu = document.getElementById('menu-city');
+  if (cityMenu) {
+    const cities = [...new Set(DB.properties.map(p => p.city || 'Bangkok'))].sort();
+    cityMenu.innerHTML = `<button onclick="setFilter('city','all','All Cities')" class="${filterState.city === 'all' ? 'selected' : ''}">All Cities</button>` +
+      cities.map(c => `<button onclick="setFilter('city','${c.replace(/'/g,"\\'")}','${c.replace(/'/g,"\\'")}')" class="${filterState.city === c ? 'selected' : ''}">${c}</button>`).join('');
+  }
+
+  // Populate developer dropdown
+  const devMenu = document.getElementById('menu-dev');
+  if (devMenu) {
+    devMenu.innerHTML = `<button onclick="setFilter('dev','all','All')" class="${filterState.dev === 'all' ? 'selected' : ''}">All Developers</button>` +
+      DB.developers.map(d => `
+        <button onclick="setFilter('dev','${d.id}','${d.name.replace(/'/g,"\\'")}')" class="${filterState.dev == d.id ? 'selected' : ''}">
+          ${d.name}
+        </button>`).join('');
+  }
+
+  // Footer lines
+  const footerLinesContainer = document.getElementById('footerLinesContainer');
+  if (footerLinesContainer) {
+    footerLinesContainer.innerHTML = DB.trainLines.map(l =>
+      `<a onclick="setFilter('line','${l.id}','${l.name}'); scrollToEl('#portfolio')" style="cursor:pointer">${l.name}</a>`
+    ).join('');
+  }
+
+  renderProjectsGrid(DB.properties);
+}
+
+function renderProjectsGrid(data) {
+  const grid = document.getElementById('projectsGrid');
+  if (!data.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>No properties match your search.</p></div>`;
+    return;
+  }
+  grid.innerHTML = data.map(p => {
+    const dev = DB.developers.find(d => d.id === p.developerId);
+    const lines = DB.trainLines.filter(l => p.trainLineIds.includes(l.id));
+    const primaryLine = lines[0];
+    let cardImages = [];
+    try { cardImages = JSON.parse(p.images || '[]'); } catch(e) {}
+    const cardThumb = cardImages[0] || p.imageUrl;
+    return `
+    <div class="project-card" onclick="navigate('detail',${p.id})">
+      <button class="card-compare-btn ${compareList.includes(p.id) ? 'active' : ''}" data-id="${p.id}" onclick="toggleCompare(event,${p.id})">${compareList.includes(p.id) ? '✓ Added' : '+ Compare'}</button>
+      <div class="card-image">
+        ${cardThumb
+          ? `<img src="${cardThumb}" alt="${p.name}" loading="lazy">`
+          : `<div class="card-image-placeholder">
+              <svg viewBox="0 0 48 48" fill="none" stroke="var(--cocoon-champagne)" stroke-width="1">
+                <rect x="8" y="16" width="32" height="24" rx="1"/>
+                <path d="M14 16v-4a10 10 0 0120 0v4"/>
+                <path d="M20 28h8M24 24v8"/>
+              </svg>
+              <span>Photo Coming Soon</span>
+            </div>`
+        }
+        ${primaryLine ? `<div class="card-line-badge" style="background:${primaryLine.color}">${primaryLine.name}</div>` : ''}
+        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : ''}">${p.status || 'Ready to Move'}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-brand">${dev?.name || ''}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-meta">
+          ${p.location ? `<span class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--cocoon-champagne)" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            ${p.location}
+          </span>` : ''}
+        </div>
+        ${p.size ? `<div class="card-size"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:12px;height:12px;opacity:.6"><path d="M3 21V3m0 0h18M3 3l18 18M21 3v18"/></svg>${p.size}</div>` : ''}
+        <div class="card-footer">
+          <div class="card-price">
+            <span class="card-price-label">Starts&nbsp;</span>
+            <span class="card-price-value">${p.startingPrice.toFixed(2)}</span>
+            <span class="card-price-unit">MB.*</span>
+          </div>
+          ${p.moveIn ? `<div class="card-movein">Move in<strong>${p.moveIn}</strong></div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ======================== RENDER DETAIL ========================
+function renderDetail(id) {
+  const p = DB.properties.find(x => x.id == id);
+  if (!p) { navigate('home'); return; }
+  const dev = DB.developers.find(d => d.id === p.developerId);
+  const lines = DB.trainLines.filter(l => p.trainLineIds.includes(l.id));
+
+  document.getElementById('detailTitle').textContent = p.name;
+  document.getElementById('detailSubtitle').textContent = dev?.name || '';
+
+  // Gallery
+  let imgs = [];
+  try { imgs = JSON.parse(p.images || '[]'); } catch(e) {}
+  if (!imgs.length && p.imageUrl) imgs = [p.imageUrl];
+  const gallery = document.getElementById('detailGallery');
+  if (imgs.length) {
+    gallery.innerHTML = imgs.map((url, i) => `
+      <div class="detail-gallery-thumb" onclick="openLightbox(${p.id}, ${i})">
+        <img src="${url}" alt="${p.name} photo ${i+1}" loading="lazy">
+        <div class="detail-gallery-thumb-overlay">
+          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </div>
+      </div>`).join('');
+  } else {
+    gallery.innerHTML = `
+      <div class="detail-gallery-thumb" style="cursor:default;grid-column:1/-1;height:360px">
+        <div class="gallery-placeholder">
+          <svg viewBox="0 0 48 48" fill="none" stroke="var(--cocoon-champagne)" stroke-width="1">
+            <rect x="8" y="16" width="32" height="24" rx="1"/><path d="M14 16v-4a10 10 0 0120 0v4"/><path d="M20 28h8M24 24v8"/>
+          </svg>
+          <span>Photo Coming Soon</span>
+        </div>
+      </div>`;
+  }
+
+  // Description
+  document.getElementById('detailDescription').textContent = p.description || 'No description available.';
+
+  // Map
+  const coords = (p.lat && p.lng) ? { lat: p.lat, lng: p.lng } : PROPERTY_COORDS[p.id];
+  if (coords) {
+    document.getElementById('detailMap').innerHTML = `<iframe
+      src="https://www.google.com/maps?q=${coords.lat},${coords.lng}&z=16&output=embed"
+      width="100%" height="360" style="border:0;border-radius:4px;display:block" allowfullscreen loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div style="margin-top:0.75rem;font-size:0.72rem;color:var(--cocoon-text-soft);letter-spacing:0.05em">
+        ${p.location || ''}
+        <a href="https://www.google.com/maps?q=${coords.lat},${coords.lng}" target="_blank" rel="noopener"
+          style="color:var(--cocoon-gold);margin-left:0.75rem;text-decoration:none">Open in Google Maps ↗</a>
+      </div>`;
+    document.getElementById('detailMapSection').style.display = '';
+  } else {
+    document.getElementById('detailMapSection').style.display = 'none';
+  }
+
+  // Grid
+  document.getElementById('detailGrid').innerHTML = `
+    ${p.location ? `<div><div class="detail-field-label">Location</div><div class="detail-field-value" style="font-size:1rem">${p.location}</div></div>` : ''}
+    <div><div class="detail-field-label">Starting Price</div><div class="detail-field-value" style="color:var(--cocoon-gold-deep)">${p.startingPrice.toFixed(2)} MB</div></div>
+    ${p.size ? `<div><div class="detail-field-label">Unit Size</div><div class="detail-field-value" style="font-size:1rem">${p.size}</div></div>` : ''}
+    <div><div class="detail-field-label">Status</div><div class="detail-field-value" style="font-size:1rem">${p.status || 'Ready to Move'}</div></div>
+    ${p.moveIn ? `<div><div class="detail-field-label">Move In</div><div class="detail-field-value" style="font-size:1rem">${p.moveIn}</div></div>` : ''}
+    ${p.floors ? `<div><div class="detail-field-label">Building Type</div><div class="detail-field-value" style="font-size:1rem">${parseInt(p.floors) <= 8 ? 'Low Rise' : parseInt(p.floors) >= 25 ? 'High Rise' : 'Mid Rise'}</div></div>` : ''}
+  `;
+
+  // Amenities
+  let amenities = [];
+  try { amenities = JSON.parse(p.amenities || '[]'); } catch(e) {}
+  document.getElementById('detailAmenities').innerHTML = amenities.length ? `
+    <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--cocoon-silk)">
+      <div class="detail-field-label" style="margin-bottom:0.8rem">Amenities</div>
+      <div class="detail-amenity-tags">${amenities.map(a => `<span class="detail-amenity-tag">${a}</span>`).join('')}</div>
+    </div>` : '';
+
+  // Price card
+  document.getElementById('detailPriceCard').innerHTML = `
+    <div class="detail-sidebar-title">Starting Price</div>
+    <div class="detail-price-hero">${p.startingPrice.toFixed(2)} <span class="detail-price-unit">MB*</span></div>
+    ${p.size ? `<div style="font-size:0.72rem;letter-spacing:0.08em;color:var(--cocoon-text-soft);text-transform:uppercase;margin-bottom:1rem">Unit Size: <span style="color:var(--cocoon-dark);font-weight:400">${p.size}</span></div>` : ''}
+    <a href="mailto:${DB.contact?.email || 'hello@cocoonproperty.com'}" class="detail-cta-btn">Inquire Now</a>
+  `;
+
+  // Developer
+  document.getElementById('detailDeveloper').innerHTML = `
+    <div class="detail-sidebar-title">Developer</div>
+    ${dev?.logoUrl ? `<img src="${dev.logoUrl}" alt="${dev.name}" class="developer-logo">` : ''}
+    <div class="developer-name-text">${dev?.name || ''}</div>
+    ${dev?.description ? `<div class="developer-desc-text">${dev.description}</div>` : ''}
+  `;
+
+  // Train lines
+  if (lines.length) {
+    document.getElementById('detailTrainLines').innerHTML = `
+      <div class="detail-sidebar-title">Train Lines</div>
+      ${lines.map(l => `
+        <div class="train-line-chip">
+          <div class="train-line-dot" style="background:${l.color}">${l.type.toUpperCase()}</div>
+          <span class="train-line-name">${l.name}</span>
+        </div>`).join('')}
+    `;
+    document.getElementById('detailTrainLines').style.display = '';
+  } else {
+    document.getElementById('detailTrainLines').style.display = 'none';
+  }
+
+  // Documents
+  if (p.documents?.length) {
+    document.getElementById('detailDocuments').style.display = '';
+    document.getElementById('detailDocuments').innerHTML = `
+      <div class="detail-sidebar-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:inline;vertical-align:middle;margin-right:0.4rem"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Documents
+      </div>
+      ${p.documents.map(d => `
+        <a href="${d.documentUrl}" target="_blank" class="doc-item">
+          <span>${d.name}</span>
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </a>`).join('')}
+    `;
+  } else {
+    document.getElementById('detailDocuments').style.display = 'none';
+  }
+}
+
+// ======================== PROPERTY COMPARISON ========================
+let compareList = [];
+
+function toggleCompare(e, id) {
+  e.stopPropagation();
+  const idx = compareList.indexOf(id);
+  if (idx > -1) {
+    compareList.splice(idx, 1);
+  } else {
+    if (compareList.length >= 3) {
+      showToast('Max 3 properties to compare', 'error'); return;
+    }
+    compareList.push(id);
+  }
+  updateCompareBar();
+  // Update all compare buttons
+  document.querySelectorAll('.card-compare-btn').forEach(btn => {
+    const btnId = parseInt(btn.dataset.id);
+    btn.classList.toggle('active', compareList.includes(btnId));
+    btn.textContent = compareList.includes(btnId) ? '✓ Added' : '+ Compare';
+  });
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const slots = document.getElementById('compareBarSlots');
+  const goBtn = document.getElementById('compareGoBtn');
+  if (!bar) return;
+
+  bar.classList.toggle('visible', compareList.length > 0);
+  goBtn.disabled = compareList.length < 2;
+
+  const items = compareList.map(id => {
+    const p = DB.properties.find(x => x.id === id);
+    let thumb = '';
+    try { const imgs = JSON.parse(p.images || '[]'); thumb = imgs[0] || p.imageUrl; } catch(e) { thumb = p.imageUrl; }
+    return `<div class="compare-bar-slot">
+      ${thumb ? `<img src="${thumb}" alt="${p.name}">` : `<div class="compare-bar-slot-empty">No img</div>`}
+      <button class="compare-bar-slot-x" onclick="toggleCompare(event,${id})">✕</button>
+    </div>`;
+  });
+
+  // Empty slots
+  for (let i = compareList.length; i < 3; i++) {
+    items.push(`<div class="compare-bar-slot"><div class="compare-bar-slot-empty">Slot ${i+1}</div></div>`);
+  }
+  slots.innerHTML = items.join('');
+}
+
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  document.querySelectorAll('.card-compare-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.textContent = '+ Compare';
+  });
+}
+
+function renderComparePage() {
+  const cols = document.getElementById('compareCols');
+  if (!cols) return;
+  const count = compareList.length;
+  cols.style.gridTemplateColumns = `repeat(${count}, 1fr)`;
+  cols.className = 'compare-cols';
+
+  cols.innerHTML = compareList.map(id => {
+    const p = DB.properties.find(x => x.id === id);
+    const dev = DB.developers.find(d => d.id === p.developerId);
+    const lines = DB.trainLines.filter(l => p.trainLineIds.includes(l.id));
+    let thumb = '';
+    try { const imgs = JSON.parse(p.images || '[]'); thumb = imgs[0] || p.imageUrl; } catch(e) { thumb = p.imageUrl; }
+    let amenities = [];
+    try { amenities = JSON.parse(p.amenities || '[]'); } catch(e) {}
+
+    return `
+      <div class="compare-col">
+        ${thumb
+          ? `<img class="compare-col-img" src="${thumb}" alt="${p.name}">`
+          : `<div class="compare-col-img-ph">No Photo</div>`}
+        <div class="compare-col-body">
+          <div class="compare-col-name" onclick="navigate('detail',${p.id})">${p.name}</div>
+          <div class="compare-col-dev">${dev?.name || ''}</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-row-label">Starting Price</div>
+          <div class="compare-row-val price">${p.startingPrice.toFixed(2)} MB</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-row-label">Location</div>
+          <div class="compare-row-val">${p.location || '—'}</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-row-label">City</div>
+          <div class="compare-row-val">${p.city || 'Bangkok'}</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-row-label">Status</div>
+          <div class="compare-row-val">${p.status || 'Ready to Move'}${p.moveIn ? ` · ${p.moveIn}` : ''}</div>
+        </div>
+        ${p.size ? `<div class="compare-row"><div class="compare-row-label">Unit Size</div><div class="compare-row-val">${p.size}</div></div>` : ''}
+        <div class="compare-row">
+          <div class="compare-row-label">Train Line</div>
+          <div class="compare-row-val">${lines.map(l => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${l.color};margin-right:4px;vertical-align:middle"></span>${l.name}`).join('<br>') || '—'}</div>
+        </div>
+        ${amenities.length ? `
+        <div class="compare-row">
+          <div class="compare-row-label">Amenities</div>
+          <div class="compare-tags">${amenities.map(a => `<span class="compare-tag">${a}</span>`).join('')}</div>
+        </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ======================== LIGHTBOX ========================
+let _lbImages = [];
+let _lbIndex = 0;
+
+function openLightbox(propertyId, index) {
+  const p = DB.properties.find(x => x.id == propertyId);
+  if (!p) return;
+  let imgs = [];
+  try { imgs = JSON.parse(p.images || '[]'); } catch(e) {}
+  if (!imgs.length && p.imageUrl) imgs = [p.imageUrl];
+  if (!imgs.length) return;
+  _lbImages = imgs;
+  _lbIndex = index;
+  renderLightbox();
+}
+
+function renderLightbox() {
+  const existing = document.getElementById('lightbox');
+  if (existing) existing.remove();
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.id = 'lightbox';
+  lb.innerHTML = `
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    ${_lbImages.length > 1 ? `
+      <button class="lightbox-nav prev" onclick="lightboxNav(-1)">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="lightbox-nav next" onclick="lightboxNav(1)">
+        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+      </button>` : ''}
+    <img class="lightbox-img" src="${_lbImages[_lbIndex]}" alt="Photo ${_lbIndex + 1}">
+    ${_lbImages.length > 1 ? `<div class="lightbox-counter">${_lbIndex + 1} / ${_lbImages.length}</div>` : ''}
+    <div class="lightbox-gold-line"></div>
+  `;
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.body.appendChild(lb);
+  document.addEventListener('keydown', _lbKeyHandler);
+}
+
+function _lbKeyHandler(e) {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') lightboxNav(1);
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+}
+
+function lightboxNav(dir) {
+  _lbIndex = (_lbIndex + dir + _lbImages.length) % _lbImages.length;
+  renderLightbox();
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.remove();
+  document.removeEventListener('keydown', _lbKeyHandler);
+}
+
+// ======================== TOAST ========================
+function showToast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ======================== STATS COUNT-UP ========================
+function animateCount(el, target, duration, isFloat, suffix) {
+  const start = performance.now();
+  const from = 0;
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const val = from + (target - from) * ease;
+    el.textContent = isFloat ? val.toFixed(2) : Math.round(val) + (suffix || '');
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+function initStatsCountUp() {
+  const statsBar = document.querySelector('.stats-bar');
+  if (!statsBar) return;
+  let fired = false;
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      const prices = DB.properties.map(p => p.startingPrice);
+      const minP = prices.length ? Math.min(...prices) : 0;
+      const maxP = prices.length ? Math.max(...prices) : 0;
+      animateCount(document.getElementById('statProjects'),   DB.properties.length, 1200, false);
+      animateCount(document.getElementById('statLines'),      DB.trainLines.length,  1000, false);
+      animateCount(document.getElementById('statDevelopers'), DB.developers.length,  900,  false);
+      // Price range — animate the display text separately
+      const rangeEl = document.getElementById('statRange');
+      let t = 0;
+      const dur = 1400;
+      const startT = performance.now();
+      function tickRange(now) {
+        const p = Math.min((now - startT) / dur, 1);
+        const e = 1 - Math.pow(1 - p, 3);
+        const lo = (minP * e).toFixed(1);
+        const hi = (maxP * e).toFixed(2);
+        rangeEl.textContent = `${lo} – ${hi}`;
+        if (p < 1) requestAnimationFrame(tickRange);
+      }
+      requestAnimationFrame(tickRange);
+    }
+  }, { threshold: 0.4 });
+  obs.observe(statsBar);
+}
+
+// ======================== SCROLL REVEALS ========================
+function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ======================== INIT ========================
+function applyContact() {
+  const c = DB.contact || {};
+  const email = c.email || '';
+  const wa = c.whatsapp || '';
+  const waDisplay = c.whatsappDisplay || wa;
+  const line = c.line || '';
+  const fb = c.facebook || '';
+  const fbDisplay = c.facebookDisplay || fb;
+
+  // CTA contact channels
+  const ch = document.getElementById('contactChannels');
+  if (ch) ch.innerHTML = `
+    ${email ? `<a href="mailto:${email}" class="contact-channel">
+      <div class="contact-channel-icon" style="background:#1E1A14">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#B39B6D" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+      </div>
+      <div class="contact-channel-info"><div class="contact-channel-label">Email</div><div class="contact-channel-value">${email}</div></div>
+    </a>` : ''}
+    ${line ? `<a href="https://line.me/ti/p/~${line}" target="_blank" rel="noopener" class="contact-channel">
+      <div class="contact-channel-icon" style="background:#0E1A0F">
+        <svg viewBox="0 0 24 24" fill="#06C755"><path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.14 1.9 5.9 4.77 7.55-.21.78-.76 2.83-.87 3.27-.14.55.2.54.42.39.17-.11 2.73-1.85 3.84-2.6.6.09 1.22.13 1.84.13 5.52 0 10-3.92 10-8.74C22 5.92 17.52 2 12 2zm-3.5 11.5h-1.7V8.5h1.7v5zm3.25 0h-1.7V8.5h1.7v5zm3.25 0h-1.7V8.5h1.7v5z"/></svg>
+      </div>
+      <div class="contact-channel-info"><div class="contact-channel-label">Line</div><div class="contact-channel-value">${line}</div></div>
+    </a>` : ''}
+    ${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener" class="contact-channel">
+      <div class="contact-channel-icon" style="background:#0E1A0F">
+        <svg viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </div>
+      <div class="contact-channel-info"><div class="contact-channel-label">WhatsApp</div><div class="contact-channel-value">${waDisplay}</div></div>
+    </a>` : ''}
+    ${fb ? `<a href="https://facebook.com/${fb}" target="_blank" rel="noopener" class="contact-channel">
+      <div class="contact-channel-icon" style="background:#1A1F2E">
+        <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </div>
+      <div class="contact-channel-info"><div class="contact-channel-label">Facebook</div><div class="contact-channel-value">${fbDisplay}</div></div>
+    </a>` : ''}
+  `;
+
+  // Footer contact
+  const fc = document.getElementById('footerContact');
+  if (fc) fc.innerHTML = `
+    ${email ? `<a href="mailto:${email}">✉ ${email}</a>` : ''}
+    ${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">● WhatsApp: ${waDisplay}</a>` : ''}
+    ${line ? `<a href="https://line.me/ti/p/~${line}" target="_blank" rel="noopener">● Line: ${line}</a>` : ''}
+    ${fb ? `<a href="https://facebook.com/${fb}" target="_blank" rel="noopener">f Facebook: ${fbDisplay}</a>` : ''}
+  `;
+
+  // FAB
+  const fab = document.getElementById('fabWhatsapp');
+  if (fab && wa) fab.href = `https://wa.me/${wa}`;
+}
+
+function applyHeroImages() {
+  const imgs = DB.heroImages || [];
+  const slidesWrap = document.querySelector('.hero-slides');
+  const dotsWrap = document.getElementById('heroDots');
+  if (!slidesWrap || !dotsWrap) return;
+
+  // Rebuild slides
+  slidesWrap.innerHTML = imgs.map((h, i) => `
+    <div class="hero-slide${i === 0 ? ' active' : ''}"
+      style="background-image:url('${h.url}');background-position:${h.position || 'center center'};animation-delay:${-i * 8}s"></div>
+  `).join('');
+
+  // Rebuild dots
+  dotsWrap.innerHTML = imgs.map((_, i) =>
+    `<button class="hero-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`
+  ).join('');
+
+  // Reset slideshow
+  _slideIndex = 0;
+  if (_slideTimer) clearInterval(_slideTimer);
+  if (imgs.length > 1) _slideTimer = setInterval(() => goToSlide(_slideIndex + 1), 8000);
+}
+
+// Hide loader and boot app on DOMContentLoaded — don't wait for external resources
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadDB();
+  applyHeroImages();
+  applyContact();
+
+  // Hash-based routing for shareable blog post URLs
+  const hash = window.location.hash;
+  if (hash && hash.startsWith('#post-')) {
+    const postId = parseInt(hash.slice(6));
+    if (!isNaN(postId)) { navigate('blog-post', postId); }
+    else { renderHome(); }
+  } else {
+    renderHome();
+  }
+
+  // Hide loader after brief brand animation
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.classList.add('hidden');
+  }, 1800);
+
+  // Header scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Hamburger
+  document.querySelector('.hamburger').addEventListener('click', toggleMobileNav);
+
+  initReveal();
+  initStatsCountUp();
+  initSlideshow();
+});
+</script>
+</body>
+</html>
