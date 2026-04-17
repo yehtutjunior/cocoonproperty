@@ -892,6 +892,7 @@ footer { padding: 4rem 0 2rem; border-top: 1px solid var(--cocoon-silk); backgro
     </a>
     <nav>
       <a href="#portfolio" onclick="navigate('home'); scrollToEl('#portfolio')" style="cursor:pointer">Portfolio</a>
+      <a href="portfolio.html" style="cursor:pointer">Selected</a>
       <a onclick="navigate('blog')" style="cursor:pointer">Blog</a>
       <a href="#contact" onclick="navigate('home'); scrollToEl('#contact')" style="cursor:pointer">Contact</a>
     </nav>
@@ -905,6 +906,7 @@ footer { padding: 4rem 0 2rem; border-top: 1px solid var(--cocoon-silk); backgro
 <!-- MOBILE NAV DRAWER -->
 <nav class="mobile-nav" id="mobileNav">
   <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#portfolio')">Portfolio</a>
+  <a href="portfolio.html" onclick="closeMobileNav()">Selected</a>
   <a onclick="closeMobileNav(); navigate('blog')">Blog</a>
   <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#contact')">Contact</a>
 
