@@ -1,0 +1,25 @@
+{
+  "name": "Cocoon Admin",
+  "short_name": "Cocoon Admin",
+  "description": "Cocoon Property Bangkok — Admin Dashboard",
+  "start_url": "/admin/index.html",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090908",
+  "theme_color": "#090908",
+  "icons": [
+    {
+      "src": "/icon-admin-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-admin-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
