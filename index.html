@@ -1950,7 +1950,8 @@ function renderDetail(id) {
       .replace(/\n/g,'<br>');
 
   // Map
-  const coords = (p.lat && p.lng) ? { lat: p.lat, lng: p.lng } : PROPERTY_COORDS[p.id];
+  const coords = (p.lat && p.lng) ? { lat: p.lat, lng: p.lng } : (!p.mapLink ? PROPERTY_COORDS[p.id] : null);
+  const mapsHref = p.mapLink || (coords ? `https://www.google.com/maps?q=${coords.lat},${coords.lng}` : null);
   if (coords) {
     document.getElementById('detailMap').innerHTML = `<iframe
       src="https://www.google.com/maps?q=${coords.lat},${coords.lng}&z=16&output=embed"
@@ -1958,7 +1959,19 @@ function renderDetail(id) {
       referrerpolicy="no-referrer-when-downgrade"></iframe>
       <div style="margin-top:0.75rem;font-size:0.72rem;color:var(--cocoon-text-soft);letter-spacing:0.05em">
         ${p.location || ''}
-        <a href="https://www.google.com/maps?q=${coords.lat},${coords.lng}" target="_blank" rel="noopener"
+        <a href="${mapsHref}" target="_blank" rel="noopener"
+          style="color:var(--cocoon-gold);margin-left:0.75rem;text-decoration:none">Open in Google Maps ↗</a>
+      </div>`;
+    document.getElementById('detailMapSection').style.display = '';
+  } else if (p.mapLink) {
+    const searchQ = encodeURIComponent((p.name || '') + (p.location ? ' ' + p.location : '') + ' Bangkok Thailand');
+    document.getElementById('detailMap').innerHTML = `<iframe
+      src="https://www.google.com/maps?q=${searchQ}&output=embed"
+      width="100%" height="360" style="border:0;border-radius:4px;display:block" allowfullscreen loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div style="margin-top:0.75rem;font-size:0.72rem;color:var(--cocoon-text-soft);letter-spacing:0.05em">
+        ${p.location || ''}
+        <a href="${p.mapLink}" target="_blank" rel="noopener"
           style="color:var(--cocoon-gold);margin-left:0.75rem;text-decoration:none">Open in Google Maps ↗</a>
       </div>`;
     document.getElementById('detailMapSection').style.display = '';
