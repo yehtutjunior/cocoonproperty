@@ -672,10 +672,10 @@ const DB = {
     { url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80', position: 'center 50%' },
   ],
   contact: {
-    email: 'hello@cocoonproperty.com',
-    whatsapp: '66800000000',
-    whatsappDisplay: '+66 80 000 0000',
-    line: '@cocoonproperty',
+    email: 'info.cocoonproperty@gmail.com',
+    whatsapp: '66949960368',
+    whatsappDisplay: '+66949960368',
+    line: 'kate_ywadi',
     facebook: 'cocoonpropertybkk',
     facebookDisplay: 'Cocoon Property Thailand',
   },
@@ -695,9 +695,16 @@ function saveDB() {
   if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
     (async () => {
       try {
-        await _supabase.from('cocoon_db')
+        const { error } = await _supabase.from('cocoon_db')
           .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() });
-      } catch(e) {}
+        if (error) {
+          console.error('Supabase save error:', error);
+          showToast('⚠️ Cloud save failed — check connection', 'error');
+        }
+      } catch(e) {
+        console.error('Supabase save exception:', e);
+        showToast('⚠️ Cloud save failed — saved locally only', 'error');
+      }
     })();
   }
   // Fallback: localStorage
@@ -767,12 +774,10 @@ function navigate(page) {
   }
 }
 
-let _adminAuthed = false;
-
 function adminLogin() {
   const pw = document.getElementById('adminPassword').value;
   if (pw === DB.admin.password) {
-    _adminAuthed = true;
+    sessionStorage.setItem('adminAuthed', '1');
     navigate('admin');
   } else {
     showToast('Incorrect password', 'error');
@@ -780,7 +785,7 @@ function adminLogin() {
 }
 
 function adminLogout() {
-  _adminAuthed = false;
+  sessionStorage.removeItem('adminAuthed');
   navigate('admin-login');
 }
 
@@ -1844,7 +1849,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loader) loader.classList.add('hidden');
   }, 800);
 
-  if (_adminAuthed) {
+  if (sessionStorage.getItem('adminAuthed') === '1') {
     navigate('admin');
   } else {
     navigate('admin-login');
