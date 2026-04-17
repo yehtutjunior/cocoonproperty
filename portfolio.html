@@ -333,11 +333,9 @@ body {
 </a>
 
 <script>
-// ══════════════════════════════════════════════
-// ▶  EDIT THIS LIST to change which 5 properties show
-//    Use the property IDs from your admin dashboard
-// ══════════════════════════════════════════════
-const PORTFOLIO_IDS = [1, 18, 19, 10, 2];
+// Portfolio IDs are now managed from the Admin → Selected tab
+// This fallback is used only if nothing is set in the DB yet
+const FALLBACK_IDS = [1, 18, 19, 10, 2];
 
 // ── SUPABASE ──
 const SUPABASE_URL  = 'https://qarfdoactjicxishrwpt.supabase.co';
@@ -361,7 +359,7 @@ const PROPERTY_COORDS = {
 
 // ── DB SEED ──
 const DB = {
-  properties:[],developers:[],trainLines:[],contact:{},
+  properties:[], developers:[], trainLines:[], contact:{}, selectedPortfolio:[],
 };
 
 async function loadDB() {
@@ -381,10 +379,11 @@ async function loadDB() {
     } catch(e) {}
   }
   if (parsed) {
-    if (parsed.properties) DB.properties = parsed.properties;
-    if (parsed.developers) DB.developers = parsed.developers;
-    if (parsed.trainLines)  DB.trainLines  = parsed.trainLines;
-    if (parsed.contact)     DB.contact     = parsed.contact;
+    if (parsed.properties)       DB.properties       = parsed.properties;
+    if (parsed.developers)       DB.developers       = parsed.developers;
+    if (parsed.trainLines)       DB.trainLines       = parsed.trainLines;
+    if (parsed.contact)          DB.contact          = parsed.contact;
+    if (parsed.selectedPortfolio) DB.selectedPortfolio = parsed.selectedPortfolio;
   }
 }
 
@@ -408,7 +407,10 @@ function showDetail(id) {
 // ── RENDER CARDS ──
 function renderCards() {
   const grid = document.getElementById('portfolioGrid');
-  const props = PORTFOLIO_IDS
+  const ids = (DB.selectedPortfolio && DB.selectedPortfolio.length)
+    ? DB.selectedPortfolio
+    : FALLBACK_IDS;
+  const props = ids
     .map(id => DB.properties.find(p => p.id === id))
     .filter(Boolean);
 
