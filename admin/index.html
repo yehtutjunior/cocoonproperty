@@ -740,8 +740,7 @@ function navigate(page) {
 function adminLogin() {
   const pw = document.getElementById('adminPassword').value;
   if (pw === DB.admin.password) {
-    DB.admin.loggedIn = true;
-    saveDB();
+    sessionStorage.setItem('cocoon_admin_auth', '1');
     navigate('admin');
   } else {
     showToast('Incorrect password', 'error');
@@ -749,8 +748,7 @@ function adminLogin() {
 }
 
 function adminLogout() {
-  DB.admin.loggedIn = false;
-  saveDB();
+  sessionStorage.removeItem('cocoon_admin_auth');
   navigate('admin-login');
 }
 
@@ -1746,7 +1744,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loader) loader.classList.add('hidden');
   }, 800);
 
-  if (DB.admin.loggedIn) {
+  if (sessionStorage.getItem('cocoon_admin_auth') === '1') {
     navigate('admin');
   } else {
     navigate('admin-login');
