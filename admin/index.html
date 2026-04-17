@@ -737,10 +737,12 @@ function navigate(page) {
   }
 }
 
+let _adminAuthed = false;
+
 function adminLogin() {
   const pw = document.getElementById('adminPassword').value;
   if (pw === DB.admin.password) {
-    sessionStorage.setItem('cocoon_admin_auth', '1');
+    _adminAuthed = true;
     navigate('admin');
   } else {
     showToast('Incorrect password', 'error');
@@ -748,7 +750,7 @@ function adminLogin() {
 }
 
 function adminLogout() {
-  sessionStorage.removeItem('cocoon_admin_auth');
+  _adminAuthed = false;
   navigate('admin-login');
 }
 
@@ -1744,7 +1746,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loader) loader.classList.add('hidden');
   }, 800);
 
-  if (sessionStorage.getItem('cocoon_admin_auth') === '1') {
+  if (_adminAuthed) {
     navigate('admin');
   } else {
     navigate('admin-login');
