@@ -491,7 +491,10 @@ function renderDetail(id) {
       <span>Photo Coming Soon</span></div></div>`;
   }
 
-  document.getElementById('detailDescription').textContent = p.description || '';
+  document.getElementById('detailDescription').innerHTML =
+    (p.description || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\n/g,'<br>');
 
   // Map
   const coords = (p.lat && p.lng) ? {lat:p.lat,lng:p.lng} : PROPERTY_COORDS[p.id];
