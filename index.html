@@ -1288,12 +1288,15 @@ const PROPERTY_COORDS = {
   21: { lat: 13.7485, lng: 100.6183 }, // Supalai Veranda Ramkhamhaeng — MRT Orange Line
   22: { lat: 13.7174, lng: 100.5874 }, // The Nest Sukhumvit 71 — BTS Phra Khanong
   23: { lat: 13.7658, lng: 100.5254 }, // Supalai Premier Samsen–Ratchawat — BTS Victory Monument
+  24: { lat: 13.6558, lng: 100.6116 }, // Reach Sukhumvit 107 — BTS Bearing
+  25: { lat: 13.6707, lng: 100.6017 }, // Rye Sukhumvit 101 — BTS Punnawithi
+  26: { lat: 13.6688, lng: 100.6151 }, // Regent Home Bangna — BTS Bangna
 };
 
 // ======================== DATA STORE ========================
 const DB = {
   properties: [
-    { id:1, name:"Good Day Sukhumvit 93", developerId:1, description:"A modern condominium nestled in the heart of Sukhumvit, offering contemporary living with premium amenities and excellent connectivity to the BTS network.", startingPrice:1.9, location:"Bang Chak, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/GKYTSAHZWbJhmolAhXmAbZD6Nfg/2850x1515/project/156831/screenshot-20241118102318.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[{id:1,name:"Good Day Project",documentUrl:"https://drive.google.com/file/d/1EoJsqYRbH_GSM52eJnq3XwpO9PqB6llm/view?usp=drive_link"}], status:"ready", moveIn:"", type:"ready" },
+    { id:1, name:"Good Day Sukhumvit 93", developerId:2, description:"A modern condominium nestled in the heart of Sukhumvit, offering contemporary living with premium amenities and excellent connectivity to the BTS network.", startingPrice:1.9, location:"Bang Chak, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/GKYTSAHZWbJhmolAhXmAbZD6Nfg/2850x1515/project/156831/screenshot-20241118102318.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[{id:1,name:"Good Day Project",documentUrl:"https://drive.google.com/file/d/1EoJsqYRbH_GSM52eJnq3XwpO9PqB6llm/view?usp=drive_link"}], status:"ready", moveIn:"", type:"ready" },
     { id:2, name:"Aspire Sukhumvit–Rama 4", developerId:2, description:"Strategically located at the intersection of Sukhumvit and Rama 4, this development offers unmatched accessibility and urban lifestyle.", startingPrice:3.1, location:"Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/LNwxU7HaN_IkML-OQQPPqg5X5Ts/2850x1515/project/114198/01-aspire-skv-4-overall-day.jpg", amenities:JSON.stringify(["Rooftop Pool","Sky Lounge","Fitness Center","Retail Shops","EV Charging"]), trainLineIds:[1], documents:[{id:1,name:"Brochure",documentUrl:"#"},{id:2,name:"Floor Plan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
     { id:3, name:"Aspire Vibha–Victory", developerId:2, description:"Centrally located near Victory Monument, this high-rise development blends connectivity with upscale design.", startingPrice:3.35, location:"Victory Monument", imageUrl:"https://cdn.fazwaz.com/nw/dS5C5_O89M6lqLxFNpYiloJYJmg/2850x1515/project/157716/overall-building-final-hires.jpg", amenities:JSON.stringify(["Infinity Pool","Gym","Meeting Rooms","Garden Terrace"]), trainLineIds:[1], documents:[], status:"ready", moveIn:"", type:"ready" },
     { id:4, name:"Life Sathorn Sierra", developerId:3, description:"Premium living along the BTS Silom line, offering serene surroundings while remaining connected to Bangkok's business districts.", startingPrice:3.69, location:"Talat Phlu, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/2Gs3mwPoKH87ySssuOP_9ttsKQM/2850x1515/project/39245/01-life-sathorn-sierra-welcome-foyer-17.jpg", amenities:JSON.stringify(["Pool","Gym","Kids Club","Library","Shuttle Service"]), trainLineIds:[2], documents:[], status:"ready", moveIn:"", type:"ready" },
@@ -1316,6 +1319,9 @@ const DB = {
     { id:21, name:"Supalai Veranda Ramkhamhaeng", developerId:7, description:"Ready-to-move Supalai Veranda project served by the new MRT Orange Line at Ramkhamhaeng. Practical units from 28–44 sqm with resort-style amenities at competitive pricing in one of Bangkok's most improving eastern districts.", startingPrice:2.55, size:"28–44 sqm", location:"Ramkhamhaeng, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/VLHlQGDX-qx_n5Iuruy50upG9IY/0x0/project/41819/180718-overall.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden Terrace","24h Security","Parking"]), trainLineIds:[11], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
     { id:22, name:"The Nest Sukhumvit 71", developerId:9, description:"Boutique high-rise by The Nestment, nestled in the quiet leafy enclave of Sukhumvit 71 (Pridi Banomyong). Walking distance to BTS Phra Khanong, with thoughtfully designed 29–45 sqm units and a rooftop sky lounge.", startingPrice:3.54, size:"29–45 sqm", location:"Sukhumvit 71, Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/6GGaTKzO34bcAyor9kbgjBVLHaw/790x400/project/11906/the-nest-sukhumvit-71-buildingthe-nest-building2.jpg", amenities:JSON.stringify(["Sky Lounge","Rooftop Pool","Fitness Center","Key Card Lift","CCTV Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
     { id:23, name:"Supalai Premier Samsen–Ratchawat", developerId:7, description:"Supalai's premier flagship development along the BTS Victory Monument corridor. Generous residences from 49–123 sqm in a prime central location, offering unrivalled spaciousness and connectivity for both own-use and investment.", startingPrice:6.41, size:"49–123 sqm", location:"Samsen–Ratchawat, Dusit", imageUrl:"https://cdn.fazwaz.com/nw/HxHpfKrCnuLvDvGiuud6fYZC-YI/2850x1515/project/115306/supalai-ratchawat-hero-shot-hires01-copy.jpg", amenities:JSON.stringify(["Grand Lobby","Infinity Pool","Fully-Equipped Gym","Meeting Rooms","Concierge","EV Charging","Visitor Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
+    { id:24, name:"Reach Sukhumvit 107", developerId:10, description:"A ready-to-move condominium by Regent Green Power near BTS Bearing on the BTS Sukhumvit extension. Compact, well-designed units at one of the most accessible price points on the Sukhumvit corridor — ideal for first-time buyers and yield-focused investors.", startingPrice:1.39, size:"", location:"Bearing, Sukhumvit", imageUrl:"", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"Oct 2025", type:"ready", lat:13.6558, lng:100.6116 },
+    { id:25, name:"Rye Sukhumvit 101", developerId:10, description:"Modern ready-to-move condominium by Regent Green Power near BTS Punnawithi. RYE offers contemporary urban living with quality amenities at an approachable price point in Bangkok's eastern Sukhumvit corridor.", startingPrice:1.49, size:"", location:"Punnawithi, Sukhumvit", imageUrl:"", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"Dec 2022", type:"ready", lat:13.6707, lng:100.6017 },
+    { id:26, name:"Regent Home Bangna", developerId:10, description:"Regent Green Power's established Bangna development offers spacious, affordable ready-to-move units near the BTS Sukhumvit Line. An excellent entry point into Bangkok's property market with strong rental demand from the surrounding business district.", startingPrice:1.39, size:"", location:"Bangna", imageUrl:"", amenities:JSON.stringify(["Swimming Pool","Fitness Center","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready", lat:13.6688, lng:100.6151 },
   ],
   developers: [
     { id:1, name:"Good Day", logoUrl:"", description:"Boutique developer focused on accessible urban living near key transit nodes." },
@@ -1327,6 +1333,7 @@ const DB = {
     { id:7, name:"Supalai", logoUrl:"", description:"One of Thailand's oldest and most trusted developers. Supalai delivers reliable, affordable-to-mid-range condos across Bangkok's BTS and MRT corridors." },
     { id:8, name:"COZII Property", logoUrl:"", description:"Rising boutique developer known for compact, design-driven condominiums in Bangkok's up-and-coming residential corridors." },
     { id:9, name:"The Nestment", logoUrl:"", description:"Modern developer focused on creating comfortable, well-located residences for the new generation of Bangkok urban dwellers." },
+    { id:10, name:"Regent Green Power", logoUrl:"", description:"A leading Thai developer focused on affordable, transit-linked condominiums along Bangkok's BTS Sukhumvit extension. Known for the REACH and RYE brands, offering quality urban living at accessible price points." },
   ],
   trainLines: [
     { id:1,  name:"BTS Sukhumvit Line",  type:"bts", color:"#7CB342", description:"Running from Khu Khot to Kheha, the longest BTS line serving Bangkok's eastern corridor via Asoke, Phrom Phong, and On Nut." },
@@ -1356,10 +1363,10 @@ const DB = {
   },
   posts: [],
   nextPostId: 1,
-  nextPropertyId: 24,
-  nextDeveloperId: 10,
+  nextPropertyId: 27,
+  nextDeveloperId: 11,
   admin: { loggedIn: false, password: "admin123" },
-  _version: 8
+  _version: 9
 };
 
 // ======================== DB PERSISTENCE (Supabase) ========================
@@ -1418,10 +1425,10 @@ async function loadDB() {
     if (parsed.heroImages) DB.heroImages = parsed.heroImages;
     if (parsed.posts) { DB.posts = parsed.posts; DB.nextPostId = parsed.nextPostId || DB.nextPostId; }
     if (parsed.contact) DB.contact = parsed.contact;
-    saveDB();
+    try { localStorage.setItem('cocoon_db', JSON.stringify(DB)); } catch(e) {}
   } else {
     Object.assign(DB, parsed);
-    saveDB();
+    try { localStorage.setItem('cocoon_db', JSON.stringify(DB)); } catch(e) {}
   }
 }
 
