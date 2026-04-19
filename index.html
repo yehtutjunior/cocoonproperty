@@ -908,11 +908,27 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
   /* Filter dropdown — prevent overflow */
   .hero-filter-menu { min-width: 140px; max-width: 80vw; }
 }
+@media (max-width: 768px) {
+  /* Hero: natural height on mobile so filter bar never floats over cards */
+  .hero { min-height: auto; }
+  .hero-content { padding-top: 100px; padding-bottom: 1.5rem; }
+  /* Pull filter bar out of absolute — flows below hero text in normal document order */
+  .hero-bottom-bar { position: relative; bottom: auto; left: auto; right: auto; padding: 0 1rem 1.5rem; }
+  .hero-bottom-inner { border-radius: 12px; }
+}
 @media (max-width: 480px) {
-  /* Filter bar — 2 columns on small screens */
+  /* 2-column filter on small phones */
   .hb-col { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
-  /* Hero padding */
-  .hero-content { padding-top: 80px; padding-bottom: 60px; }
+  /* Cards: tappable with press feedback */
+  .project-card { touch-action: manipulation; }
+  .project-card:active { transform: scale(0.98); opacity: 0.9; }
+  /* Reduce card image height */
+  .card-image { height: 190px; }
+  /* Reduce card body padding */
+  .card-body { padding: 1rem 1.25rem 1.25rem; }
+  /* Stats tighter */
+  .stats-inner { gap: 1.5rem; flex-wrap: wrap; }
+  .stat-num { font-size: 2rem; }
 }
 </style>
 </head>
