@@ -68,9 +68,8 @@ body {
   max-width: 1340px; margin: 0 auto; padding: 0 2.5rem;
   display: flex; align-items: center; justify-content: space-between; width: 100%;
 }
-.logo { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
-.logo-main { font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1D1D1F; }
-.logo-sub  { font-size: 0.42rem; font-weight: 500; letter-spacing: 0.35em; text-transform: uppercase; color: #6E6E73; }
+.logo { text-decoration: none; display: inline-block; }
+.logo img { height: 38px; width: auto; display: block; object-fit: contain; }
 .header-tag { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #6E6E73; }
 .back-to-site {
   display: inline-flex; align-items: center; gap: 0.4rem;
@@ -201,7 +200,7 @@ body {
 /* Loader */
 #loader { position:fixed;inset:0;background:#FFFFFF;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.2rem;transition:opacity .5s ease; }
 #loader.hidden { opacity:0;pointer-events:none; }
-.loader-logo { font-family:'Playfair Display',Georgia,serif;font-size:2rem;letter-spacing:0.12em;color:#1D1D1F;text-transform:uppercase;font-weight:700; }
+.loader-logo img { height:60px;width:auto;display:block; }
 .loader-bar { width:80px;height:2px;background:#E5E5EA;position:relative;overflow:hidden;border-radius:2px; }
 .loader-bar::after { content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--cocoon-gold);animation:loaderSlide 1.4s ease infinite; }
 @keyframes loaderSlide { to { left:100%; } }
@@ -219,7 +218,7 @@ body {
 <body>
 
 <div id="loader">
-  <div class="loader-logo">Cocoon</div>
+  <div class="loader-logo"><img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok"></div>
   <div class="loader-bar"></div>
 </div>
 
@@ -227,8 +226,7 @@ body {
 <header class="site-header">
   <div class="header-inner">
     <a href="index.html" class="logo">
-      <span class="logo-main">Cocoon</span>
-      <span class="logo-sub">Property Bangkok</span>
+      <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
     </a>
     <span class="header-tag">Selected Portfolio</span>
     <a href="index.html" class="back-to-site">
@@ -429,7 +427,7 @@ function renderCards() {
               <span>Photo Coming Soon</span>
             </div>`}
         ${primaryLine ? `<div class="card-line-badge" style="background:${primaryLine.color}">${primaryLine.name}</div>` : ''}
-        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : ''}">${p.status || 'Ready to Move'}</div>
+        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : ''}">${p.type === 'offplan' ? 'Pre-Sale' : 'Ready to Move'}</div>
       </div>
       <div class="card-body">
         <div class="card-brand">${dev?.name || ''}</div>
