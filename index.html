@@ -909,16 +909,24 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
   .hero-filter-menu { min-width: 140px; max-width: 80vw; }
 }
 @media (max-width: 768px) {
-  /* Hero: natural height on mobile so filter bar never floats over cards */
-  .hero { min-height: auto; }
-  .hero-content { padding-top: 100px; padding-bottom: 1.5rem; }
-  /* Pull filter bar out of absolute — flows below hero text in normal document order */
+  /* Hero: natural height, filter bar flows below text */
+  .hero { min-height: auto; flex-direction: column; align-items: stretch; }
+  .hero-content { padding-top: 80px; padding-bottom: 1.5rem; }
+  .hero h1 { font-size: clamp(2.2rem, 9vw, 3.2rem); }
+  /* Filter bar: out of absolute positioning, flows in document */
   .hero-bottom-bar { position: relative; bottom: auto; left: auto; right: auto; padding: 0 1rem 1.5rem; }
-  .hero-bottom-inner { border-radius: 12px; }
+  /* Inner container wraps on mobile */
+  .hero-bottom-inner { flex-wrap: wrap; border-radius: 12px; }
+  /* Search input: full width row */
+  .hb-search { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); border-radius: 12px 12px 0 0; }
+  /* Each filter col: 50% (2 per row) */
+  .hb-col { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  /* Even columns get a divider on the left */
+  .hb-col:nth-child(odd) { border-right: 1px solid rgba(0,0,0,0.06); }
+  /* CTA button: full width */
+  .hb-search-btn { flex: 0 0 100%; border-radius: 0 0 12px 12px; padding: 0.9rem; font-size: 0.78rem; justify-content: center; }
 }
 @media (max-width: 480px) {
-  /* 2-column filter on small phones */
-  .hb-col { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
   /* Cards: tappable with press feedback */
   .project-card { touch-action: manipulation; }
   .project-card:active { transform: scale(0.98); opacity: 0.9; }
