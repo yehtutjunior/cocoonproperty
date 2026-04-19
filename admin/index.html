@@ -1123,6 +1123,11 @@ function renderAdminProperties() {
   Sortable.create(tbody, {
     handle: '.drag-handle',
     animation: 150,
+    scroll: true,
+    scrollEl: document.documentElement,
+    scrollSensitivity: 100,
+    scrollSpeed: 12,
+    forceAutoScrollFallback: true,
     onEnd() {
       const newOrder = [...tbody.querySelectorAll('tr')].map(tr => parseInt(tr.dataset.id));
       DB.properties = newOrder.map(id => DB.properties.find(p => p.id === id));
