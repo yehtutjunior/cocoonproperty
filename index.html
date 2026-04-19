@@ -71,14 +71,8 @@ body {
 }
 .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 .loader-brand { text-align: center; opacity: 0; animation: loaderIn 0.8s 0.2s ease forwards; }
-.loader-brand h1 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 2.8rem; font-weight: 700; letter-spacing: 0.12em;
-  color: #1D1D1F; text-transform: uppercase;
-}
-.loader-brand p {
-  font-family: var(--font-body); font-size: 0.7rem; letter-spacing: 0.35em;
-  color: #6E6E73; margin-top: 0.6rem; text-transform: uppercase;
+.loader-brand img {
+  height: 72px; width: auto; display: block; margin: 0 auto;
 }
 .loader-line {
   width: 60px; height: 2px; background: var(--cocoon-gold);
@@ -105,15 +99,8 @@ header.scrolled {
   max-width: 1340px; margin: 0 auto; padding: 0 2.5rem;
   display: flex; align-items: center; justify-content: space-between;
 }
-.logo { text-decoration: none; line-height: 1; }
-.logo-main {
-  font-family: 'Playfair Display', Georgia, serif; font-size: 1.4rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase; color: #1D1D1F; display: block;
-}
-.logo-sub {
-  font-family: var(--font-body); font-size: 0.5rem; font-weight: 500;
-  letter-spacing: 0.35em; color: #6E6E73; text-transform: uppercase; display: block; margin-top: 2px;
-}
+.logo { text-decoration: none; line-height: 1; display: inline-block; }
+.logo img { height: 42px; width: auto; display: block; object-fit: contain; }
 nav { display: flex; align-items: center; gap: 2rem; }
 nav a {
   font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
@@ -573,8 +560,7 @@ nav a:hover::after { width: 100%; }
 footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 .footer-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem; margin-bottom: 3rem; }
 .footer-brand p { font-size: 0.85rem; font-weight: 400; color: rgba(255,255,255,0.5); margin-top: 0.8rem; max-width: 280px; line-height: 1.7; }
-.footer-brand .logo-main { color: #FFFFFF; }
-.footer-brand .logo-sub { color: rgba(255,255,255,0.4); }
+.footer-brand .logo img { height: 36px; filter: brightness(0) invert(1); }
 .footer-links h4 { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.9); margin-bottom: 1rem; }
 .footer-links a { display: block; font-size: 0.84rem; font-weight: 400; color: rgba(255,255,255,0.5); text-decoration: none; margin-bottom: 0.5rem; transition: color 0.3s ease; cursor: pointer; }
 .footer-links a:hover { color: var(--cocoon-gold); }
@@ -935,8 +921,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 <!-- LOADER -->
 <div class="loader" id="loader">
   <div class="loader-brand">
-    <h1>Cocoon</h1>
-    <p>Property Thailand</p>
+    <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
   </div>
   <div class="loader-line"></div>
 </div>
@@ -945,8 +930,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 <header id="header">
   <div class="header-inner">
     <a class="logo" onclick="navigate('home')" style="cursor:pointer">
-      <span class="logo-main">Cocoon</span>
-      <span class="logo-sub">Property Thailand</span>
+      <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
     </a>
     <nav>
       <a href="#portfolio" onclick="navigate('home'); scrollToEl('#portfolio')" style="cursor:pointer">Portfolio</a>
@@ -1063,7 +1047,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
           <div class="hero-filter-menu" id="menu-status">
             <button onclick="setFilter('status','any','Any')" class="selected">Any Status</button>
             <button onclick="setFilter('status','ready','Ready to Move')">Ready to Move</button>
-            <button onclick="setFilter('status','offplan','Off-Plan')">Off-Plan</button>
+            <button onclick="setFilter('status','offplan','Pre-Sale')">Pre-Sale</button>
           </div>
         </div>
 
@@ -1151,8 +1135,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
       <div class="footer-inner">
         <div class="footer-brand">
           <a class="logo" onclick="navigate('home')" style="cursor:pointer">
-            <span class="logo-main" style="font-size:1.2rem">Cocoon</span>
-            <span class="logo-sub">Property Thailand</span>
+            <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
           </a>
           <p>A curated collection of premium condominiums along Bangkok's BTS &amp; MRT transit lines.</p>
         </div>
@@ -1363,17 +1346,17 @@ const DB = {
     { id:7, name:"The Address Siam–Ratchathewi", developerId:4, description:"Prestigious address in the heart of Bangkok, steps from major shopping centers and entertainment hubs.", startingPrice:7.99, location:"Ratchathewi", imageUrl:"https://cdn.fazwaz.com/nw/A-X6LOm6zwFZMzsvgBXxIjfjuP0/790x400/project/39086/the-address-siam-ratchathewi-1.jpeg", amenities:JSON.stringify(["Lap Pool","Premium Gym","Wine Cellar","Private Theater","Concierge 24/7"]), trainLineIds:[1], documents:[{id:3,name:"Masterplan",documentUrl:"#"}], status:"ready", moveIn:"", type:"ready" },
     { id:8, name:"Aspire Itsaraphap Station", developerId:2, description:"Quality living on the MRT Blue Line, connecting you seamlessly across Bangkok's key districts.", startingPrice:3.29, location:"Itsaraphap, Thonburi", imageUrl:"https://cdn.fazwaz.com/nw/o6zlXbiBaGQLZ0wNZ6whxzuh_M4/0x0/project/155521/240830-drop-off-view-final4-op2.jpg", amenities:JSON.stringify(["Pool","Gym","Garden","24h Security"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
     { id:9, name:"Life Rama 4–Asoke", developerId:3, description:"Dual access to MRT Blue Line and expressway makes this one of Bangkok's best-connected luxury addresses.", startingPrice:4.49, location:"Queen Sirikit, Rama 4", imageUrl:"https://cdn.fazwaz.com/nw/ufnV9ajwd_FovNQSJ8LCDam_h74/2850x1515/project/109058/210916-lrm4-heroshot-final-003-large.jpg", amenities:JSON.stringify(["Infinity Pool","Sky Deck","Gym","Smart Locks","EV Parking"]), trainLineIds:[3], documents:[], status:"ready", moveIn:"", type:"ready" },
-    { id:10, name:"Aspire Sukhumvit 103", developerId:2, description:"Off-plan opportunity in the fast-developing Udomsuk corridor, with strong rental demand from expats and professionals.", startingPrice:3.0, location:"Udomsuk, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/_Bd-GeJf_LOM7zGww74jE6CuWDQ/2850x1515/project/168186/screenshot-2025-11-06-114254.jpg", amenities:JSON.stringify(["Pool","Gym","Co-Working","Retail"]), trainLineIds:[1], documents:[{id:4,name:"E-Brochure",documentUrl:"#"},{id:5,name:"Payment Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
-    { id:11, name:"Life Udomsuk Station", developerId:3, description:"A landmark off-plan development at Udomsuk BTS, designed for modern Bangkok living at accessible price points.", startingPrice:3.89, location:"Udomsuk", imageUrl:"https://cdn.fazwaz.com/nw/v9sqx_IPcilNCsVh2_tPfPqdW_g/790x400/project/165402/overall-view-final-hires_1.jpg", amenities:JSON.stringify(["Rooftop Pool","Fitness","Co-Working","Smart Home"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"July 2028", type:"offplan" },
-    { id:12, name:"Life Charoennakhon–Sathorn", developerId:3, description:"Riverside district living meets Silom business access — a rare combination in one of Bangkok's most desirable neighborhoods.", startingPrice:3.89, location:"Krungthonburi, Charoen Nakhon", imageUrl:"https://cdn.fazwaz.com/nw/oV3J6GuVZ6MmxcnImTdOGMuKIU8/0x0/project/153371/heroshot-final-1920x1354.jpg", amenities:JSON.stringify(["River View Pool","Gym","Sky Bar","Shuttle to BTS"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
-    { id:13, name:"Life Sathorn–Narathiwas 22", developerId:3, description:"Prime Sathorn location, one of Bangkok's most prestigious business corridors, ideal for investment and self-use.", startingPrice:3.89, location:"Chong Nonsi, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/46PhvBpu3Tgucn9Ef-tlVmO6Sog/2850x1515/project/161328/e-brochure-a4-life-sathorn-nara22-compressed-02.jpg", amenities:JSON.stringify(["Pool","Gym","Meeting Rooms","EV Charging","Concierge"]), trainLineIds:[2], documents:[], status:"Off-Plan", moveIn:"Sept 2026", type:"offplan" },
-    { id:14, name:"Aspire Huai Khwang", developerId:2, description:"Emerging MRT Blue Line location with strong growth fundamentals and a vibrant local community feel.", startingPrice:3.69, location:"Huai Khwang", imageUrl:"https://cdn.fazwaz.com/nw/_NxtURY0NO_Vef40eSX2zXoanX4/2850x1515/project/150692/aspire-huaikhwang.jpg", amenities:JSON.stringify(["Pool","Fitness Center","Garden","Co-Working"]), trainLineIds:[3], documents:[{id:6,name:"Floor Plan",documentUrl:"#"}], status:"Off-Plan", moveIn:"April 2027", type:"offplan" },
-    { id:15, name:"Life Ratchada–Rama 9", developerId:3, description:"Central MRT hub at Phra Ram 9, surrounded by the CBD, entertainment, and world-class hospitals.", startingPrice:3.3, location:"Phra Ram 9, Ratchada", imageUrl:"https://cdn.fazwaz.com/nw/FLFhh6uqWd-O7iPYTWlIfCdLMl0/2850x1515/project/170645/2.png", amenities:JSON.stringify(["Infinity Pool","Sky Gym","Co-Working","Smart Living"]), trainLineIds:[3], documents:[], status:"Off-Plan", moveIn:"Oct 2027", type:"offplan" },
-    { id:16, name:"COZI ONNUT 46 (Srinakarin 38)", developerId:8, description:"A fresh boutique condominium by COZII Property, ideally positioned near BTS On Nut. Compact and intelligently designed units starting at 22 sqm — perfect for investors and first-time buyers seeking a well-connected address in Sukhumvit's eastern corridor.", startingPrice:1.59, size:"22–34.5 sqm", location:"On Nut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/1ISrx-8Mm-OUbmu_khH4Fv5REng/790x400/project/156339/screenshot-2024-10-28-141300.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","Key Card Access","CCTV Security"]), trainLineIds:[1], documents:[], status:"Off-Plan", moveIn:"Q3 2027", type:"offplan" },
-    { id:17, name:"Supalai Sense Srinakarin", developerId:7, description:"Supalai's Sense series brings refined modern living to the Srinakarin–Suan Luang Rama 9 corridor. With units ranging 25–53 sqm and direct MRT Yellow Line access, this development offers strong rental potential in a rapidly developing district.", startingPrice:1.89, size:"25–53 sqm", location:"Srinakarin, Suan Luang", imageUrl:"https://cdn.fazwaz.com/nw/k8SX4WObdazv7dRMLkeFC8kuPhM/2850x1515/project/143272/screenshot-2026-02-16-101053.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden","24h Security","Parking"]), trainLineIds:[6], documents:[], status:"Off-Plan", moveIn:"Q2 2026", type:"offplan" },
+    { id:10, name:"Aspire Sukhumvit 103", developerId:2, description:"Off-plan opportunity in the fast-developing Udomsuk corridor, with strong rental demand from expats and professionals.", startingPrice:3.0, location:"Udomsuk, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/_Bd-GeJf_LOM7zGww74jE6CuWDQ/2850x1515/project/168186/screenshot-2025-11-06-114254.jpg", amenities:JSON.stringify(["Pool","Gym","Co-Working","Retail"]), trainLineIds:[1], documents:[{id:4,name:"E-Brochure",documentUrl:"#"},{id:5,name:"Payment Plan",documentUrl:"#"}], status:"Pre-Sale", moveIn:"July 2028", type:"offplan" },
+    { id:11, name:"Life Udomsuk Station", developerId:3, description:"A landmark off-plan development at Udomsuk BTS, designed for modern Bangkok living at accessible price points.", startingPrice:3.89, location:"Udomsuk", imageUrl:"https://cdn.fazwaz.com/nw/v9sqx_IPcilNCsVh2_tPfPqdW_g/790x400/project/165402/overall-view-final-hires_1.jpg", amenities:JSON.stringify(["Rooftop Pool","Fitness","Co-Working","Smart Home"]), trainLineIds:[1], documents:[], status:"Pre-Sale", moveIn:"July 2028", type:"offplan" },
+    { id:12, name:"Life Charoennakhon–Sathorn", developerId:3, description:"Riverside district living meets Silom business access — a rare combination in one of Bangkok's most desirable neighborhoods.", startingPrice:3.89, location:"Krungthonburi, Charoen Nakhon", imageUrl:"https://cdn.fazwaz.com/nw/oV3J6GuVZ6MmxcnImTdOGMuKIU8/0x0/project/153371/heroshot-final-1920x1354.jpg", amenities:JSON.stringify(["River View Pool","Gym","Sky Bar","Shuttle to BTS"]), trainLineIds:[2], documents:[], status:"Pre-Sale", moveIn:"Sept 2026", type:"offplan" },
+    { id:13, name:"Life Sathorn–Narathiwas 22", developerId:3, description:"Prime Sathorn location, one of Bangkok's most prestigious business corridors, ideal for investment and self-use.", startingPrice:3.89, location:"Chong Nonsi, Sathorn", imageUrl:"https://cdn.fazwaz.com/nw/46PhvBpu3Tgucn9Ef-tlVmO6Sog/2850x1515/project/161328/e-brochure-a4-life-sathorn-nara22-compressed-02.jpg", amenities:JSON.stringify(["Pool","Gym","Meeting Rooms","EV Charging","Concierge"]), trainLineIds:[2], documents:[], status:"Pre-Sale", moveIn:"Sept 2026", type:"offplan" },
+    { id:14, name:"Aspire Huai Khwang", developerId:2, description:"Emerging MRT Blue Line location with strong growth fundamentals and a vibrant local community feel.", startingPrice:3.69, location:"Huai Khwang", imageUrl:"https://cdn.fazwaz.com/nw/_NxtURY0NO_Vef40eSX2zXoanX4/2850x1515/project/150692/aspire-huaikhwang.jpg", amenities:JSON.stringify(["Pool","Fitness Center","Garden","Co-Working"]), trainLineIds:[3], documents:[{id:6,name:"Floor Plan",documentUrl:"#"}], status:"Pre-Sale", moveIn:"April 2027", type:"offplan" },
+    { id:15, name:"Life Ratchada–Rama 9", developerId:3, description:"Central MRT hub at Phra Ram 9, surrounded by the CBD, entertainment, and world-class hospitals.", startingPrice:3.3, location:"Phra Ram 9, Ratchada", imageUrl:"https://cdn.fazwaz.com/nw/FLFhh6uqWd-O7iPYTWlIfCdLMl0/2850x1515/project/170645/2.png", amenities:JSON.stringify(["Infinity Pool","Sky Gym","Co-Working","Smart Living"]), trainLineIds:[3], documents:[], status:"Pre-Sale", moveIn:"Oct 2027", type:"offplan" },
+    { id:16, name:"COZI ONNUT 46 (Srinakarin 38)", developerId:8, description:"A fresh boutique condominium by COZII Property, ideally positioned near BTS On Nut. Compact and intelligently designed units starting at 22 sqm — perfect for investors and first-time buyers seeking a well-connected address in Sukhumvit's eastern corridor.", startingPrice:1.59, size:"22–34.5 sqm", location:"On Nut, Sukhumvit", imageUrl:"https://cdn.fazwaz.com/nw/1ISrx-8Mm-OUbmu_khH4Fv5REng/790x400/project/156339/screenshot-2024-10-28-141300.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Co-Working Space","Key Card Access","CCTV Security"]), trainLineIds:[1], documents:[], status:"Pre-Sale", moveIn:"Q3 2027", type:"offplan" },
+    { id:17, name:"Supalai Sense Srinakarin", developerId:7, description:"Supalai's Sense series brings refined modern living to the Srinakarin–Suan Luang Rama 9 corridor. With units ranging 25–53 sqm and direct MRT Yellow Line access, this development offers strong rental potential in a rapidly developing district.", startingPrice:1.89, size:"25–53 sqm", location:"Srinakarin, Suan Luang", imageUrl:"https://cdn.fazwaz.com/nw/k8SX4WObdazv7dRMLkeFC8kuPhM/2850x1515/project/143272/screenshot-2026-02-16-101053.png", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden","24h Security","Parking"]), trainLineIds:[6], documents:[], status:"Pre-Sale", moveIn:"Q2 2026", type:"offplan" },
     { id:18, name:"Supalai Veranda Sukhumvit 117", developerId:7, description:"Ready-to-move Supalai Veranda development along the BTS Sukhumvit extension near Pu Chao station. Spacious units from 27–65 sqm with a full suite of resort-style amenities in the fast-growing Samut Prakan fringe.", startingPrice:2.04, size:"27–65 sqm", location:"Sukhumvit 117, Samut Prakan fringe", imageUrl:"https://cdn.fazwaz.com/nw/ELOLP1Iqs1nwcdZ993b-QvbcNWs/2850x1515/project/38928/5cc6c0b35a3a6032cd0be346.jpg", amenities:JSON.stringify(["Resort Pool","Clubhouse","Fitness Center","Sky Garden","24h Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
     { id:19, name:"Supalai City Resort Sukhumvit 107", developerId:7, description:"Resort-concept living at Sukhumvit 107 near BTS Bearing. Generous unit sizes from 28–69.5 sqm with verdant landscaping and premium facilities make this one of Supalai's best-value ready-to-move addresses on the BTS Sukhumvit Line.", startingPrice:2.29, size:"28–69.5 sqm", location:"Sukhumvit 107, Bearing", imageUrl:"https://cdn.fazwaz.com/nw/DoeGUVTq4adnKsYmci_BEhKZJ8c/2850x1515/project/114840/dji-0100.jpg", amenities:JSON.stringify(["Lagoon Pool","Tropical Garden","Fitness Center","Children's Area","24h Security","Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
-    { id:20, name:"Supalai Parc Ekkamai–Pattanakarn", developerId:7, description:"Off-plan opportunity in the prestigious Ekkamai–Pattanakarn neighbourhood with ARL Ramkhamhaeng access. Units from 30–56 sqm in a low-rise garden setting, offering a peaceful retreat with excellent connectivity.", startingPrice:2.41, size:"30–56 sqm", location:"Ekkamai–Pattanakarn, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/Mv6gzLBZb8Y-zeHPtkGukU9rTAg/790x400/project/154502/screenshot-2024-08-19-172243.png", amenities:JSON.stringify(["Park & Garden","Swimming Pool","Fitness Center","Co-Working Lounge","EV Charging"]), trainLineIds:[10], documents:[], status:"Off-Plan", moveIn:"Q3 2026", type:"offplan" },
+    { id:20, name:"Supalai Parc Ekkamai–Pattanakarn", developerId:7, description:"Off-plan opportunity in the prestigious Ekkamai–Pattanakarn neighbourhood with ARL Ramkhamhaeng access. Units from 30–56 sqm in a low-rise garden setting, offering a peaceful retreat with excellent connectivity.", startingPrice:2.41, size:"30–56 sqm", location:"Ekkamai–Pattanakarn, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/Mv6gzLBZb8Y-zeHPtkGukU9rTAg/790x400/project/154502/screenshot-2024-08-19-172243.png", amenities:JSON.stringify(["Park & Garden","Swimming Pool","Fitness Center","Co-Working Lounge","EV Charging"]), trainLineIds:[10], documents:[], status:"Pre-Sale", moveIn:"Q3 2026", type:"offplan" },
     { id:21, name:"Supalai Veranda Ramkhamhaeng", developerId:7, description:"Ready-to-move Supalai Veranda project served by the new MRT Orange Line at Ramkhamhaeng. Practical units from 28–44 sqm with resort-style amenities at competitive pricing in one of Bangkok's most improving eastern districts.", startingPrice:2.55, size:"28–44 sqm", location:"Ramkhamhaeng, Bangkok", imageUrl:"https://cdn.fazwaz.com/nw/VLHlQGDX-qx_n5Iuruy50upG9IY/0x0/project/41819/180718-overall.jpg", amenities:JSON.stringify(["Swimming Pool","Fitness Center","Garden Terrace","24h Security","Parking"]), trainLineIds:[11], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
     { id:22, name:"The Nest Sukhumvit 71", developerId:9, description:"Boutique high-rise by The Nestment, nestled in the quiet leafy enclave of Sukhumvit 71 (Pridi Banomyong). Walking distance to BTS Phra Khanong, with thoughtfully designed 29–45 sqm units and a rooftop sky lounge.", startingPrice:3.54, size:"29–45 sqm", location:"Sukhumvit 71, Phra Khanong", imageUrl:"https://cdn.fazwaz.com/nw/6GGaTKzO34bcAyor9kbgjBVLHaw/790x400/project/11906/the-nest-sukhumvit-71-buildingthe-nest-building2.jpg", amenities:JSON.stringify(["Sky Lounge","Rooftop Pool","Fitness Center","Key Card Lift","CCTV Security"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
     { id:23, name:"Supalai Premier Samsen–Ratchawat", developerId:7, description:"Supalai's premier flagship development along the BTS Victory Monument corridor. Generous residences from 49–123 sqm in a prime central location, offering unrivalled spaciousness and connectivity for both own-use and investment.", startingPrice:6.41, size:"49–123 sqm", location:"Samsen–Ratchawat, Dusit", imageUrl:"https://cdn.fazwaz.com/nw/HxHpfKrCnuLvDvGiuud6fYZC-YI/2850x1515/project/115306/supalai-ratchawat-hero-shot-hires01-copy.jpg", amenities:JSON.stringify(["Grand Lobby","Infinity Pool","Fully-Equipped Gym","Meeting Rooms","Concierge","EV Charging","Visitor Parking"]), trainLineIds:[1], documents:[], status:"Ready to Move", moveIn:"", type:"ready" },
@@ -1948,7 +1931,7 @@ function renderProjectsGrid(data) {
             </div>`
         }
         ${primaryLine ? `<div class="card-line-badge" style="background:${primaryLine.color}">${primaryLine.name}</div>` : ''}
-        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : 'ready-tag'}">${p.type === 'offplan' ? (p.status || 'Off-Plan') : 'Ready to Move'}</div>
+        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : 'ready-tag'}">${p.type === 'offplan' ? 'Pre-Sale' : 'Ready to Move'}</div>
       </div>
       <div class="card-body">
         <div class="card-brand">${dev?.name || ''}</div>
@@ -2049,7 +2032,7 @@ function renderDetail(id) {
     ${p.location ? `<div><div class="detail-field-label">Location</div><div class="detail-field-value" style="font-size:1rem">${p.location}</div></div>` : ''}
     <div><div class="detail-field-label">Starting Price</div><div class="detail-field-value" style="color:var(--cocoon-gold-deep)">${p.startingPrice.toFixed(2)} MB</div></div>
     ${p.size ? `<div><div class="detail-field-label">Unit Size</div><div class="detail-field-value" style="font-size:1rem">${p.size}</div></div>` : ''}
-    <div><div class="detail-field-label">Status</div><div class="detail-field-value" style="font-size:1rem">${p.type === 'offplan' ? (p.status || 'Off-Plan') : 'Ready to Move'}</div></div>
+    <div><div class="detail-field-label">Status</div><div class="detail-field-value" style="font-size:1rem">${p.type === 'offplan' ? 'Pre-Sale' : 'Ready to Move'}</div></div>
     ${p.moveIn ? `<div><div class="detail-field-label">Move In</div><div class="detail-field-value" style="font-size:1rem">${p.moveIn}</div></div>` : ''}
     ${p.floors ? `<div><div class="detail-field-label">Building Type</div><div class="detail-field-value" style="font-size:1rem">${parseInt(p.floors) <= 8 ? 'Low Rise' : parseInt(p.floors) >= 25 ? 'High Rise' : 'Mid Rise'}</div></div>` : ''}
   `;
@@ -2214,7 +2197,7 @@ function renderComparePage() {
         </div>
         <div class="compare-row">
           <div class="compare-row-label">Status</div>
-          <div class="compare-row-val">${p.type === 'offplan' ? (p.status || 'Off-Plan') : 'Ready to Move'}${p.moveIn ? ` · ${p.moveIn}` : ''}</div>
+          <div class="compare-row-val">${p.type === 'offplan' ? 'Pre-Sale' : 'Ready to Move'}${p.moveIn ? ` · ${p.moveIn}` : ''}</div>
         </div>
         ${p.size ? `<div class="compare-row"><div class="compare-row-label">Unit Size</div><div class="compare-row-val">${p.size}</div></div>` : ''}
         <div class="compare-row">
