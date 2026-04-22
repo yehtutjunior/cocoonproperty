@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cocoon Property Bangkok — Light</title>
+<title>Cocoon Property Bangkok — Bangkok's Premier Property Specialists</title>
 
 <!-- PWA -->
 <link rel="manifest" href="/manifest.json">
@@ -86,13 +86,13 @@ body {
 header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 110;
   padding: 1.1rem 0; transition: all 0.3s ease;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 header.scrolled {
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.98);
   box-shadow: 0 1px 0 rgba(0,0,0,0.06); padding: 0.75rem 0;
 }
 .header-inner {
@@ -154,140 +154,217 @@ nav a:hover::after { width: 100%; }
 /* ========== PAGES ========== */
 .page { display: none; }
 .page.active { display: block; }
+#page-listings { padding-top: 64px; }
+#page-home { padding-top: 0; }
 
-/* ========== HERO ========== */
-.hero {
-  min-height: 100vh; display: flex; align-items: center;
-  position: relative; overflow: visible; padding: 0;
-  background: #F5F5F7;
-}
-
-/* ---- Slideshow ---- */
-.hero-slides { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.hero-slide {
-  position: absolute; inset: -6%; opacity: 0;
-  background-size: cover; background-position: center 60%;
-  transition: opacity 1.6s ease;
-  animation: heroZoom 26s ease-in-out infinite alternate;
-}
-.hero-slide.active { opacity: 0.18; }
-.hero-slide:nth-child(2) { animation-delay: -8s; }
-.hero-slide:nth-child(3) { animation-delay: -16s; }
-@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
-
-/* ---- Overlays ---- */
-.hero-bg {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: linear-gradient(180deg, transparent 60%, rgba(245,245,247,0.95) 100%);
-}
-.hero-threads { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; opacity: 0.15; }
-
-/* ---- Content — centered ---- */
-.hero-content {
-  position: relative; z-index: 3;
-  max-width: 1340px; width: 100%; margin: 0 auto;
-  padding: 0 2.5rem; padding-top: 140px; padding-bottom: 120px;
-  opacity: 0; animation: heroFade 1.2s 1.8s ease forwards;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-}
-@keyframes heroFade { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-.hero-text { max-width: 600px; margin: 0 auto; text-align: center; }
-.hero-eyebrow {
-  font-family: var(--font-body); font-size: 0.65rem; font-weight: 600;
-  letter-spacing: 0.35em; text-transform: uppercase; color: var(--cocoon-gold);
-  margin-bottom: 1.4rem; display: flex; align-items: center; gap: 1rem;
-  justify-content: center;
-}
-.hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--cocoon-gold); flex-shrink: 0; }
-.hero h1 {
-  font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 5.2rem);
-  font-weight: 700; letter-spacing: -0.02em; color: #1D1D1F; line-height: 1.05;
-}
-.hero h1 em { font-style: normal; color: var(--cocoon-gold); font-weight: 300; }
-.hero-divider {
-  width: 40px; height: 2px; background: var(--cocoon-gold);
-  margin: 2rem auto; margin-left: auto; margin-right: auto; position: relative;
-  border-radius: 2px;
-}
-.hero-divider::before, .hero-divider::after {
-  content: ''; position: absolute; top: -1.5px;
-  width: 4px; height: 4px; border-radius: 50%; background: var(--cocoon-gold);
-}
-.hero-divider::before { left: -6px; }
-.hero-divider::after { right: -6px; }
-.hero-desc {
-  font-size: 1rem; font-weight: 400; color: #6E6E73;
-  letter-spacing: 0.01em; line-height: 1.7; max-width: 460px; margin-bottom: 2.5rem;
-}
-
-/* ---- Slide dots ---- */
-.hero-dots { display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
-.hero-dot {
-  width: 20px; height: 3px; background: rgba(0,0,0,0.15);
-  border: none; cursor: pointer; padding: 0; transition: all 0.4s ease;
-  border-radius: 2px;
-}
-.hero-dot.active { width: 40px; background: var(--cocoon-gold); }
-
-/* ---- Bottom search bar ---- */
-.hero-bottom-bar {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
-  background: transparent;
-  padding: 0 2.5rem 2rem;
-  overflow: visible;
-}
-.hero-bottom-inner {
-  max-width: 1340px; margin: 0 auto;
-  display: flex; align-items: stretch;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  overflow: visible;
+/* ========== LISTINGS HEADER ========== */
+.listings-header {
+  background: #1D1D1F;
+  padding: 8rem 0 3.5rem;
+  text-align: center;
   position: relative;
+  overflow: hidden;
+}
+.listings-header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cocoon-gold), transparent);
+}
+.listings-eyebrow {
+  font-family: var(--font-body); font-size: 0.63rem; font-weight: 600;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--cocoon-gold); margin-bottom: 0.9rem;
+}
+.listings-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em; line-height: 1.1;
+}
+.listings-title em { color: var(--cocoon-gold); font-style: normal; font-weight: 300; }
+.listings-desc {
+  font-size: 0.9rem; color: rgba(255,255,255,0.5);
+  margin-top: 0.7rem; line-height: 1.6;
+}
+.listings-stats {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-top: 2.5rem; flex-wrap: wrap;
+}
+.listings-stat {
+  text-align: center; padding: 0.3rem 2.5rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.listings-stat:last-child { border-right: none; }
+.listings-stat-num {
+  font-family: var(--font-display); font-size: 1.7rem; font-weight: 700;
+  color: var(--cocoon-gold); line-height: 1;
+}
+.listings-stat-lbl {
+  font-size: 0.58rem; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.35);
+  margin-top: 0.35rem;
+}
+
+/* ========== SPLIT LAYOUT ========== */
+.listings-layout {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  align-items: flex-start;
+}
+
+/* ---- LEFT: Filter Panel ---- */
+.filter-panel {
+  width: 280px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+  background: #141414;
+  padding: 1.8rem 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+.filter-panel::-webkit-scrollbar { width: 4px; }
+.filter-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+/* Search row */
+.fp-search {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.6rem;
+}
+.fp-search svg { width: 14px; height: 14px; stroke: var(--cocoon-gold); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+.fp-search input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--font-body); font-size: 0.82rem;
+  color: #FFFFFF; letter-spacing: 0.01em;
+}
+.fp-search input::placeholder { color: rgba(255,255,255,0.3); }
+
+/* Clear btn */
+.fp-clear {
+  display: none; background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.6rem; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); padding: 0 0 1rem;
+  transition: color 0.2s ease;
+}
+.fp-clear.visible { display: block; }
+.fp-clear:hover { color: var(--cocoon-gold); }
+
+/* Filter sections */
+.fp-section {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.fp-section:last-of-type { border-bottom: none; }
+
+/* Dropdown button */
+.fp-dd-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 0.7rem 0.9rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  cursor: pointer; text-align: left;
+  transition: background 0.2s ease;
+  flex-direction: row; gap: 0.5rem;
+}
+.fp-dd-btn:hover { background: rgba(255,255,255,0.09); }
+.fp-dd-label {
+  font-family: var(--font-body); font-size: 0.56rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); white-space: nowrap;
+}
+.fp-dd-val {
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  color: #FFFFFF; display: flex; align-items: center; gap: 0.35rem;
+  margin-left: auto;
+}
+.fp-dd-val svg { width: 10px; height: 10px; stroke: rgba(255,255,255,0.4); fill: none; stroke-width: 2.5; flex-shrink: 0; transition: transform 0.2s; }
+.fp-dd-btn.open .fp-dd-val svg { transform: rotate(180deg); }
+
+/* Dropdown menu inside dark panel */
+.filter-panel .hero-filter-menu {
+  top: calc(100% + 4px); bottom: auto;
+  background: #242424;
+  border-color: rgba(255,255,255,0.1);
+  min-width: 100%; left: 0; right: 0;
+}
+.filter-panel .hero-filter-menu button {
+  color: rgba(255,255,255,0.7);
+  border-bottom-color: rgba(255,255,255,0.05);
+}
+.filter-panel .hero-filter-menu button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.filter-panel .hero-filter-menu button.selected { color: var(--cocoon-gold); }
+
+/* Results count */
+.fp-results {
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3); margin-top: 1.2rem;
+}
+.fp-results span { color: var(--cocoon-gold); font-weight: 600; }
+
+/* ---- RIGHT: Listings Main ---- */
+.listings-main {
+  flex: 1; min-width: 0;
+  padding: 2rem 2rem 4rem;
+  background: var(--cocoon-bg);
+}
+
+/* Mobile: stack */
+@media (max-width: 768px) {
+  .listings-layout { flex-direction: column; }
+  .filter-panel {
+    width: 100%; position: relative; top: auto;
+    height: auto; padding: 1.2rem;
+  }
+  .fp-pills { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.3rem; }
 }
 /* Search col */
 .hb-search {
   display: flex; align-items: center; gap: 0.75rem;
-  flex: 1.5; padding: 1.1rem 1.5rem 1.1rem 1.5rem;
-  border-right: 1px solid rgba(0,0,0,0.08);
-  border-radius: 14px 0 0 14px;
+  flex: 1.5; padding: 1rem 1.5rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
 }
 .hb-search svg { width: 16px; height: 16px; stroke: var(--cocoon-gold); fill: none; stroke-width: 1.5; flex-shrink: 0; }
 .hb-search input {
   flex: 1; background: transparent; border: none; outline: none;
   font-family: var(--font-body); font-size: 0.85rem; font-weight: 400;
-  color: #1D1D1F; letter-spacing: 0.01em;
+  color: #FFFFFF; letter-spacing: 0.01em;
 }
-.hb-search input::placeholder { color: #AEAEB2; }
+.hb-search input::placeholder { color: rgba(255,255,255,0.35); }
 /* Filter cols */
 .hb-col {
   position: relative; flex: 1; min-width: 0;
-  border-right: 1px solid rgba(0,0,0,0.08);
+  border-right: 1px solid rgba(255,255,255,0.08);
 }
+.hb-col:last-child { border-right: none; }
 .hb-btn {
   display: flex; flex-direction: column; justify-content: center;
-  width: 100%; height: 100%; padding: 0.85rem 1.2rem;
+  width: 100%; height: 100%; padding: 0.75rem 1.2rem;
   background: none; border: none; cursor: pointer; text-align: left;
   transition: background 0.2s ease;
 }
-.hb-btn:hover { background: rgba(0,0,0,0.03); }
+.hb-btn:hover { background: rgba(255,255,255,0.05); }
 .hb-label {
   font-family: var(--font-body); font-size: 0.58rem; font-weight: 600;
-  letter-spacing: 0.15em; text-transform: uppercase; color: #6E6E73;
-  margin-bottom: 0.25rem;
+  letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-bottom: 0.2rem;
 }
 .hb-val {
   font-family: var(--font-body); font-size: 0.82rem; font-weight: 500;
-  color: #1D1D1F; display: flex; align-items: center; gap: 0.4rem;
+  color: #FFFFFF; display: flex; align-items: center; gap: 0.4rem;
 }
-.hb-val svg { width: 10px; height: 10px; stroke: #6E6E73; fill: none; stroke-width: 2.5; flex-shrink: 0; transition: transform 0.2s ease; }
+.hb-val svg { width: 10px; height: 10px; stroke: rgba(255,255,255,0.5); fill: none; stroke-width: 2.5; flex-shrink: 0; transition: transform 0.2s ease; }
 .hb-btn.open .hb-val svg { transform: rotate(180deg); }
-/* Dropdown — opens UPWARD */
+/* Dropdown — opens DOWNWARD */
 .hero-filter-menu {
-  position: absolute; bottom: calc(100% + 6px); left: 0;
+  position: absolute; top: calc(100% + 4px); left: 0;
   background: #FFFFFF;
   border: 1px solid rgba(0,0,0,0.1);
   min-width: 160px; z-index: 200;
@@ -306,46 +383,32 @@ nav a:hover::after { width: 100%; }
 .hero-filter-menu button:last-child { border-bottom: none; }
 .hero-filter-menu button:hover { background: #F5F5F7; color: #1D1D1F; }
 .hero-filter-menu button.selected { color: var(--cocoon-gold); font-weight: 500; }
-/* Search button col */
-.hb-search-btn {
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  padding: 0 2rem; background: #1D1D1F; border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: 0.72rem; font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase; color: #FFFFFF;
-  transition: background 0.3s ease; gap: 0.5rem; white-space: nowrap;
-  border-radius: 0 14px 14px 0;
-}
-.hb-search-btn:hover { background: var(--cocoon-gold); }
-.hb-search-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
 /* Results count */
 .hb-results {
-  position: absolute; bottom: calc(100% + 6px); right: 0;
   font-size: 0.68rem; color: var(--cocoon-gold); letter-spacing: 0.1em;
-  font-family: var(--font-body); white-space: nowrap; padding: 0.3rem 0;
+  font-family: var(--font-body); white-space: nowrap;
 }
-/* Clear */
+/* Clear btn */
 .hero-clear {
-  position: absolute; top: -1.6rem; right: 0;
   padding: 0; background: none; border: none; cursor: pointer;
   font-family: var(--font-body); font-size: 0.62rem; font-weight: 500;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: #6E6E73; transition: color 0.2s ease; display: none;
+  color: #6E6E73; transition: color 0.2s ease; display: none; flex-shrink: 0;
 }
 .hero-clear.visible { display: block; }
 .hero-clear:hover { color: var(--cocoon-gold); }
 /* Compat aliases */
 .hero-filter-dd { position: relative; }
 @media (max-width: 900px) {
-  .hero-bottom-bar { padding: 0 1rem 1.5rem; }
-  .hero-bottom-inner { flex-wrap: wrap; border-radius: 12px; }
+  .filter-strip-inner { flex-wrap: wrap; }
   .hb-col { flex: 0 0 50%; border-bottom: 1px solid rgba(0,0,0,0.06); }
-  .hb-search { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); border-radius: 12px 12px 0 0; }
-  .hb-search-btn { flex: 0 0 100%; padding: 1rem; border-radius: 0 0 12px 12px; }
-  .hero-text { max-width: 100%; }
+  .hb-search { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .listings-stats { gap: 0; }
+  .listings-stat { padding: 0.3rem 1.2rem; }
 }
 @media (max-width: 600px) {
   .hb-col { flex: 0 0 50%; }
-  .hero h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
+  .listings-title { font-size: clamp(1.6rem, 8vw, 2.4rem); }
 }
 
 /* ========== STATS BAR ========== */
@@ -850,6 +913,76 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 }
 .fab-whatsapp:hover .fab-whatsapp-tooltip { opacity: 1; }
 
+/* ========== HERO (home page) ========== */
+.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: visible; padding: 0; background: #F5F5F7; }
+.hero-slides { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-slide { position: absolute; inset: -6%; opacity: 0; background-size: cover; background-position: center 60%; transition: opacity 1.6s ease; animation: heroZoom 26s ease-in-out infinite alternate; }
+.hero-slide.active { opacity: 0.18; }
+.hero-slide:nth-child(2) { animation-delay: -8s; }
+.hero-slide:nth-child(3) { animation-delay: -16s; }
+@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+.hero-bg { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, transparent 60%, rgba(245,245,247,0.95) 100%); }
+.hero-threads { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; opacity: 0.15; }
+.hero-content { position: relative; z-index: 3; max-width: 1340px; width: 100%; margin: 0 auto; padding: 0 2.5rem; padding-top: 140px; padding-bottom: 100px; opacity: 0; animation: heroFade 1.2s 1.8s ease forwards; display: flex; flex-direction: column; align-items: center; text-align: center; }
+@keyframes heroFade { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.hero-text { max-width: 800px; margin: 0 auto; text-align: center; }
+.hero-eyebrow { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 1.4rem; display: flex; align-items: center; gap: 1rem; justify-content: center; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 5.2rem); font-weight: 700; letter-spacing: -0.02em; color: #1D1D1F; line-height: 1.05; }
+.hero h1 em { font-style: normal; color: var(--cocoon-gold); font-weight: 300; }
+.hero-divider { width: 40px; height: 2px; background: var(--cocoon-gold); margin: 2rem auto; border-radius: 2px; position: relative; }
+.hero-divider::before, .hero-divider::after { content: ''; position: absolute; top: -1.5px; width: 4px; height: 4px; border-radius: 50%; background: var(--cocoon-gold); }
+.hero-divider::before { left: -6px; }
+.hero-divider::after { right: -6px; }
+.hero-desc { font-size: 1rem; font-weight: 400; color: #6E6E73; letter-spacing: 0.01em; line-height: 1.7; max-width: 460px; margin: 0 auto 2.5rem; text-align: center; }
+.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+.hero-btn-main { display: inline-block; padding: 0.9rem 2.5rem; background: #1D1D1F; color: #FFFFFF; font-family: var(--font-body); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 980px; transition: background 0.3s ease; cursor: pointer; border: none; }
+.hero-btn-main:hover { background: var(--cocoon-gold); color: #FFFFFF; }
+.hero-dots { display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
+.hero-dot { width: 20px; height: 3px; background: rgba(0,0,0,0.15); border: none; cursor: pointer; padding: 0; transition: all 0.4s ease; border-radius: 2px; }
+.hero-dot.active { width: 40px; background: var(--cocoon-gold); }
+
+/* ========== FEATURED SECTION (home page) ========== */
+.featured-section { padding: 6rem 0; background: #FFFFFF; }
+.featured-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 3rem; }
+.featured-header .section-header { margin-bottom: 0; text-align: left; }
+.featured-view-all { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cocoon-gold); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; flex-shrink: 0; transition: color 0.2s; cursor: pointer; border: none; background: none; }
+.featured-view-all:hover { color: var(--cocoon-gold-deep); }
+.featured-view-all svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.featured-empty { text-align: center; padding: 4rem 0; color: #6E6E73; font-size: 0.9rem; }
+
+/* ========== TESTIMONIALS ========== */
+.testimonial-section { background: #F5F5F7; padding: 6rem 0; }
+.testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.testimonial-card { background: #FFFFFF; border-radius: 20px; padding: 2.5rem 2rem; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 16px rgba(0,0,0,0.04); display: flex; flex-direction: column; gap: 1.5rem; }
+.testimonial-quote { font-size: 2rem; color: var(--cocoon-gold); line-height: 1; opacity: 0.6; }
+.testimonial-text { font-size: 0.9rem; color: #6E6E73; line-height: 1.8; flex: 1; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.06); }
+.testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: #F2F2F7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85rem; font-weight: 700; color: var(--cocoon-gold); }
+.testimonial-name { font-size: 0.85rem; font-weight: 600; color: #1D1D1F; }
+.testimonial-role { font-size: 0.72rem; color: #AEAEB2; letter-spacing: 0.04em; }
+.testimonial-stars { font-size: 0.7rem; color: var(--cocoon-gold); letter-spacing: 0.15em; margin-top: 0.2rem; }
+
+/* ========== FAQ ========== */
+.faq-section { background: #FFFFFF; padding: 6rem 0; }
+.faq-list { max-width: 760px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid rgba(0,0,0,0.06); }
+.faq-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 0; background: none; border: none; text-align: left; cursor: pointer; gap: 1rem; }
+.faq-q { font-size: 1rem; font-weight: 600; color: #1D1D1F; line-height: 1.5; }
+.faq-icon { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #F5F5F7; border-radius: 50%; transition: background 0.2s, transform 0.3s; }
+.faq-icon::after { content: '+'; font-size: 1rem; font-weight: 300; color: var(--cocoon-gold); line-height: 1; }
+.faq-item.open .faq-icon { background: var(--cocoon-gold); transform: rotate(45deg); }
+.faq-item.open .faq-icon::after { color: #FFFFFF; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.faq-answer.open { max-height: 400px; }
+.faq-answer p { font-size: 0.9rem; color: #6E6E73; line-height: 1.8; padding-bottom: 1.4rem; }
+
+/* ========== LINE FAB ========== */
+.fab-line { position: fixed; bottom: 2rem; right: 2rem; z-index: 500; width: 52px; height: 52px; border-radius: 980px; background: #06C755; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(6,199,85,0.35); transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; }
+.fab-line:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(6,199,85,0.5); }
+.fab-line svg { width: 28px; height: 28px; fill: #fff; }
+.fab-line-tip { position: absolute; right: 60px; top: 50%; transform: translateY(-50%); background: #1D1D1F; color: #FFFFFF; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; white-space: nowrap; padding: 0.4rem 0.9rem; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.fab-line:hover .fab-line-tip { opacity: 1; }
+
 /* ========== ANIMATIONS ========== */
 .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.25,0.46,0.45,0.94); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -953,14 +1086,14 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 <!-- HEADER -->
 <header id="header">
   <div class="header-inner">
-    <a class="logo" onclick="navigate('home')" style="cursor:pointer">
+    <a class="logo" href="index.html">
       <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
     </a>
     <nav>
-      <a href="#portfolio" onclick="navigate('home'); scrollToEl('#portfolio')" style="cursor:pointer">Portfolio</a>
-      <a href="portfolio.html" style="cursor:pointer">Selected</a>
-      <a onclick="navigate('blog')" style="cursor:pointer">Blog</a>
-      <a href="#contact" onclick="navigate('home'); scrollToEl('#contact')" style="cursor:pointer">Contact</a>
+      <a onclick="navigate('home')" href="#" style="cursor:pointer">Home</a>
+      <a onclick="navigate('listings')" href="#" style="cursor:pointer">Properties</a>
+      <a onclick="navigate('blog')" href="#" style="cursor:pointer">Blog</a>
+      <a onclick="navigate('contact')" href="#" style="cursor:pointer">Contact</a>
     </nav>
     <button class="hamburger"><span></span><span></span><span></span></button>
   </div>
@@ -971,30 +1104,23 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 
 <!-- MOBILE NAV DRAWER -->
 <nav class="mobile-nav" id="mobileNav">
-  <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#portfolio')">Portfolio</a>
-  <a href="portfolio.html" onclick="closeMobileNav()">Selected</a>
-  <a onclick="closeMobileNav(); navigate('blog')">Blog</a>
-  <a onclick="closeMobileNav(); navigate('home'); scrollToEl('#contact')">Contact</a>
-
+  <a onclick="navigate('home');closeMobileNav()" href="#" style="cursor:pointer">Home</a>
+  <a onclick="navigate('listings');closeMobileNav()" href="#" style="cursor:pointer">Properties</a>
+  <a onclick="navigate('blog');closeMobileNav()" href="#" style="cursor:pointer">Blog</a>
+  <a onclick="navigate('contact');closeMobileNav()" href="#" style="cursor:pointer">Contact</a>
 </nav>
 
-<!-- ======================== HOME PAGE ======================== -->
-<div class="page active" id="page-home">
+<!-- ======================== HOME LANDING PAGE ======================== -->
+<div class="page" id="page-home">
 
   <!-- HERO -->
   <section class="hero">
-
-    <!-- Slideshow backgrounds — 3 luxury property images -->
     <div class="hero-slides">
       <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80');background-position:center 40%"></div>
       <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');background-position:center 55%"></div>
       <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80');background-position:center 50%"></div>
     </div>
-
-    <!-- Gradient overlay -->
     <div class="hero-bg"></div>
-
-    <!-- Gold thread accent lines -->
     <svg class="hero-threads" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <g stroke="#C9A96E" stroke-width="0.8" fill="none">
         <line x1="0" y1="200" x2="480" y2="450"/>
@@ -1009,14 +1135,15 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
         <circle cx="860" cy="640" r="2.5"/>
       </g>
     </svg>
-
-    <!-- Left-aligned text content -->
     <div class="hero-content">
       <div class="hero-text">
-        <p class="hero-eyebrow">Curated Condominium Portfolio · Thailand</p>
-        <h1>Your second<br>home <em>awaits.</em></h1>
+        <p class="hero-eyebrow">Bangkok's Premier Property Specialists</p>
+        <h1>Find Your Perfect<br><em>Bangkok Home.</em></h1>
         <div class="hero-divider"></div>
-        <p class="hero-desc">A handpicked collection of premium condominiums along Bangkok's BTS &amp; MRT transit lines — selected for location, value, and lifestyle.</p>
+        <p class="hero-desc">Curated condominiums along Bangkok's BTS &amp; MRT corridors — handpicked by specialists who live and breathe the city.</p>
+        <div class="hero-cta">
+          <button class="hero-btn-main" onclick="navigate('listings')">View Properties &rarr;</button>
+        </div>
         <div class="hero-dots" id="heroDots">
           <button class="hero-dot active" onclick="goToSlide(0)"></button>
           <button class="hero-dot" onclick="goToSlide(1)"></button>
@@ -1024,125 +1151,288 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
         </div>
       </div>
     </div>
-
-    <!-- Bottom search/filter bar -->
-    <div class="hero-bottom-bar">
-      <div class="hero-bottom-inner">
-
-        <!-- Keyword search -->
-        <div class="hb-search">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="heroSearch" placeholder="Search by name, area or keyword…" oninput="applyFilters()">
-          <button class="hero-clear" id="clearBtn" onclick="clearFilters()">✕ Clear</button>
-        </div>
-
-        <!-- City -->
-        <div class="hb-col hero-filter-dd" id="dd-city">
-          <button class="hb-btn" onclick="toggleDD('city')" id="btn-city">
-            <span class="hb-label">City</span>
-            <span class="hb-val"><span id="val-city">All Cities</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-city">
-            <button onclick="setFilter('city','all','All Cities')" class="selected">All Cities</button>
-          </div>
-        </div>
-
-        <!-- Price -->
-        <div class="hb-col hero-filter-dd" id="dd-price">
-          <button class="hb-btn" onclick="toggleDD('price')" id="btn-price">
-            <span class="hb-label">Price (MB)</span>
-            <span class="hb-val"><span id="val-price">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-price">
-            <button onclick="setFilter('price','any','Any')" class="selected">Any Price</button>
-            <button onclick="setFilter('price','0-2','0–2 MB')">0 – 2 MB</button>
-            <button onclick="setFilter('price','2-5','2–5 MB')">2 – 5 MB</button>
-            <button onclick="setFilter('price','5-10','5–10 MB')">5 – 10 MB</button>
-            <button onclick="setFilter('price','10+','10+ MB')">10+ MB</button>
-          </div>
-        </div>
-
-        <!-- Status -->
-        <div class="hb-col hero-filter-dd" id="dd-status">
-          <button class="hb-btn" onclick="toggleDD('status')" id="btn-status">
-            <span class="hb-label">Status</span>
-            <span class="hb-val"><span id="val-status">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-status">
-            <button onclick="setFilter('status','any','Any')" class="selected">Any Status</button>
-            <button onclick="setFilter('status','ready','Ready to Move')">Ready to Move</button>
-            <button onclick="setFilter('status','offplan','Pre-Sale')">Pre-Sale</button>
-          </div>
-        </div>
-
-        <!-- Train Line -->
-        <div class="hb-col hero-filter-dd" id="dd-line">
-          <button class="hb-btn" onclick="toggleDD('line')" id="btn-line">
-            <span class="hb-label">Train Line</span>
-            <span class="hb-val"><span id="val-line">All Lines</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-line">
-            <button onclick="setFilter('line','all','All Lines')" class="selected">All Lines</button>
-          </div>
-        </div>
-
-        <!-- Developer -->
-        <div class="hb-col hero-filter-dd" id="dd-dev">
-          <button class="hb-btn" onclick="toggleDD('dev')" id="btn-dev">
-            <span class="hb-label">Developer</span>
-            <span class="hb-val"><span id="val-dev">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-dev">
-            <button onclick="setFilter('dev','all','All')" class="selected">All Developers</button>
-          </div>
-        </div>
-
-        <!-- Sort -->
-        <div class="hb-col hero-filter-dd" id="dd-type">
-          <button class="hb-btn" onclick="toggleDD('type')" id="btn-type">
-            <span class="hb-label">TYPE</span>
-            <span class="hb-val"><span id="val-type">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </button>
-          <div class="hero-filter-menu" id="menu-type">
-            <button onclick="setFilter('type','all','All')" class="selected">All Types</button>
-            <button onclick="setFilter('type','low-rise','Low Rise')">Low Rise</button>
-            <button onclick="setFilter('type','high-rise','High Rise')">High Rise</button>
-          </div>
-        </div>
-
-        <!-- Search CTA -->
-        <button class="hb-search-btn" onclick="scrollToEl('#portfolio')">
-          View Properties
-          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
-
-      </div>
-      <div class="hb-results" id="heroResults"></div>
-    </div>
-
   </section>
 
-  <!-- STATS -->
+  <!-- STATS BAR -->
   <div class="stats-bar">
-    <div class="stats-inner">
-      <div class="stat-item"><div class="stat-number" id="statProjects">0</div><div class="stat-label">Projects</div></div>
-      <div class="stat-item"><div class="stat-number" id="statLines">0</div><div class="stat-label">Train Lines</div></div>
-      <div class="stat-item"><div class="stat-number" id="statDevelopers">0</div><div class="stat-label">Developers</div></div>
-      <div class="stat-item"><div class="stat-number" id="statRange">—</div><div class="stat-label">MB. Price Range</div></div>
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item"><div class="stat-number" id="statProjects">—</div><div class="stat-label">Projects</div></div>
+        <div class="stat-item"><div class="stat-number" id="statLines">—</div><div class="stat-label">Train Lines</div></div>
+        <div class="stat-item"><div class="stat-number" id="statDevelopers">—</div><div class="stat-label">Developers</div></div>
+        <div class="stat-item"><div class="stat-number" id="statRange">—</div><div class="stat-label">MB. Price Range</div></div>
+      </div>
     </div>
   </div>
 
-  <!-- PORTFOLIO -->
-  <section id="portfolio" class="portfolio-section">
+  <!-- WHY COCOON -->
+  <section class="brand-section" id="why-cocoon">
     <div class="container">
       <div class="section-header reveal">
-        <p class="section-eyebrow">Portfolio</p>
-        <h2 class="section-title">Our Property Collection</h2>
+        <p class="section-eyebrow">Why Cocoon</p>
+        <h2 class="section-title">Built on Expertise &amp; Trust</h2>
         <div class="section-line"></div>
       </div>
-      <div class="projects-grid" id="projectsGrid"></div>
+      <div class="brand-grid">
+        <div class="brand-card reveal">
+          <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#B07D2A" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h3>Curated Selection</h3>
+          <p>Every listing is personally vetted by our team — only properties we'd confidently recommend to family. No filler, no inflated portfolios.</p>
+        </div>
+        <div class="brand-card reveal">
+          <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#B07D2A" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+          <h3>Foreign Buyer Expertise</h3>
+          <p>We specialise in guiding international buyers through Thai property law, FET transfers, and legal title checks — so you never get caught off guard.</p>
+        </div>
+        <div class="brand-card reveal">
+          <div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#B07D2A" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <h3>End-to-End Service</h3>
+          <p>From first viewing to title transfer and beyond — every step personally managed so you can focus on what matters most to you.</p>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- FEATURED LISTINGS -->
+  <section class="featured-section" id="featured">
+    <div class="container">
+      <div class="featured-header">
+        <div class="section-header reveal">
+          <p class="section-eyebrow">Featured Listings</p>
+          <h2 class="section-title">Handpicked Properties</h2>
+        </div>
+        <button class="featured-view-all reveal" onclick="navigate('listings')">
+          View All Properties
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+      <div class="projects-grid" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonial-section" id="testimonials">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">Testimonials</p>
+        <h2 class="section-title">Words from Our Clients</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card reveal">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">Cocoon made buying my first Bangkok condo effortless. They knew every detail about the area and handled everything from viewing to transfer. I wouldn't have managed without them.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">K</div>
+            <div><div class="testimonial-name">Karin L.</div><div class="testimonial-role">Sweden · Sukhumvit</div><div class="testimonial-stars">★★★★★</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">Professional, discreet, and deeply knowledgeable about the Bangkok market. This was my second purchase through Cocoon — I wouldn't go elsewhere for Thai property.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">D</div>
+            <div><div class="testimonial-name">David C.</div><div class="testimonial-role">UK · Sathorn</div><div class="testimonial-stars">★★★★★</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">The curated portfolio saved me weeks of research. I found exactly what I was looking for in just two viewings. The process from offer to transfer was smooth.</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div><div class="testimonial-name">Aisha A.</div><div class="testimonial-role">Singapore · Ari</div><div class="testimonial-stars">★★★★★</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header reveal">
+        <p class="section-eyebrow">FAQ</p>
+        <h2 class="section-title">Common Questions</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span class="faq-q">Can foreigners buy property in Bangkok?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>Yes. Foreign nationals can own condominium units in freehold under Thai law, provided no more than 49% of a building's total floor space is foreign-owned. We help you navigate the quota check and all legal requirements before you commit.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span class="faq-q">What upfront costs should I expect?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>Typical costs include a 2% transfer fee (split with developer or 100% buyer), a 1% mortgage registration fee if applicable, and roughly 0.5–1% for legal/title fees. Pre-sale properties may have a small reservation deposit (฿50,000–฿200,000) to secure your unit.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span class="faq-q">What is a Pre-Sale (off-plan) property?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>Pre-Sale properties are purchased before or during construction. They typically offer lower entry prices and flexible payment schedules. Cocoon only lists pre-sale projects from established developers with a proven delivery record.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span class="faq-q">How long does the buying process take?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>For a ready-to-move unit, the process from offer accepted to title transfer typically takes 4–8 weeks, depending on financing and FET documentation. Pre-sale timelines depend on the construction schedule, usually 2–4 years from launch.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span class="faq-q">Do you offer property management for investors?</span><span class="faq-icon"></span></button>
+          <div class="faq-answer"><p>We can connect you with trusted property management partners for rental, tenant management, and maintenance. Get in touch and we will match you with the right service for your investment goals.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <h2 class="reveal">Interested in a Property?</h2>
+      <p class="reveal">Get in touch for unit availability, floor plans, and exclusive offers for overseas buyers.</p>
+      <div class="contact-channels reveal" id="homeContactChannels"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="logo" onclick="navigate('home')" href="#" style="cursor:pointer">
+            <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon Property Bangkok">
+          </a>
+          <p>Bangkok's curated property specialists — condominiums along the BTS &amp; MRT corridors selected for location, value, and lifestyle.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Explore</h4>
+          <a onclick="navigate('listings')" href="#" style="cursor:pointer">All Properties</a>
+          <a onclick="navigate('listings')" href="#" style="cursor:pointer">Ready to Move</a>
+          <a onclick="navigate('listings')" href="#" style="cursor:pointer">Pre-Sale</a>
+        </div>
+        <div class="footer-links">
+          <h4>Company</h4>
+          <a onclick="navigate('home');setTimeout(()=>scrollToEl('#why-cocoon'),300)" href="#" style="cursor:pointer">Why Cocoon</a>
+          <a onclick="navigate('home');setTimeout(()=>scrollToEl('#faq'),300)" href="#" style="cursor:pointer">FAQ</a>
+          <a onclick="navigate('contact')" href="#" style="cursor:pointer">Contact</a>
+          <a onclick="navigate('blog')" href="#" style="cursor:pointer">Blog</a>
+        </div>
+        <div class="footer-links" id="homeFooterContact">
+          <h4>Reach Us</h4>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Cocoon Property Bangkok &middot; All rights reserved</p>
+        <p>cocoonproperty.vercel.app</p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ======================== LISTINGS PAGE ======================== -->
+<div class="page" id="page-listings">
+
+  <!-- SPLIT LAYOUT: Filter Panel + Listings -->
+  <div class="listings-layout">
+
+    <!-- LEFT: Filter Panel -->
+    <div class="filter-panel" id="filterPanel">
+
+      <!-- Search -->
+      <div class="fp-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="heroSearch" placeholder="Search properties…" oninput="applyFilters()">
+      </div>
+      <button class="fp-clear" id="clearBtn" onclick="clearFilters()">✕ Clear all filters</button>
+
+      <!-- Status -->
+      <div class="fp-section hero-filter-dd" id="dd-status">
+        <button class="fp-dd-btn" onclick="toggleDD('status')" id="btn-status">
+          <span class="fp-dd-label">Status</span>
+          <span class="fp-dd-val"><span id="val-status">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-status">
+          <button onclick="setFilter('status','any','Any')" class="selected">Any Status</button>
+          <button onclick="setFilter('status','ready','Ready to Move')">Ready to Move</button>
+          <button onclick="setFilter('status','offplan','Pre-Sale')">Pre-Sale</button>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="fp-section hero-filter-dd" id="dd-price">
+        <button class="fp-dd-btn" onclick="toggleDD('price')" id="btn-price">
+          <span class="fp-dd-label">Price (MB)</span>
+          <span class="fp-dd-val"><span id="val-price">Any</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-price">
+          <button onclick="setFilter('price','any','Any')" class="selected">Any Price</button>
+          <button onclick="setFilter('price','0-2','0–2 MB')">0 – 2 MB</button>
+          <button onclick="setFilter('price','2-5','2–5 MB')">2 – 5 MB</button>
+          <button onclick="setFilter('price','5-10','5–10 MB')">5 – 10 MB</button>
+          <button onclick="setFilter('price','10+','10+ MB')">10+ MB</button>
+        </div>
+      </div>
+
+      <!-- Building Type -->
+      <div class="fp-section hero-filter-dd" id="dd-type">
+        <button class="fp-dd-btn" onclick="toggleDD('type')" id="btn-type">
+          <span class="fp-dd-label">Building Type</span>
+          <span class="fp-dd-val"><span id="val-type">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-type">
+          <button onclick="setFilter('type','all','All')" class="selected">All Types</button>
+          <button onclick="setFilter('type','low-rise','Low Rise')">Low Rise</button>
+          <button onclick="setFilter('type','high-rise','High Rise')">High Rise</button>
+        </div>
+      </div>
+
+      <!-- Train Line (populated by JS) -->
+      <div class="fp-section hero-filter-dd" id="dd-line">
+        <button class="fp-dd-btn" onclick="toggleDD('line')" id="btn-line">
+          <span class="fp-dd-label">Train Line</span>
+          <span class="fp-dd-val"><span id="val-line">All Lines</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-line">
+          <button onclick="setFilter('line','all','All Lines')" class="selected">All Lines</button>
+        </div>
+      </div>
+
+      <!-- City (populated by JS) -->
+      <div class="fp-section hero-filter-dd" id="dd-city">
+        <button class="fp-dd-btn" onclick="toggleDD('city')" id="btn-city">
+          <span class="fp-dd-label">City</span>
+          <span class="fp-dd-val"><span id="val-city">All Cities</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-city">
+          <button onclick="setFilter('city','all','All Cities')" class="selected">All Cities</button>
+        </div>
+      </div>
+
+      <!-- Developer (populated by JS) -->
+      <div class="fp-section hero-filter-dd" id="dd-dev">
+        <button class="fp-dd-btn" onclick="toggleDD('dev')" id="btn-dev">
+          <span class="fp-dd-label">Developer</span>
+          <span class="fp-dd-val"><span id="val-dev">All</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </button>
+        <div class="hero-filter-menu" id="menu-dev">
+          <button onclick="setFilter('dev','all','All')" class="selected">All Developers</button>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <div class="fp-results" id="heroResults"></div>
+
+      <!-- Hidden val spans for JS compatibility -->
+      <span id="val-city" style="display:none">All Cities</span>
+      <span id="val-price" style="display:none">Any</span>
+      <span id="val-status" style="display:none">Any</span>
+      <span id="val-line" style="display:none">All Lines</span>
+      <span id="val-dev" style="display:none">All</span>
+      <span id="val-type" style="display:none">All</span>
+    </div>
+
+    <!-- RIGHT: Property Grid -->
+    <div class="listings-main" id="portfolio">
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+
+  </div>
 
   <!-- CTA -->
   <section class="cta-section" id="contact">
@@ -1191,7 +1481,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
   <div class="detail-page">
     <div class="container">
       <div class="detail-header">
-        <button class="detail-back" onclick="navigate('home')">
+        <button class="detail-back" onclick="navigate('listings')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
           Back to Properties
         </button>
@@ -1238,7 +1528,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 <div class="page" id="page-compare">
   <div class="compare-page">
     <div class="container">
-      <button class="detail-back" onclick="navigate('home')">
+      <button class="detail-back" onclick="navigate('listings')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
         Back to Properties
       </button>
@@ -1430,7 +1720,7 @@ const DB = {
   nextPostId: 1,
   nextPropertyId: 27,
   nextDeveloperId: 11,
-  admin: { loggedIn: false, password: "admin123" },
+  admin: { loggedIn: false, password: "koutkout431" },
   _version: 9
 };
 DB.properties = [];
@@ -1526,9 +1816,24 @@ function navigate(page, id) {
 
   const header = document.getElementById('header');
   if (page === 'home') {
+    document.title = "Cocoon Property Bangkok — Bangkok's Premier Property Specialists";
     document.getElementById('page-home').classList.add('active');
     header.style.display = '';
+    renderFeatured();
     window.scrollTo(0, 0);
+  } else if (page === 'listings') {
+    document.title = "Properties | Cocoon Property Bangkok";
+    document.getElementById('page-listings').classList.add('active');
+    header.style.display = '';
+    renderHome();
+    window.scrollTo(0, 0);
+  } else if (page === 'contact') {
+    document.title = "Contact | Cocoon Property Bangkok";
+    document.getElementById('page-home').classList.add('active');
+    header.style.display = '';
+    renderFeatured();
+    window.scrollTo(0, 0);
+    setTimeout(() => scrollToEl('#contact'), 150);
   } else if (page === 'detail') {
     currentDetailId = id;
     document.getElementById('page-detail').classList.add('active');
@@ -1536,8 +1841,12 @@ function navigate(page, id) {
     renderDetail(id);
     window.scrollTo(0, 0);
     const prop = DB.properties.find(p => p.id === id);
-    if (prop) history.replaceState(null, '', '#property-' + slugify(prop.name));
+    if (prop) {
+      document.title = prop.name + " | Cocoon Property Bangkok";
+      history.replaceState(null, '', '#property-' + slugify(prop.name));
+    }
   } else if (page === 'blog') {
+    document.title = "Blog | Cocoon Property Bangkok";
     document.getElementById('page-blog').classList.add('active');
     header.style.display = '';
     renderBlog();
@@ -1548,6 +1857,7 @@ function navigate(page, id) {
     renderBlogPost(id);
     window.scrollTo(0, 0);
   } else if (page === 'compare') {
+    document.title = "Compare Properties | Cocoon Property Bangkok";
     document.getElementById('page-compare').classList.add('active');
     header.style.display = '';
     renderComparePage();
@@ -1618,7 +1928,8 @@ function renderBlogPost(id) {
   const post = (DB.posts || []).find(p => p.id == id);
   if (!post) { navigate('blog'); return; }
 
-  // Update URL hash for sharing
+  // Update URL hash and title for sharing
+  document.title = post.title + " | Cocoon Property Bangkok";
   history.replaceState(null, '', '#post-' + id);
 
   document.getElementById('blogPostCoverWrap').innerHTML = post.coverImage
@@ -1749,6 +2060,20 @@ function closeMobileNav() {
   document.querySelector('.hamburger').classList.remove('open');
 }
 
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => {
+    el.classList.remove('open');
+    el.querySelector('.faq-answer').classList.remove('open');
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.classList.add('open');
+  }
+}
+
 function scrollToEl(selector) {
   setTimeout(() => {
     const el = document.querySelector(selector);
@@ -1774,7 +2099,7 @@ function toggleDD(name) {
   const btn = document.getElementById(`btn-${name}`);
   const isOpen = menu.classList.contains('open');
   document.querySelectorAll('.hero-filter-menu').forEach(m => m.classList.remove('open'));
-  document.querySelectorAll('.hb-btn, .hero-filter-btn').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.hb-btn, .fp-dd-btn, .hero-filter-btn').forEach(b => b.classList.remove('open'));
   if (!isOpen) { menu.classList.add('open'); btn.classList.add('open'); }
 }
 
@@ -1820,7 +2145,7 @@ function clearFilters() {
 
 function updateClearBtn() {
   const hasActive = searchQuery || filterState.price !== 'any' || filterState.status !== 'any' || filterState.line !== 'all' || filterState.more !== 'any' || filterState.dev !== 'all' || filterState.city !== 'all' || filterState.type !== 'all';
-  document.getElementById('clearBtn').classList.toggle('visible', !!hasActive);
+  document.getElementById('clearBtn')?.classList.toggle('visible', !!hasActive);
 }
 
 function applyFilters() {
@@ -1872,13 +2197,82 @@ function applyFilters() {
     return matchSearch && matchPrice && matchStatus && matchLine && matchMore && matchDev && matchCity && matchType;
   });
 
-  const hasFilter = searchQuery || filterState.price !== 'any' || filterState.status !== 'any' || filterState.line !== 'all' || filterState.more !== 'any' || filterState.type !== 'all';
   const resultsEl = document.getElementById('heroResults');
-  if (resultsEl) resultsEl.textContent = hasFilter
-    ? `${data.length} ${data.length === 1 ? 'property' : 'properties'} found`
-    : '';
+  if (resultsEl) resultsEl.innerHTML = `<span>${data.length}</span> ${data.length === 1 ? 'property' : 'properties'} found`;
 
   renderProjectsGrid(data);
+}
+
+// ======================== RENDER FEATURED (Home page) ========================
+function renderFeatured() {
+  // Stats
+  const prices = DB.properties.map(p => p.startingPrice);
+  const statProjects = document.getElementById('statProjects');
+  const statLines = document.getElementById('statLines');
+  const statDevelopers = document.getElementById('statDevelopers');
+  const statRange = document.getElementById('statRange');
+  if (statProjects) statProjects.textContent = DB.properties.length || '—';
+  if (statLines) statLines.textContent = DB.trainLines.length || '—';
+  if (statDevelopers) statDevelopers.textContent = DB.developers.length || '—';
+  if (statRange) statRange.textContent = prices.length ? `${Math.min(...prices).toFixed(2)} – ${Math.max(...prices).toFixed(2)}` : '—';
+
+  const grid = document.getElementById('featuredGrid');
+  if (!grid) return;
+
+  const ids = (DB.selectedPortfolio && DB.selectedPortfolio.length)
+    ? DB.selectedPortfolio
+    : DB.properties.slice(0, 6).map(p => p.id);
+  const featured = ids.map(id => DB.properties.find(p => p.id === id)).filter(Boolean);
+
+  if (!featured.length) {
+    grid.innerHTML = `<div class="featured-empty" style="grid-column:1/-1">No featured properties yet.</div>`;
+    return;
+  }
+
+  grid.innerHTML = featured.map(p => {
+    const dev = DB.developers.find(d => d.id === p.developerId);
+    const lines = DB.trainLines.filter(l => p.trainLineIds.includes(l.id));
+    const primaryLine = lines[0];
+    let cardImages = [];
+    try { cardImages = JSON.parse(p.images || '[]'); } catch(e) {}
+    const cardThumb = cardImages[0] || p.imageUrl;
+    return `
+    <div class="project-card" onclick="navigate('detail',${p.id})">
+      <div class="card-image">
+        ${cardThumb
+          ? `<img src="${cardThumb}" alt="${p.name}" loading="lazy">`
+          : `<div class="card-image-placeholder">
+              <svg viewBox="0 0 48 48" fill="none" stroke="#AEAEB2" stroke-width="1">
+                <rect x="8" y="16" width="32" height="24" rx="1"/>
+                <path d="M14 16v-4a10 10 0 0120 0v4"/>
+                <path d="M20 28h8M24 24v8"/>
+              </svg>
+              <span>Photo Coming Soon</span>
+            </div>`
+        }
+        ${primaryLine ? `<div class="card-line-badge" style="background:${primaryLine.color}">${primaryLine.name}</div>` : ''}
+        <div class="card-status ${p.type === 'offplan' ? 'offplan-tag' : 'ready-tag'}">${p.type === 'offplan' ? 'Pre-Sale' : 'Ready to Move'}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-brand">${dev?.name || ''}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-meta">
+          ${p.location ? `<span class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#AEAEB2" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            ${p.location}
+          </span>` : ''}
+        </div>
+        <div class="card-footer">
+          <div class="card-price">
+            <span class="card-price-label">Starts&nbsp;</span>
+            <span class="card-price-value">${p.startingPrice.toFixed(2)}</span>
+            <span class="card-price-unit">MB.*</span>
+          </div>
+          ${p.moveIn ? `<div class="card-movein">Move in<strong>${p.moveIn}</strong></div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ======================== RENDER HOME ========================
@@ -2409,6 +2803,19 @@ function applyContact() {
     ${fb ? `<a href="https://facebook.com/${fb}" target="_blank" rel="noopener">f Facebook: ${fbDisplay}</a>` : ''}
   `;
 
+  // Home page contact channels (different ID to avoid duplicate)
+  const hch = document.getElementById('homeContactChannels');
+  if (hch && ch) hch.innerHTML = ch.innerHTML;
+
+  // Home footer contact
+  const hfc = document.getElementById('homeFooterContact');
+  if (hfc) hfc.innerHTML = `<h4>Reach Us</h4>
+    ${email ? `<a href="mailto:${email}">✉ ${email}</a>` : ''}
+    ${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener">● WhatsApp: ${waDisplay}</a>` : ''}
+    ${line ? `<a href="https://line.me/R/ti/p/~${line}" target="_blank" rel="noopener">● Line: ${line}</a>` : ''}
+    ${fb ? `<a href="https://facebook.com/${fb}" target="_blank" rel="noopener">f Facebook: ${fbDisplay}</a>` : ''}
+  `;
+
   // FAB — LINE
   const fab = document.getElementById('fabWhatsapp');
   if (fab && line) fab.href = `https://line.me/R/ti/p/${line.startsWith('@') ? line : '~' + line}`;
@@ -2463,14 +2870,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (hash && hash.startsWith('#post-')) {
     const postId = parseInt(hash.slice(6));
     if (!isNaN(postId)) { navigate('blog-post', postId); }
-    else { renderHome(); }
+    else { navigate('home'); }
   } else if (hash && hash.startsWith('#property-')) {
     const slug = hash.slice(10);
     const prop = DB.properties.find(p => slugify(p.name) === slug);
     if (prop) { navigate('detail', prop.id); }
-    else { renderHome(); }
+    else { navigate('home'); }
   } else {
-    renderHome();
+    navigate('home');
   }
 
   // Header scroll
@@ -2483,7 +2890,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initReveal();
   initStatsCountUp();
-  initSlideshow();
 });
 </script>
 </body>
