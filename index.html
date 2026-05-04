@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Cocoon">
 <link rel="apple-touch-icon" href="/icon-apple.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
@@ -85,42 +85,72 @@ body {
 /* ========== HEADER ========== */
 header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 110;
-  padding: 1.1rem 0; transition: all 0.3s ease;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  height: 64px; display: flex; align-items: center;
+  padding: 0;
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  background: transparent;
+  border-bottom: 1px solid transparent;
 }
+/* Black glass — over dark hero only */
+header.hero-dark {
+  background: rgba(10,10,10,0.52);
+  border-bottom-color: rgba(255,255,255,0.07);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 1px 32px rgba(0,0,0,0.22);
+}
+/* White glass — after hero, and all other pages */
 header.scrolled {
-  background: rgba(255,255,255,0.98);
-  box-shadow: 0 1px 0 rgba(0,0,0,0.06); padding: 0.75rem 0;
+  background: rgba(255,255,255,0.82);
+  border-bottom-color: rgba(0,0,0,0.07);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 24px rgba(0,0,0,0.07);
 }
 .header-inner {
   max-width: 1340px; margin: 0 auto; padding: 0 2.5rem;
-  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
 }
 .logo { text-decoration: none; line-height: 1; display: inline-block; }
-.logo img { height: 42px; width: auto; display: block; object-fit: contain; }
-nav { display: flex; align-items: center; gap: 2rem; }
+.logo img { height: 36px; width: auto; display: block; object-fit: contain; filter: brightness(0) invert(1); transition: filter 0.3s ease; }
+/* Dark nav text for white glass */
+header.scrolled .logo img { filter: none; }
+header.page-forced .logo img { filter: none; }
+nav { display: flex; align-items: center; gap: 2.5rem; }
 nav a {
-  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
-  color: #1D1D1F; text-decoration: none; position: relative; transition: color 0.3s ease;
+  font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(248,244,238,0.75); text-decoration: none; transition: color 0.2s ease; cursor: pointer;
 }
-nav a::after {
-  content: ''; position: absolute; bottom: -4px; left: 0;
-  width: 0; height: 1.5px; background: var(--cocoon-gold); transition: width 0.3s ease;
-  border-radius: 2px;
+nav a:hover { color: rgba(248,244,238,1); }
+/* White glass nav — dark text */
+header.scrolled nav a { color: rgba(29,29,31,0.7); }
+header.scrolled nav a:hover { color: #1D1D1F; }
+.header-cta {
+  font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 0.5rem 1.4rem; background: transparent;
+  color: #C9A96E; border: 1px solid #C9A96E; cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  border-radius: 980px;
 }
-nav a:hover { color: var(--cocoon-gold); }
-nav a:hover::after { width: 100%; }
-.hamburger { display: none; background: none; border: none; cursor: pointer; width: 28px; height: 20px; position: relative; z-index: 110; }
-.hamburger span { display: block; width: 100%; height: 1.5px; background: #1D1D1F; position: absolute; left: 0; transition: all 0.35s ease; }
-.hamburger span:nth-child(1) { top: 0; }
-.hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
-.hamburger span:nth-child(3) { bottom: 0; }
-.hamburger.open span:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; transform: translateY(-50%) scaleX(0); }
-.hamburger.open span:nth-child(3) { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+.header-cta:hover { background: rgba(201,169,110,0.12); }
+header.scrolled .header-cta { color: var(--cocoon-gold); border-color: var(--cocoon-gold); }
+/* White style for non-home pages */
+header.page-forced {
+  background: rgba(255,255,255,0.88);
+  border-bottom-color: rgba(0,0,0,0.07);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 24px rgba(0,0,0,0.07);
+}
+header.page-forced nav a { color: rgba(29,29,31,0.7); }
+header.page-forced nav a:hover { color: #1D1D1F; }
+header.page-forced .header-cta { color: var(--cocoon-gold); border-color: var(--cocoon-gold); }
+.hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; padding: 6px 4px; cursor: pointer; width: 32px; height: 32px; }
+.hamburger span { display: block; width: 22px; height: 1.5px; background: rgba(248,244,238,0.9); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+header.scrolled .hamburger span,
+header.page-forced .hamburger span { background: #1D1D1F; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* Mobile nav drawer */
 .mobile-nav {
@@ -597,27 +627,65 @@ nav a:hover::after { width: 100%; }
 .doc-item svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
 
 /* ========== CTA SECTION ========== */
-.cta-section { padding: 7rem 0; text-align: center; background: #FFFFFF; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
-.cta-section h2 { font-family: var(--font-display); font-size: clamp(2rem,4vw,3.2rem); font-weight: 700; color: #1D1D1F; letter-spacing: -0.02em; margin-bottom: 1rem; }
-.cta-section p { font-size: 1rem; font-weight: 400; color: #6E6E73; max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.cta-section { padding: 7rem 0; text-align: center; background: #F5F5F7; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
+.cta-section h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2rem,4vw,3.4rem); font-weight: 300; color: #1D1D1F; letter-spacing: -0.01em; margin-bottom: 1rem; }
+.cta-section p { font-size: 1rem; font-weight: 400; color: #6E6E73; max-width: 500px; margin: 0 auto 3rem; line-height: 1.7; }
+.contact-channels { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; max-width: 860px; margin: 0 auto; }
+.contact-channel { display: flex; align-items: center; gap: 1rem; background: #FFFFFF; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; padding: 1.25rem 2rem; text-decoration: none; color: inherit; transition: all 0.25s ease; min-width: 200px; cursor: pointer; }
+.contact-channel:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); border-color: rgba(176,125,42,0.3); transform: translateY(-2px); }
+.contact-channel-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.contact-channel-icon svg { width: 22px; height: 22px; }
+.contact-channel-info { text-align: left; }
+.contact-channel-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #AEAEB2; margin-bottom: 0.2rem; }
+.contact-channel-value { font-size: 0.9rem; font-weight: 500; color: #1D1D1F; }
 .cta-btn { display: inline-block; padding: 0.9rem 2.5rem; background: #1D1D1F; color: #FFFFFF; font-family: var(--font-body); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: none; transition: all 0.3s ease; cursor: pointer; border-radius: 980px; }
 .cta-btn:hover { background: var(--cocoon-gold); color: #FFFFFF; }
-.contact-channels { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
-.contact-channel {
-  display: flex; align-items: center; gap: 1rem;
-  padding: 1.25rem 2rem; background: #F5F5F7;
-  text-decoration: none; min-width: 200px; transition: all 0.3s ease; cursor: pointer;
-  border-radius: 16px; border: 1px solid rgba(0,0,0,0.06);
+
+/* ========== CONTACT PAGE ========== */
+.contact-page { padding-top: 64px; min-height: 100svh; background: #F5F5F7; }
+.contact-page-inner { max-width: 1340px; margin: 0 auto; padding: 5rem 2.5rem 6rem; }
+.contact-hero { margin-bottom: 4rem; }
+.contact-hero .eyebrow { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 1.2rem; }
+.contact-hero h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; color: #1D1D1F; margin-bottom: 1.25rem; }
+.contact-hero h1 em { font-style: italic; color: var(--cocoon-gold); font-weight: 300; }
+.contact-hero p { font-size: 0.95rem; color: #6E6E73; line-height: 1.75; max-width: 520px; }
+.contact-body { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+/* Form */
+.contact-form-label { display: block; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6E73; margin-bottom: 0.6rem; }
+.contact-form-input, .contact-form-select, .contact-form-textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(0,0,0,0.15); color: #1D1D1F; font-family: var(--font-body); font-size: 0.95rem; padding: 0.75rem 0; outline: none; transition: border-color 0.25s; appearance: none; }
+.contact-form-input::placeholder, .contact-form-textarea::placeholder { color: #AEAEB2; }
+.contact-form-input:focus, .contact-form-select:focus, .contact-form-textarea:focus { border-bottom-color: var(--cocoon-gold); }
+.contact-form-select { cursor: pointer; background: transparent; color: #1D1D1F; }
+.contact-form-select option { background: #FFFFFF; color: #1D1D1F; }
+.contact-form-textarea { resize: none; min-height: 120px; line-height: 1.65; }
+.contact-form-group { margin-bottom: 2rem; }
+.contact-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.contact-form-submit { margin-top: 2.5rem; display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.9rem 2.5rem; background: #1D1D1F; color: #FFFFFF; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: background 0.25s, transform 0.2s; border-radius: 980px; }
+.contact-form-submit:hover { background: var(--cocoon-gold); transform: translateX(2px); }
+.contact-form-note { font-size: 0.75rem; color: #AEAEB2; margin-top: 1rem; line-height: 1.6; }
+/* Right panel */
+.contact-channels-title { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #6E6E73; margin-bottom: 2rem; }
+.contact-channel-card { display: flex; align-items: center; gap: 1.25rem; padding: 1.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.07); text-decoration: none; color: inherit; transition: opacity 0.2s; }
+.contact-channel-card:first-of-type { padding-top: 0; }
+.contact-channel-card:last-of-type { border-bottom: none; }
+.contact-channel-card:hover { opacity: 0.75; }
+.contact-channel-icon-wrap { width: 44px; height: 44px; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.2s; }
+.contact-channel-card:hover .contact-channel-icon-wrap { border-color: var(--cocoon-gold); }
+.contact-channel-icon-wrap svg { width: 20px; height: 20px; }
+.contact-channel-cta { margin-top: 2.5rem; padding: 2rem; border: 1px solid rgba(0,0,0,0.08); background: #FFFFFF; border-radius: 16px; }
+.contact-channel-cta-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 0.75rem; }
+.contact-channel-cta-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.7rem; font-weight: 300; color: #1D1D1F; margin-bottom: 0.5rem; }
+.contact-channel-cta-desc { font-size: 0.85rem; color: #6E6E73; line-height: 1.7; margin-bottom: 1.5rem; }
+.contact-cta-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.contact-cta-btn-line { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1.5rem; background: #06C755; color: #fff; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: none; cursor: pointer; text-decoration: none; transition: opacity 0.2s; border-radius: 980px; }
+.contact-cta-btn-line:hover { opacity: 0.85; }
+.contact-cta-btn-wa { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1.5rem; background: transparent; color: #1D1D1F; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border: 1px solid rgba(0,0,0,0.2); cursor: pointer; text-decoration: none; transition: border-color 0.2s, color 0.2s; border-radius: 980px; }
+.contact-cta-btn-wa:hover { border-color: var(--cocoon-gold); color: var(--cocoon-gold); }
+@media(max-width: 768px) {
+  .contact-body { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-form-row { grid-template-columns: 1fr; }
+  .contact-page-inner { padding: 3rem 1.25rem 5rem; }
 }
-.contact-channel:hover { background: #FFFFFF; transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-.contact-channel-icon {
-  width: 40px; height: 40px; border-radius: 12px; display: flex;
-  align-items: center; justify-content: center; flex-shrink: 0; background: #FFFFFF;
-}
-.contact-channel-icon svg { width: 20px; height: 20px; }
-.contact-channel-info { text-align: left; }
-.contact-channel-label { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #AEAEB2; margin-bottom: 0.2rem; }
-.contact-channel-value { font-size: 0.88rem; font-weight: 500; color: #1D1D1F; letter-spacing: 0.01em; }
 
 /* ========== FOOTER ========== */
 footer { padding: 4rem 0 2rem; background: #1D1D1F; }
@@ -914,32 +982,29 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 .fab-whatsapp:hover .fab-whatsapp-tooltip { opacity: 1; }
 
 /* ========== HERO (home page) ========== */
-.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: visible; padding: 0; background: #F5F5F7; }
+.hero { min-height: 100svh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: flex-start; background: #0A0A0A; }
 .hero-slides { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.hero-slide { position: absolute; inset: -6%; opacity: 0; background-size: cover; background-position: center 60%; transition: opacity 1.6s ease; animation: heroZoom 26s ease-in-out infinite alternate; }
-.hero-slide.active { opacity: 0.18; }
-.hero-slide:nth-child(2) { animation-delay: -8s; }
-.hero-slide:nth-child(3) { animation-delay: -16s; }
-@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
-.hero-bg { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, transparent 60%, rgba(245,245,247,0.95) 100%); }
-.hero-threads { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; opacity: 0.15; }
-.hero-content { position: relative; z-index: 3; max-width: 1340px; width: 100%; margin: 0 auto; padding: 0 2.5rem; padding-top: 140px; padding-bottom: 100px; opacity: 0; animation: heroFade 1.2s 1.8s ease forwards; display: flex; flex-direction: column; align-items: center; text-align: center; }
-@keyframes heroFade { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-.hero-text { max-width: 800px; margin: 0 auto; text-align: center; }
-.hero-eyebrow { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase; color: var(--cocoon-gold); margin-bottom: 1.4rem; display: flex; align-items: center; gap: 1rem; justify-content: center; }
-.hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 5.2rem); font-weight: 700; letter-spacing: -0.02em; color: #1D1D1F; line-height: 1.05; }
-.hero h1 em { font-style: normal; color: var(--cocoon-gold); font-weight: 300; }
-.hero-divider { width: 40px; height: 2px; background: var(--cocoon-gold); margin: 2rem auto; border-radius: 2px; position: relative; }
-.hero-divider::before, .hero-divider::after { content: ''; position: absolute; top: -1.5px; width: 4px; height: 4px; border-radius: 50%; background: var(--cocoon-gold); }
-.hero-divider::before { left: -6px; }
-.hero-divider::after { right: -6px; }
-.hero-desc { font-size: 1rem; font-weight: 400; color: #6E6E73; letter-spacing: 0.01em; line-height: 1.7; max-width: 460px; margin: 0 auto 2.5rem; text-align: center; }
-.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
-.hero-btn-main { display: inline-block; padding: 0.9rem 2.5rem; background: #1D1D1F; color: #FFFFFF; font-family: var(--font-body); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 980px; transition: background 0.3s ease; cursor: pointer; border: none; }
-.hero-btn-main:hover { background: var(--cocoon-gold); color: #FFFFFF; }
-.hero-dots { display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
-.hero-dot { width: 20px; height: 3px; background: rgba(0,0,0,0.15); border: none; cursor: pointer; padding: 0; transition: all 0.4s ease; border-radius: 2px; }
-.hero-dot.active { width: 40px; background: var(--cocoon-gold); }
+.hero-slide { position: absolute; inset: 0; background-size: cover; background-position: 15% center; opacity: 0; transition: opacity 1.8s ease; animation: heroZoom 28s ease-in-out infinite alternate; }
+.hero-slide.active { opacity: .88; }
+@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+.hero-veil { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(10,10,10,.95) 0%, rgba(10,10,10,.88) 28%, rgba(10,10,10,.25) 55%, rgba(10,10,10,0) 75%), linear-gradient(to bottom, rgba(10,10,10,.75) 0%, rgba(10,10,10,0) 18%, transparent 55%, rgba(10,10,10,.8) 100%); pointer-events: none; }
+.hero-content { position: relative; z-index: 2; max-width: 1340px; width: 100%; margin: 0 auto; padding: 140px 2.5rem 100px; display: flex; flex-direction: column; align-items: flex-start; opacity: 0; animation: heroFade 1.2s 1.4s ease forwards; }
+@keyframes heroFade { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.hero-text { max-width: 600px; text-align: left; }
+.hero-eyebrow { font-family: 'Inter', sans-serif; font-size: .65rem; font-weight: 500; letter-spacing: .25em; text-transform: uppercase; color: rgba(201,169,110,0.7); display: flex; align-items: center; gap: .75rem; margin-bottom: 1.8rem; }
+.hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: #C9A96E; }
+.hero h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.8rem, 4.2vw, 4.6rem); font-weight: 300; letter-spacing: -0.01em; color: rgba(248,244,238,0.92); line-height: 1.08; white-space: nowrap; }
+.hero h1 em { font-style: italic; color: #C9A96E; font-weight: 400; display: block; }
+.hero-divider { width: 32px; height: 1px; background: var(--cocoon-gold); margin: 2rem 0; position: relative; }
+.hero-desc { font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 300; color: rgba(248,244,238,0.6); letter-spacing: .01em; line-height: 1.75; max-width: 420px; margin-bottom: 2.5rem; text-align: left; }
+.hero-cta { display: flex; gap: 1rem; justify-content: flex-start; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.hero-btn-main { display: inline-block; padding: .85rem 2.2rem; background: #C9A96E; color: #0A0A0A; font-family: 'Inter', sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; border: 1px solid #C9A96E; cursor: pointer; transition: background .2s, color .2s; }
+.hero-btn-main:hover { background: #b8945a; border-color: #b8945a; }
+.hero-btn-secondary { display: inline-block; padding: .85rem 2.2rem; background: transparent; color: #C9A96E; font-family: 'Inter', sans-serif; font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; border: 1px solid rgba(201,169,110,0.55); cursor: pointer; transition: border-color .2s, color .2s; }
+.hero-btn-secondary:hover { border-color: #C9A96E; color: #C9A96E; }
+.hero-dots { display: flex; gap: .5rem; align-items: center; justify-content: flex-start; }
+.hero-dot { width: 24px; height: 1px; background: rgba(248,244,238,0.25); border: none; cursor: pointer; padding: 0; transition: all .4s ease; }
+.hero-dot.active { width: 44px; background: var(--cocoon-gold); }
 
 /* ========== FEATURED SECTION (home page) ========== */
 .featured-section { padding: 6rem 0; background: #FFFFFF; }
@@ -1002,7 +1067,8 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 }
 @media (max-width: 900px) {
   nav { display: none; }
-  .hamburger { display: block; }
+  .header-cta { display: none; }
+  .hamburger { display: flex; }
   .mobile-nav { display: flex; }
   .mobile-nav-overlay { display: block; }
   .brand-grid { grid-template-columns: 1fr; }
@@ -1042,21 +1108,28 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
   .hero-filter-menu { min-width: 140px; max-width: 80vw; }
 }
 @media (max-width: 768px) {
-  /* Hero: natural height, filter bar flows below text */
-  .hero { min-height: auto; flex-direction: column; align-items: stretch; }
-  .hero-content { padding-top: 80px; padding-bottom: 1.5rem; }
-  .hero h1 { font-size: clamp(2.2rem, 9vw, 3.2rem); }
-  /* Filter bar: out of absolute positioning, flows in document */
+  /* Hero mobile — show right side of image (building/skyline) */
+  .hero { min-height: 100svh; }
+  .hero-slide { background-position: 78% center; }
+  /* Veil: clear on top, dark only from ~55% down + subtle left edge */
+  .hero-veil { background:
+    linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,0) 42%, rgba(10,10,10,.72) 62%, rgba(10,10,10,.97) 100%),
+    linear-gradient(to right, rgba(10,10,10,.65) 0%, rgba(10,10,10,.2) 50%, rgba(10,10,10,0) 78%); }
+  /* Push content to the bottom */
+  .hero-content { padding: 0 1.5rem 3.5rem; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; }
+  .hero h1 { font-size: clamp(2.2rem, 9.5vw, 3rem); white-space: normal; }
+  /* Hide noisy text on mobile — keep it clean */
+  .hero-desc { display: none; }
+  .hero-eyebrow { display: none; }
+  .hero-divider { margin: 1.2rem 0; }
+  .hero-cta { flex-direction: column; gap: 0.75rem; }
+  .hero-btn-main, .hero-btn-secondary { width: 100%; text-align: center; padding: .9rem 1.5rem; }
+  /* Filter bar */
   .hero-bottom-bar { position: relative; bottom: auto; left: auto; right: auto; padding: 0 1rem 1.5rem; }
-  /* Inner container wraps on mobile */
   .hero-bottom-inner { flex-wrap: wrap; border-radius: 12px; }
-  /* Search input: full width row */
   .hb-search { flex: 0 0 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); border-radius: 12px 12px 0 0; }
-  /* Each filter col: 50% (2 per row) */
   .hb-col { flex: 0 0 50%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.06); }
-  /* Even columns get a divider on the left */
   .hb-col:nth-child(odd) { border-right: 1px solid rgba(0,0,0,0.06); }
-  /* CTA button: full width */
   .hb-search-btn { flex: 0 0 100%; border-radius: 0 0 12px 12px; padding: 0.9rem; font-size: 0.78rem; justify-content: center; }
 }
 @media (max-width: 480px) {
@@ -1095,6 +1168,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
       <a onclick="navigate('blog')" href="#" style="cursor:pointer">Blog</a>
       <a onclick="navigate('contact')" href="#" style="cursor:pointer">Contact</a>
     </nav>
+    <button class="header-cta" onclick="navigate('listings')">View Properties</button>
     <button class="hamburger"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -1115,34 +1189,21 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-slides">
-      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80');background-position:center 40%"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');background-position:center 55%"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80');background-position:center 50%"></div>
+    <div class="hero-slides" id="heroSlides">
+      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1920&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1566073771259-470848c4a33b?auto=format&fit=crop&w=1920&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80')"></div>
     </div>
-    <div class="hero-bg"></div>
-    <svg class="hero-threads" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <g stroke="#C9A96E" stroke-width="0.8" fill="none">
-        <line x1="0" y1="200" x2="480" y2="450"/>
-        <line x1="480" y1="450" x2="1440" y2="180"/>
-        <line x1="0" y1="700" x2="350" y2="520"/>
-        <line x1="350" y1="520" x2="860" y2="640"/>
-        <line x1="860" y1="640" x2="1440" y2="380"/>
-      </g>
-      <g fill="#C9A96E" opacity="0.6">
-        <circle cx="480" cy="450" r="2.5"/>
-        <circle cx="350" cy="520" r="2.5"/>
-        <circle cx="860" cy="640" r="2.5"/>
-      </g>
-    </svg>
+    <div class="hero-veil"></div>
     <div class="hero-content">
       <div class="hero-text">
         <p class="hero-eyebrow">Bangkok's Premier Property Specialists</p>
         <h1>Find Your Perfect<br><em>Bangkok Home.</em></h1>
         <div class="hero-divider"></div>
-        <p class="hero-desc">Curated condominiums along Bangkok's BTS &amp; MRT corridors — handpicked by specialists who live and breathe the city.</p>
+        <p class="hero-desc">Curated condominiums along Bangkok's BTS &amp; MRT corridors. Expert guidance for local and foreign buyers.</p>
         <div class="hero-cta">
-          <button class="hero-btn-main" onclick="navigate('listings')">View Properties &rarr;</button>
+          <button class="hero-btn-main" onclick="navigate('listings')">Browse Properties</button>
+          <button class="hero-btn-secondary" onclick="navigate('contact')">Contact Us</button>
         </div>
         <div class="hero-dots" id="heroDots">
           <button class="hero-dot active" onclick="goToSlide(0)"></button>
@@ -1210,7 +1271,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
+  <!-- TESTIMONIALS — hidden until real reviews collected
   <section class="testimonial-section" id="testimonials">
     <div class="container">
       <div class="section-header reveal">
@@ -1246,6 +1307,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
       </div>
     </div>
   </section>
+  -->
 
   <!-- FAQ -->
   <section class="faq-section" id="faq">
@@ -1586,6 +1648,94 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
   </div>
 </div>
 
+<!-- ======================== CONTACT PAGE ======================== -->
+<div id="page-contact" class="page">
+  <div class="contact-page">
+    <div class="contact-page-inner">
+      <div class="contact-hero reveal">
+        <div class="eyebrow">Get in Touch</div>
+        <h1>Let's find your<br><em>perfect property.</em></h1>
+        <p>Our Bangkok specialists are ready to guide you — from first viewing to title deed transfer. Reach us any way you prefer.</p>
+      </div>
+      <div class="contact-body">
+        <!-- LEFT: Form -->
+        <div class="contact-form-wrap reveal">
+          <form id="contactForm" onsubmit="handleContactSubmit(event)">
+            <div class="contact-form-row">
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="cf-name">Full Name</label>
+                <input class="contact-form-input" id="cf-name" type="text" placeholder="Your name" required>
+              </div>
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="cf-email">Email</label>
+                <input class="contact-form-input" id="cf-email" type="email" placeholder="your@email.com" required>
+              </div>
+            </div>
+            <div class="contact-form-row">
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="cf-phone">Phone / WhatsApp</label>
+                <input class="contact-form-input" id="cf-phone" type="tel" placeholder="+66 or international">
+              </div>
+              <div class="contact-form-group">
+                <label class="contact-form-label" for="cf-interest">I'm interested in</label>
+                <select class="contact-form-select" id="cf-interest">
+                  <option value="">Select type...</option>
+                  <option>Ready to Move condo</option>
+                  <option>Pre-Sale / Off-Plan</option>
+                  <option>Investment property</option>
+                  <option>General enquiry</option>
+                </select>
+              </div>
+            </div>
+            <div class="contact-form-group">
+              <label class="contact-form-label" for="cf-budget">Budget range (MB)</label>
+              <select class="contact-form-select" id="cf-budget">
+                <option value="">Select budget...</option>
+                <option>Under 2 MB</option>
+                <option>2 – 4 MB</option>
+                <option>4 – 6 MB</option>
+                <option>6 MB +</option>
+              </select>
+            </div>
+            <div class="contact-form-group">
+              <label class="contact-form-label" for="cf-message">Message</label>
+              <textarea class="contact-form-textarea" id="cf-message" placeholder="Tell us what you're looking for — area, size, timeline..."></textarea>
+            </div>
+            <button type="submit" class="contact-form-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              Send Enquiry
+            </button>
+            <p class="contact-form-note">We respond within 24 hours. Your information is never shared with third parties.</p>
+          </form>
+        </div>
+        <!-- RIGHT: Channels + CTA -->
+        <div class="contact-channels-wrap reveal">
+          <div class="contact-channels-title">Direct Channels</div>
+          <div id="contactPageChannels"></div>
+          <div class="contact-channel-cta">
+            <div class="contact-channel-cta-label">Fastest Response</div>
+            <div class="contact-channel-cta-title">Chat with us now</div>
+            <div class="contact-channel-cta-desc">Our team is active on LINE and WhatsApp daily, 9am–8pm Bangkok time. Most enquiries answered within the hour.</div>
+            <div class="contact-cta-btns" id="contactPageCTABtns"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Contact page mini footer -->
+  <div style="background:#1D1D1F;padding:2rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+    <a onclick="navigate('home')" style="cursor:pointer;text-decoration:none;">
+      <img src="https://qarfdoactjicxishrwpt.supabase.co/storage/v1/object/public/Brand%20Identity/Cocoon%20Logo.png" alt="Cocoon" style="height:28px;filter:brightness(0) invert(1);display:block;">
+    </a>
+    <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+      <a onclick="navigate('home')" style="cursor:pointer;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;" onmouseover="this.style.color='#C9A96E'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">Home</a>
+      <a onclick="navigate('listings')" style="cursor:pointer;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;" onmouseover="this.style.color='#C9A96E'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">Properties</a>
+      <a onclick="navigate('blog')" style="cursor:pointer;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;" onmouseover="this.style.color='#C9A96E'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">Blog</a>
+    </div>
+    <p style="font-family:'Inter',sans-serif;font-size:0.65rem;color:rgba(255,255,255,0.2);letter-spacing:0.06em;">© 2026 Cocoon Property Bangkok</p>
+  </div>
+</div><!-- /page-contact -->
+
 <!-- Modal container -->
 <div id="modalContainer"></div>
 
@@ -1815,12 +1965,21 @@ function navigate(page, id) {
   }
 
   const header = document.getElementById('header');
+  // White glass nav on non-home pages; home uses dynamic scroll logic
+  if (page === 'home') {
+    header.classList.remove('page-forced', 'scrolled', 'hero-dark');
+  } else {
+    header.classList.remove('hero-dark', 'scrolled');
+    header.classList.add('page-forced');
+  }
   if (page === 'home') {
     document.title = "Cocoon Property Bangkok — Bangkok's Premier Property Specialists";
     document.getElementById('page-home').classList.add('active');
     header.style.display = '';
     renderFeatured();
     window.scrollTo(0, 0);
+    // Re-run scroll logic after scrollTo settles
+    setTimeout(() => { if (window._updateHeaderScroll) window._updateHeaderScroll(); }, 50);
   } else if (page === 'listings') {
     document.title = "Properties | Cocoon Property Bangkok";
     document.getElementById('page-listings').classList.add('active');
@@ -1829,11 +1988,10 @@ function navigate(page, id) {
     window.scrollTo(0, 0);
   } else if (page === 'contact') {
     document.title = "Contact | Cocoon Property Bangkok";
-    document.getElementById('page-home').classList.add('active');
+    document.getElementById('page-contact').classList.add('active');
     header.style.display = '';
-    renderFeatured();
     window.scrollTo(0, 0);
-    setTimeout(() => scrollToEl('#contact'), 150);
+    initReveal();
   } else if (page === 'detail') {
     currentDetailId = id;
     document.getElementById('page-detail').classList.add('active');
@@ -2748,11 +2906,18 @@ function initStatsCountUp() {
 }
 
 // ======================== SCROLL REVEALS ========================
+// Singleton reveal observer — safe to call multiple times, never creates duplicate watchers
+let _revealObserver = null;
 function initReveal() {
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  if (!_revealObserver) {
+    _revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+  }
+  document.querySelectorAll('.reveal:not([data-observed])').forEach(el => {
+    el.dataset.observed = '1';
+    _revealObserver.observe(el);
+  });
 }
 
 // ======================== INIT ========================
@@ -2819,6 +2984,58 @@ function applyContact() {
   // FAB — LINE
   const fab = document.getElementById('fabWhatsapp');
   if (fab && line) fab.href = `https://line.me/R/ti/p/${line.startsWith('@') ? line : '~' + line}`;
+
+  // Contact page — channel list
+  const cpc = document.getElementById('contactPageChannels');
+  if (cpc) cpc.innerHTML = [
+    email ? `<a href="mailto:${email}" class="contact-channel-card">
+      <div class="contact-channel-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cocoon-gold)" stroke-width="1.5" width="20" height="20"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
+      <div><div class="contact-channel-label">Email</div><div class="contact-channel-value">${email}</div></div></a>` : '',
+    line ? `<a href="https://line.me/R/ti/p/~${line}" target="_blank" rel="noopener" class="contact-channel-card">
+      <div class="contact-channel-icon-wrap"><svg viewBox="0 0 24 24" fill="#06C755" width="20" height="20"><path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.14 1.9 5.9 4.77 7.55-.21.78-.76 2.83-.87 3.27-.14.55.2.54.42.39.17-.11 2.73-1.85 3.84-2.6.6.09 1.22.13 1.84.13 5.52 0 10-3.92 10-8.74C22 5.92 17.52 2 12 2z"/></svg></div>
+      <div><div class="contact-channel-label">LINE</div><div class="contact-channel-value">${line}</div></div></a>` : '',
+    wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener" class="contact-channel-card">
+      <div class="contact-channel-icon-wrap"><svg viewBox="0 0 24 24" fill="#25D366" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+      <div><div class="contact-channel-label">WhatsApp</div><div class="contact-channel-value">${waDisplay}</div></div></a>` : '',
+    fb ? `<a href="https://facebook.com/${fb}" target="_blank" rel="noopener" class="contact-channel-card">
+      <div class="contact-channel-icon-wrap"><svg viewBox="0 0 24 24" fill="#1877F2" width="20" height="20"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></div>
+      <div><div class="contact-channel-label">Facebook</div><div class="contact-channel-value">${fbDisplay}</div></div></a>` : ''
+  ].join('');
+
+  // Contact page — CTA buttons
+  const ctaBtns = document.getElementById('contactPageCTABtns');
+  if (ctaBtns) ctaBtns.innerHTML = `
+    ${line ? `<a href="https://line.me/R/ti/p/~${line}" target="_blank" rel="noopener" class="contact-cta-btn-line">
+      <svg viewBox="0 0 24 24" fill="#fff" width="16" height="16"><path d="M12 2C6.48 2 2 5.92 2 10.72c0 3.14 1.9 5.9 4.77 7.55-.21.78-.76 2.83-.87 3.27-.14.55.2.54.42.39.17-.11 2.73-1.85 3.84-2.6.6.09 1.22.13 1.84.13 5.52 0 10-3.92 10-8.74C22 5.92 17.52 2 12 2z"/></svg>
+      Chat on LINE</a>` : ''}
+    ${wa ? `<a href="https://wa.me/${wa}" target="_blank" rel="noopener" class="contact-cta-btn-wa">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp</a>` : ''}
+  `;
+}
+
+function handleContactSubmit(e) {
+  e.preventDefault();
+  const c = DB.contact || {};
+  const name = document.getElementById('cf-name').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const phone = document.getElementById('cf-phone').value.trim();
+  const interest = document.getElementById('cf-interest').value;
+  const budget = document.getElementById('cf-budget').value;
+  const message = document.getElementById('cf-message').value.trim();
+  const body = `Hello, I'm ${name}.\n\nInterest: ${interest}\nBudget: ${budget}\nPhone: ${phone || 'N/A'}\n\n${message}`;
+  const wa = c.whatsapp || '';
+  if (wa) {
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(body)}`, '_blank');
+    showToast('Opening WhatsApp — we\'ll reply within the hour.', 'success');
+    e.target.reset();
+  } else if (c.email) {
+    window.location.href = `mailto:${c.email}?subject=Property Enquiry from ${name}&body=${encodeURIComponent(body)}`;
+    showToast('Opening your email app — send when ready.', 'success');
+    e.target.reset();
+  } else {
+    showToast('No contact channels set up yet — please try again later.', 'error');
+  }
 }
 
 function applyHeroImages() {
@@ -2830,7 +3047,7 @@ function applyHeroImages() {
   // Rebuild slides
   slidesWrap.innerHTML = imgs.map((h, i) => `
     <div class="hero-slide${i === 0 ? ' active' : ''}"
-      style="background-image:url('${h.url}');background-position:${h.position || 'center center'};animation-delay:${-i * 8}s"></div>
+      style="background-image:url('${h.url}');background-position:${h.position || '15% center'};animation-delay:${-i * 8}s"></div>
   `).join('');
 
   // Rebuild dots
@@ -2880,10 +3097,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     navigate('home');
   }
 
-  // Header scroll
-  window.addEventListener('scroll', () => {
-    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
-  });
+  // Header scroll — 3 states on home page:
+  //   transparent  (top, y < 60)
+  //   hero-dark    (scrolled into hero but stats not yet reached)
+  //   scrolled     (past hero / stats section → white glass)
+  // Non-home pages always get page-forced (white glass via CSS)
+  const headerEl = document.getElementById('header');
+  const statsBarEl = document.querySelector('.stats-bar');
+  window._updateHeaderScroll = function() {
+    // Only run the dynamic logic when on home page (no page-forced)
+    if (headerEl.classList.contains('page-forced')) return;
+    const y = window.scrollY;
+    if (y < 60) {
+      headerEl.classList.remove('hero-dark', 'scrolled');
+    } else if (statsBarEl && y < statsBarEl.offsetTop - 20) {
+      headerEl.classList.add('hero-dark');
+      headerEl.classList.remove('scrolled');
+    } else {
+      headerEl.classList.remove('hero-dark');
+      headerEl.classList.add('scrolled');
+    }
+  };
+  window.addEventListener('scroll', window._updateHeaderScroll, { passive: true });
+  window._updateHeaderScroll();
 
   // Hamburger
   document.querySelector('.hamburger').addEventListener('click', toggleMobileNav);
