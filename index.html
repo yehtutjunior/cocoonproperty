@@ -3061,7 +3061,7 @@ function applyHeroImages() {
   // Rebuild slides
   slidesWrap.innerHTML = imgs.map((h, i) => `
     <div class="hero-slide${i === 0 ? ' active' : ''}"
-      style="--bg:url('${h.url}');${h.mobileUrl ? `--mob:url('${h.mobileUrl}');` : ''}background-position:${h.position || '15% center'};animation-delay:${-i * 8}s"></div>
+      style="--bg:url('${h.url}');${h.mobileUrl ? `--mob:url('${h.mobileUrl}');` : ''}background-position:${h.position || '15% center'}"></div>
   `).join('');
 
   // Rebuild dots
