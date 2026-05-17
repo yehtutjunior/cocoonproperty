@@ -561,6 +561,7 @@ body {
 <script>
 // ======================== SUPABASE CONFIG ========================
 // Replace these two values after creating your Supabase project
+const ADMIN_HASH = '4a6b99c53da1f758743b8fa4543444846964b8bd55ec9dbceedbf055fa4583e0'; // SHA-256 of admin password — never store plaintext
 const SUPABASE_URL  = 'https://qarfdoactjicxishrwpt.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhcmZkb2FjdGppY3hpc2hyd3B0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNjc3ODIsImV4cCI6MjA5MTY0Mzc4Mn0.pcwtRZ_WQbiYif6l9hzxdQyuVmLOZvzPJUSzAX8Hvo4';
 let _supabase = null;
@@ -679,7 +680,7 @@ const DB = {
   nextPostId: 1,
   nextPropertyId: 27,
   nextDeveloperId: 11,
-  admin: { loggedIn: false, password: "koutkout431" },
+  admin: { loggedIn: false },
   selectedPortfolio: [1, 18, 24, 25, 26],
   _version: 9
 };
@@ -691,13 +692,21 @@ DB.trainLines = [];
 function saveDB() {
   const data = JSON.stringify(DB);
   // Primary: Supabase
-  if (_supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+  if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
     (async () => {
       try {
-        const { error } = await _supabase.from('cocoon_db')
-          .upsert({ id: 1, data: DB, updated_at: new Date().toISOString() });
-        if (error) {
-          console.error('Supabase save error:', error);
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/cocoon_db?id=eq.1`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ data: { ...DB, admin: { loggedIn: false } }, updated_at: new Date().toISOString() })
+        });
+        if (!res.ok) {
+          console.error('Supabase save error:', res.status);
           showToast('⚠️ Cloud save failed — check connection', 'error');
         }
       } catch(e) {
@@ -776,9 +785,11 @@ function navigate(page) {
   }
 }
 
-function adminLogin() {
+async function adminLogin() {
   const pw = document.getElementById('adminPassword').value;
-  if (pw === DB.admin.password) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  const hash = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+  if (hash === ADMIN_HASH) {
     sessionStorage.setItem('adminAuthed', '1');
     navigate('admin');
   } else {
