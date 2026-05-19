@@ -1167,7 +1167,7 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
       <a onclick="navigate('home')" href="#" style="cursor:pointer">Home</a>
       <a onclick="navigate('listings')" href="#" style="cursor:pointer">Properties</a>
       <a onclick="navigate('blog')" href="#" style="cursor:pointer">Blog</a>
-      <a href="#" onclick="window.open('property-guide.html','_blank');return false;" style="cursor:pointer">Guide</a>
+      <a href="#" onclick="window.location.href='property-guide.html';return false;" style="cursor:pointer">Guide</a>
       <a onclick="navigate('contact')" href="#" style="cursor:pointer">Contact</a>
     </nav>
     <button class="header-cta" onclick="navigate('listings')">View Properties</button>
@@ -2210,7 +2210,16 @@ function goToSlide(i) {
 function initSlideshow() {
   const slides = document.querySelectorAll('.hero-slide');
   if (slides.length < 2) return;
-  _slideTimer = setInterval(() => goToSlide(_slideIndex + 1), 6000);
+  const start = () => { _slideTimer = setInterval(() => goToSlide(_slideIndex + 1), 6000); };
+  const fallback = setTimeout(start, 5000);
+  const preloads = Array.from(slides).slice(1).map(slide => {
+    const url = slide.style.backgroundImage.replace(/^url\(["']?|["']?\)$/g, '');
+    if (!url) return Promise.resolve();
+    const img = new Image();
+    img.src = url;
+    return img.decode ? img.decode().catch(() => {}) : new Promise(r => { img.onload = r; img.onerror = r; });
+  });
+  Promise.all(preloads).then(() => { clearTimeout(fallback); start(); });
 }
 
 // ======================== MOBILE NAV ========================
