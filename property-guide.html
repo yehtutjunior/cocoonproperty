@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thailand / Bangkok Property Guide for Myanmar Buyers</title>
+  <style>
+    :root {
+      --black: #090909;
+      --black-2: #121316;
+      --ink: #202124;
+      --muted: #6d7077;
+      --line: #e2e2e2;
+      --white: #ffffff;
+      --soft: #f4f2ee;
+      --gold: #c9a35d;
+      --gold-2: #e6c77f;
+      --blue: #183b77;
+      --red: #d8322b;
+      --shadow: 0 24px 48px rgba(0, 0, 0, .22);
+      --my: "Myanmar Text", "Noto Sans Myanmar", "Padauk", "Pyidaungsu", sans-serif;
+      --sans: "Aptos", "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #d8d8d8;
+      color: var(--ink);
+      font-family: var(--my);
+    }
+
+    .deck {
+      width: min(100vw, 1500px);
+      margin: 0 auto;
+      padding: 36px 26px 60px;
+      display: grid;
+      gap: 34px;
+    }
+
+    .slide {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .dark { background: var(--black); color: var(--white); }
+    .cream { background: var(--soft); }
+    .split {
+      display: grid;
+      grid-template-columns: 53% 47%;
+      min-height: 100%;
+    }
+
+    .pad { padding: clamp(22px, 5.2vh, 72px) clamp(24px, 5.5vw, 78px); }
+    .pad-tight { padding: clamp(18px, 4.2vh, 58px) clamp(20px, 4.8vw, 68px); }
+    .eyebrow {
+      font-family: var(--sans);
+      color: var(--gold);
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 2.4px;
+      font-weight: 700;
+      margin-bottom: 26px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      font-family: var(--sans);
+      font-size: clamp(22px, 3.2vw, 56px);
+      line-height: 1.04;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+    h2 {
+      font-family: var(--sans);
+      font-size: clamp(24px, 2.4vw, 40px);
+      line-height: 1.08;
+      letter-spacing: 0;
+      font-weight: 850;
+    }
+    h3 {
+      font-family: var(--sans);
+      font-size: clamp(18px, 1.55vw, 28px);
+      line-height: 1.08;
+      font-weight: 800;
+    }
+    .my-title {
+      font-family: var(--my);
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: 0;
+      font-size: clamp(22px, 2.1vw, 36px);
+    }
+    .en-title { font-family: var(--sans); }
+    .lead {
+      margin-top: 18px;
+      max-width: 720px;
+      font-size: clamp(16px, 1.15vw, 22px);
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .dark .lead { color: #d7d7d7; }
+    .accent { color: var(--gold); }
+    .blue { color: var(--blue); }
+    .red { color: var(--red); }
+
+    .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(.96) contrast(1.03);
+    }
+    .photo-wrap { position: relative; min-height: 100%; }
+    .photo-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 38px auto auto 38px;
+      width: 72%;
+      height: 72%;
+      border: 20px solid var(--gold);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .photo-wrap img { position: relative; z-index: 1; }
+    .photo-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      height: 100%;
+      padding: 54px 54px 54px 0;
+    }
+    .photo-card {
+      overflow: hidden;
+      border-radius: 0;
+      min-height: 0;
+      box-shadow: 0 12px 24px rgba(0,0,0,.12);
+    }
+
+    .rule {
+      width: 116px;
+      height: 5px;
+      background: var(--gold);
+      margin: 30px 0 32px;
+    }
+    .footer {
+      position: absolute;
+      left: 72px;
+      right: 72px;
+      bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--sans);
+      color: #9b9b9b;
+      font-size: 12px;
+      border-top: 1px solid rgba(170,170,170,.35);
+      padding-top: 13px;
+    }
+    .dark .footer { border-color: rgba(255,255,255,.2); color: #bbbbbb; }
+
+    .num {
+      font-family: var(--sans);
+      font-size: 92px;
+      font-weight: 900;
+      line-height: .9;
+      color: rgba(201, 163, 93, .22);
+    }
+    .side-number {
+      position: absolute;
+      right: 58px;
+      bottom: 64px;
+      color: rgba(255,255,255,.72);
+      font-family: var(--sans);
+      font-size: 72px;
+      font-weight: 900;
+    }
+
+    .grid-3, .grid-2, .grid-4 {
+      display: grid;
+      gap: 22px;
+      margin-top: 44px;
+    }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .box {
+      border: 1px solid var(--line);
+      background: #fff;
+      padding: 28px 26px;
+      min-height: 170px;
+      position: relative;
+    }
+    .dark .box {
+      background: #16171a;
+      border-color: rgba(255,255,255,.13);
+    }
+    .box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 7px;
+      height: 100%;
+      background: var(--gold);
+    }
+    .box p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .dark .box p { color: #cfcfcf; }
+    .term {
+      font-family: var(--sans);
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 360px;
+      margin-top: 16px;
+      gap: 24px;
+    }
+    .compare-panel {
+      display: grid;
+      grid-template-rows: 38% 62%;
+      border: 1px solid rgba(255,255,255,.16);
+      background: #141518;
+    }
+    .compare-panel img { height: 100%; object-fit: cover; width: 100%; }
+    .compare-body { padding: 22px 28px; }
+    .compare-body ul, .clean-list {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 9px;
+    }
+    .compare-body li, .clean-list li {
+      font-size: 15.8px;
+      line-height: 1.42;
+      color: #dcdcdc;
+      position: relative;
+      padding-left: 24px;
+    }
+    .compare-body li::before, .clean-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+    }
+    .cream .clean-list li, .white-list li { color: var(--muted); }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 30px;
+    }
+    .stat {
+      padding: 24px 22px;
+      background: #111;
+      color: #fff;
+      min-height: 132px;
+    }
+    .stat b {
+      display: block;
+      color: var(--gold);
+      font-family: var(--sans);
+      font-size: 38px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .stat span {
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .timeline {
+      margin-top: 44px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-top: 2px solid var(--gold);
+    }
+    .step {
+      padding: 28px 22px 18px;
+      border-right: 1px solid var(--line);
+      min-height: 0;
+    }
+    .step:last-child { border-right: 0; }
+    .step .index {
+      font-family: var(--sans);
+      color: var(--gold);
+      font-weight: 900;
+      font-size: 34px;
+      margin-bottom: 24px;
+    }
+    .step p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.48;
+    }
+
+    .purpose {
+      display: grid;
+      grid-template-columns: 46% 54%;
+      min-height: 100%;
+    }
+    .purpose-left {
+      background: var(--black);
+      color: #fff;
+      padding: 76px 68px;
+    }
+    .purpose-right {
+      padding: 64px;
+      display: grid;
+      gap: 20px;
+      align-content: center;
+    }
+    .mini-card {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 22px;
+      align-items: stretch;
+      min-height: 136px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .mini-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mini-card div { padding: 22px 22px 18px 0; }
+    .mini-card p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .checklist {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .check {
+      background: #fff;
+      border: 1px solid var(--line);
+      min-height: 0;
+      padding: 18px 12px;
+      text-align: center;
+    }
+    .check strong {
+      display: block;
+      font-family: var(--sans);
+      color: var(--gold);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .check p {
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 13px;
+    }
+
+    .developer-hero {
+      display: grid;
+      grid-template-columns: 42% 58%;
+      min-height: 100%;
+      background: var(--black);
+      color: #fff;
+    }
+    .developer-panel {
+      padding: 78px 70px;
+      border-right: 1px solid rgba(255,255,255,.12);
+    }
+    .developer-proof {
+      padding: 72px 70px 58px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      align-content: center;
+    }
+    .proof-card {
+      background: #17181b;
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 24px 24px 22px;
+      min-height: 178px;
+    }
+    .proof-card strong {
+      display: block;
+      font-family: var(--sans);
+      color: var(--gold);
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      margin-bottom: 13px;
+    }
+    .proof-card p {
+      color: #d8d8d8;
+      font-size: 18px;
+      line-height: 1.45;
+    }
+    .developer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .dev-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      min-height: 142px;
+      padding: 16px 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    .dev-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 7px;
+      background: var(--gold);
+    }
+    .dev-card h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+      color: var(--black);
+    }
+    .dev-card p {
+      color: var(--muted);
+      font-size: 12.8px;
+      line-height: 1.34;
+    }
+
+    .compact-comparison .pad-tight { padding: 36px 60px; }
+    .compact-comparison h2 { font-size: clamp(26px, 2.3vw, 39px); }
+    .compact-comparison .comparison { height: 360px; margin-top: 14px; }
+    .compact-comparison .compare-body { padding: 18px 24px; }
+    .compact-comparison .compare-body li { font-size: 13.6px; line-height: 1.32; }
+    .compact-comparison .compare-body h3 { font-size: 21px; }
+
+    .compact-investment .pad { padding: 54px 62px; }
+    .compact-investment h2 { font-size: clamp(28px, 2.55vw, 44px); }
+    .compact-investment .lead { font-size: clamp(15px, 1vw, 19px); line-height: 1.38; }
+    .compact-investment .stat-row { margin-top: 20px; }
+    .compact-investment .stat { min-height: 112px; padding: 20px 18px; }
+    .compact-investment .stat b { font-size: 32px; }
+    .compact-investment .stat span { font-size: 14px; }
+
+    .closing-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .42;
+      filter: grayscale(.15) contrast(1.05);
+    }
+    .closing-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+    .closing-content h1 {
+      font-size: clamp(38px, 4vw, 62px);
+      line-height: 1.08;
+      max-width: 860px;
+    }
+    .closing-content .lead {
+      max-width: 780px;
+      font-size: clamp(17px, 1.35vw, 24px);
+      line-height: 1.45;
+    }
+    .contact-bar {
+      margin-top: 42px;
+      display: inline-flex;
+      gap: 28px;
+      align-items: center;
+      padding: 18px 26px;
+      border: 1px solid rgba(255,255,255,.26);
+      background: rgba(0,0,0,.28);
+      font-family: var(--sans);
+      color: #f4f4f4;
+      font-size: 16px;
+    }
+
+    .service-final {
+      background:
+        linear-gradient(90deg, rgba(9,9,9,.98) 0%, rgba(9,9,9,.94) 55%, rgba(9,9,9,.78) 100%),
+        url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80") center / cover;
+      color: #fff;
+    }
+    .service-copy {
+      max-width: 980px;
+      margin-top: 20px;
+      font-size: clamp(15px, 1.4vw, 22px);
+      line-height: 1.85;
+      font-weight: 400;
+    }
+    .service-final h2.my-title {
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .service-copy .term {
+      color: var(--gold-2);
+      font-family: var(--my);
+      font-weight: 800;
+    }
+    .service-strip {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .service-pill {
+      border: 1px solid rgba(255,255,255,.26);
+      background: rgba(255,255,255,.08);
+      color: #f5f5f5;
+      padding: 12px 16px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .deck { padding: 18px 12px 38px; gap: 18px; }
+      .slide { aspect-ratio: auto; min-height: 720px; }
+      .split, .purpose, .comparison, .grid-2, .grid-3, .grid-4, .stat-row, .timeline, .checklist {
+        grid-template-columns: 1fr;
+      }
+      .photo-strip { grid-template-columns: 1fr; padding: 20px; }
+      .checklist { grid-template-columns: repeat(2, 1fr); }
+      .footer { left: 28px; right: 28px; }
+      .pad, .pad-tight, .purpose-left, .purpose-right { padding: 44px 32px; }
+    }
+
+    @media (min-width: 901px) and (max-width: 1300px) {
+      .pad { padding: 56px 64px; }
+      .pad-tight { padding: 46px 58px; }
+      h1 { font-size: clamp(42px, 4.7vw, 66px); }
+      h2 { font-size: clamp(28px, 2.55vw, 42px); }
+      .lead { font-size: clamp(15px, 1.05vw, 19px); line-height: 1.36; }
+      .stat-row { margin-top: 22px; }
+      .stat { min-height: 116px; padding: 20px 18px; }
+      .stat b { font-size: 32px; }
+      .comparison { height: 350px; }
+      .compare-body li { font-size: 13.2px; line-height: 1.3; }
+      .compare-body h3 { font-size: 20px; }
+      .compact-comparison .pad-tight { padding-top: 32px; padding-bottom: 32px; }
+      .compact-comparison h2 { font-size: clamp(24px, 2.15vw, 36px); }
+      .compact-comparison .comparison { height: 330px; margin-top: 12px; }
+      .compact-comparison .compare-body { padding: 15px 22px; }
+      .compact-comparison .compare-body li { font-size: 12.6px; line-height: 1.25; }
+      .photo-wrap::before { inset: 34px auto auto 34px; height: 70%; }
+      .service-copy { font-size: clamp(21px, 2vw, 32px); line-height: 1.4; }
+      .service-strip { margin-top: 24px; }
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(201, 163, 93, .18), transparent 30%),
+        linear-gradient(135deg, #101114 0%, #242830 42%, #d8d8d8 42%, #eeeeee 100%);
+    }
+
+    .deck {
+      position: relative;
+      width: min(calc(100vw - 112px), calc((100vh - 108px) * 16 / 9), 1500px);
+      height: min(calc((100vw - 112px) * 9 / 16), calc(100vh - 108px), 844px);
+      margin: 0;
+      padding: 0;
+      display: block;
+      perspective: 1800px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(28px) scale(.985);
+      transition: opacity .28s ease, transform .28s ease;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, .34);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+      z-index: 2;
+    }
+
+    .slide.leaving-left { transform: translateX(-28px) scale(.985); }
+
+    .deck-control {
+      position: fixed;
+      top: 50%;
+      z-index: 20;
+      width: 48px;
+      height: 68px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(9, 9, 9, .72);
+      color: #fff;
+      font: 700 42px/1 var(--sans);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transform: translateY(-50%);
+      transition: background .18s ease, transform .18s ease, opacity .18s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .deck-control:hover {
+      background: rgba(201, 163, 93, .92);
+      transform: translateY(-50%) scale(1.03);
+    }
+
+    .deck-control:disabled {
+      opacity: .32;
+      cursor: default;
+      transform: translateY(-50%);
+    }
+
+    .deck-prev { left: 22px; }
+    .deck-next { right: 22px; }
+
+    .deck-status {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      z-index: 20;
+      width: min(560px, calc(100vw - 40px));
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      color: #fff;
+      font: 700 12px/1 var(--sans);
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      height: 3px;
+      overflow: hidden;
+      background: rgba(255,255,255,.25);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--gold);
+      transition: width .22s ease;
+    }
+
+
+    @media (max-width: 900px) {
+      body { padding: 12px; }
+      .deck {
+        width: min(calc(100vw - 24px), calc((100vh - 104px) * 16 / 9));
+        height: min(calc((100vw - 24px) * 9 / 16), calc(100vh - 104px));
+      }
+      .slide { min-height: 0; }
+      .deck-control {
+        top: auto;
+        bottom: 14px;
+        width: 44px;
+        height: 48px;
+        font-size: 34px;
+      }
+      .deck-prev { left: 14px; }
+      .deck-next { right: 14px; }
+      .deck-status { bottom: 72px; width: min(420px, calc(100vw - 28px)); }
+      .slide-dots { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide dark split">
+      <div class="pad">
+        <div class="eyebrow">Bangkok Property Guide</div>
+        <h1><span class="accent">Thailand</span><br>Property Guide<br>for Myanmar Buyers</h1>
+        <div class="rule"></div>
+        <p class="lead">ဘန်ကောက်ကွန်ဒို ဝယ်ယူမည့် Myanmar Buyers များအတွက် <span class="term">Freehold</span>, <span class="term">Foreign Quota</span>, <span class="term">FET Form</span>, cost နှင့် investment logic ကို နားလည်လွယ်အောင် ရှင်းပြထားသော guide ဖြစ်ပါသည်။</p>
+      </div>
+      <div class="photo-wrap">
+        <img class="photo" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80" alt="Bangkok skyline and high-rise property" />
+      </div>
+      <div class="side-number">01</div>
+      <div class="footer"><span>Thailand / Bangkok Property Guide</span><span>01</span></div>
+    </section>
+
+    <section class="slide cream">
+      <div class="pad-tight">
+        <div class="eyebrow">Before Deposit</div>
+        <h2 class="my-title">နိုင်ငံခြားသားဝယ်သူများ မဖြစ်မနေ သိထားရမည့် အချက်များ</h2>
+        <div class="grid-3">
+          <article class="box">
+            <h3>Foreign Quota</h3>
+            <p>ထိုင်းနိုင်ငံရဲ့ ကွန်ဒိုတိုင်းဟာ <span class="term">51%</span> က ထိုင်းလူမျိုးဝယ်ယူခွင့် ဖြစ်ပြီး ကျန်တဲ့ <span class="term">49%</span> ကပဲ နိုင်ငံခြားသားဝယ်ယူခွင့်ဖြစ်တာကြောင့်၊ ကိုယ်ဝယ်ယူမယ့် ကွန်ဒိုသည် <span class="term">foreign quota 49%</span> ထဲပါဖို့ လိုအပ်ပါတယ်။</p>
+          </article>
+          <article class="box">
+            <h3>FET Form</h3>
+            <p>ငွေကို ထိုင်းနိုင်ငံပြင်ပမှ တိုက်ရိုက်လွှဲဝင်လာကြောင်း သက်သေပြတဲ့ bank document အရေးကြီးပါတယ်။</p>
+          </article>
+          <article class="box">
+            <h3>Hidden Costs</h3>
+            <p>အခန်းတန်ဖိုးအပြင် <span class="term">Transfer Fee</span>, <span class="term">Common Fee</span>, <span class="term">Sinking Fund</span> စတာတွေရှိတတ်ပါတယ်။</p>
+          </article>
+        </div>
+      </div>
+      <div class="footer"><span>Key things foreign buyers must know</span><span>02</span></div>
+    </section>
+
+    <section class="slide dark">
+      <div class="split">
+        <div class="pad">
+          <div class="eyebrow">Foreign Quota Explained</div>
+          <h2 class="my-title">49% Foreign Quota ထဲမှာ ပါဝင်ကြောင်း Confirm လုပ်ရပါမယ်</h2>
+          <div class="stat-row">
+            <div class="stat"><b>49%</b><span>Foreign name ownership limit</span></div>
+            <div class="stat"><b>51%</b><span>Thai / other quota side</span></div>
+            <div class="stat"><b>2x</b><span>Confirm before deposit and before transfer</span></div>
+          </div>
+        </div>
+        <div class="photo-strip">
+          <div class="photo-card"><img class="photo" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80" alt="modern high-rise condominium" /></div>
+          <div class="photo-card"><img class="photo" src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=80" alt="Bangkok condo tower facade" /></div>
+        </div>
+      </div>
+      <div class="footer"><span>Foreign Quota</span><span>03</span></div>
+    </section>
+
+    <section class="slide cream">
+      <div class="pad-tight">
+        <div class="eyebrow">FET Form / Money Transfer</div>
+        <h2 class="my-title">ငွေကြေးကို ထိုင်းနိုင်ငံပြင်ပမှ လွှဲဝင်လာကြောင်း သက်သေပြရပါမယ်</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="index">01</div>
+            <h3>Transfer From Abroad</h3>
+            <p>အခန်းဝယ်ရန်ငွေကို ထိုင်းနိုင်ငံပြင်ပမှ foreign currency ဖြင့် လွှဲဝင်လာရန် လိုအပ်ပါတယ်။</p>
+          </div>
+          <div class="step">
+            <div class="index">02</div>
+            <h3>Buyer Name</h3>
+            <p>Bank document ပေါ်ရှိ buyer name နှင့် condo purchase purpose ကို စစ်ဆေးရပါမယ်။</p>
+          </div>
+          <div class="step">
+            <div class="index">03</div>
+            <h3>FET / Bank Letter</h3>
+            <p>Land Office transfer အတွက် FET Form သို့မဟုတ် bank certificate လိုအပ်နိုင်ပါတယ်။</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer"><span>Money trail matters</span><span>04</span></div>
+    </section>
+
+    <section class="slide split">
+      <div class="photo-wrap">
+        <img class="photo" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" alt="real estate finance documents" />
+      </div>
+      <div class="pad">
+        <div class="eyebrow">Hidden Costs</div>
+        <h2 class="my-title">Condo တန်ဖိုးအပြင် ထပ်မံတွက်ထားရမည့် Cost များ</h2>
+        <ul class="clean-list white-list">
+          <li><span class="term">Transfer Fee</span> - ပုံမှန်အားဖြင့် buyer / seller 1% စီ မျှခံကြတာမျိုးရှိပါတယ်။ Contract ပေါ်မူတည်ပါတယ်။</li>
+          <li><span class="term">Common Fee</span> - အဆောက်အဦး common area, security, facilities ထိန်းသိမ်းရန် monthly fee။</li>
+          <li><span class="term">Sinking Fund</span> - building repair / major maintenance အတွက် one-time fund ဖြစ်တတ်ပါတယ်။</li>
+          <li>Furniture package, meter deposit, agency fee, rental management fee တို့ကိုလည်း budget ထဲထည့်တွက်သင့်ပါတယ်။</li>
+        </ul>
+      </div>
+      <div class="footer"><span>Buyer-side cost awareness</span><span>05</span></div>
+    </section>
+
+    <section class="slide dark compact-comparison">
+      <div class="pad-tight">
+        <div class="eyebrow">Off-Plan vs Resale</div>
+        <h2 class="my-title">ကွန်ဒိုအသစ် Off-Plan နှင့် Ready to Move In / Resale ကို ရည်ရွယ်ချက်အလိုက် ရွေးချယ်ပါ</h2>
+        <div class="comparison">
+          <article class="compare-panel">
+            <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1000&q=80" alt="new residential property development" />
+            <div class="compare-body">
+              <h3><span class="accent">Off-Plan</span> Condo</h3>
+              <ul>
+                <li>Installments ဖြင့် Developer ဆီ တိုက်ရိုက်ခွဲပေးနိုင်</li>
+                <li>ငွေအလုံးအရင်း ချက်ချင်းမလိုနိုင်</li>
+                <li>အသစ်စက်စက် facilities နှင့် modern design ရနိုင်</li>
+                <li>ပရောဂျက်အသစ်စက်စက်ဆို discount တွေရရှိနိုင်</li>
+              </ul>
+            </div>
+          </article>
+          <article class="compare-panel">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80" alt="finished condo interior" />
+            <div class="compare-body">
+              <h3><span class="accent">Ready to Move In</span></h3>
+              <ul>
+                <li>အခန်းကို လက်တွေ့ကြည့်ပြီး ဆုံးဖြတ်နိုင်</li>
+                <li>ငွေအကျေချေပြီး ချက်ချင်းတက်နေနိုင်</li>
+                <li>ချက်ချင်း ပြန်ငှားပြီး rental income စနိုင်</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="footer"><span>Product type selection</span><span>06</span></div>
+    </section>
+
+    <section class="slide split cream">
+      <div class="pad">
+        <div class="eyebrow">Off-Plan Condo</div>
+        <h2 class="my-title">Off-Plan က ဘယ်သူတွေအတွက် ပိုသင့်လဲ?</h2>
+        <p class="lead">Budget ကို staged payment နဲ့ ထိန်းချုပ်ချင်သူ၊ brand-new facilities လိုချင်သူ၊ future completion value ကို မျှော်လင့်သူများအတွက် သင့်တော်နိုင်ပါတယ်။</p>
+        <div class="grid-2">
+          <article class="box"><h3>Installment Advantage</h3><p>Down payment နဲ့ construction period installment ကို plan လုပ်နိုင်ပါတယ်။</p></article>
+          <article class="box"><h3>New Facilities</h3><p>Lobby, pool, gym, co-working, smart access စတဲ့ facilities အသစ်ရနိုင်ပါတယ်။</p></article>
+        </div>
+      </div>
+      <div class="photo-wrap">
+        <img class="photo" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80" alt="modern condo exterior" />
+      </div>
+      <div class="footer"><span>Off-plan buyer profile</span><span>07</span></div>
+    </section>
+
+    <section class="slide split dark">
+      <div class="photo-wrap">
+        <img class="photo" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80" alt="ready to move in apartment interior" />
+      </div>
+      <div class="pad">
+        <div class="eyebrow">Ready to Move In</div>
+        <h2 class="my-title">Ready to Move In က ဘယ်သူတွေအတွက် ပိုသင့်လဲ?</h2>
+        <p class="lead">အခန်း condition ကို တကယ်ကြည့်ချင်သူ၊ တက်နေချင်သူ၊ သို့မဟုတ် investment အတွက် ချက်ချင်း rent out လုပ်ချင်သူများအတွက် ပိုသင့်တော်နိုင်ပါတယ်။</p>
+        <ul class="clean-list">
+          <li>Actual room view, sunlight, noise, furniture condition ကို စစ်နိုင်</li>
+          <li>Transfer ပြီးတာနဲ့ move in / rent out လုပ်နိုင်</li>
+          <li>Rental income မြန်မြန်စချင်သူအတွက် practical choice</li>
+        </ul>
+      </div>
+      <div class="footer"><span>Ready to move in buyer profile</span><span>08</span></div>
+    </section>
+
+    <section class="slide purpose">
+      <div class="purpose-left">
+        <div class="eyebrow">Buying Purpose</div>
+        <h2 class="my-title">ကိုယ်တိုင်နေမှာလား<br>ပြန်ငှားမှာလား?</h2>
+        <p class="lead">Buying purpose ကို အရင်သတ်မှတ်မှ location, room size, budget, developer, facilities နှင့် exit plan ကို မှန်ကန်စွာရွေးနိုင်ပါမယ်။</p>
+      </div>
+      <div class="purpose-right">
+        <article class="mini-card">
+          <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=700&q=80" alt="own stay condo living room" />
+          <div><h3>Own Stay</h3><p>နေထိုင်ရန်ဆို room comfort, daily convenience, supermarket, hospital, school, transport ကို အဓိကထားပါ။</p></div>
+        </article>
+        <article class="mini-card">
+          <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=700&q=80" alt="property investment discussion" />
+          <div><h3>Investment / Rental</h3><p>ငှားရမ်းရန်ဆို station distance, tenant demand, yield, building brand, resale liquidity ကို အဓိကထားပါ။</p></div>
+        </article>
+      </div>
+      <div class="footer"><span>Purpose before property</span><span>09</span></div>
+    </section>
+
+    <section class="slide cream">
+      <div class="pad-tight">
+        <div class="eyebrow">Own Stay Buying Criteria</div>
+        <h2 class="my-title">ကိုယ်တိုင်နေထိုင်ရန် ဝယ်မယ်ဆို ဘာတွေကြည့်သင့်လဲ?</h2>
+        <div class="grid-4">
+          <article class="box"><h3>Room Size</h3><p>Daily living အတွက် usable layout, storage, kitchen, balcony, natural light ကိုစစ်ပါ။</p></article>
+          <article class="box"><h3>Daily Convenience</h3><p>Shopping Mall, Lotus's, Big C, supermarket, restaurant အနီးအနား ရှိမရှိကြည့်ပါ။</p></article>
+          <article class="box"><h3>Hospital Access</h3><p>မိသားစုနေထိုင်မှုအတွက် hospital / clinic access က comfort factor ဖြစ်ပါတယ်။</p></article>
+          <article class="box"><h3>Transport + Budget</h3><p>မြို့လယ်မနီးရင်တောင် BTS/MRT, road access, budget fit ကို balance လုပ်ပါ။</p></article>
+        </div>
+      </div>
+      <div class="footer"><span>Own stay criteria</span><span>10</span></div>
+    </section>
+
+    <section class="slide dark split compact-investment">
+      <div class="pad">
+        <div class="eyebrow">Investment Buying Criteria</div>
+        <h2 class="my-title">Investment အတွက်ဆို Rental Demand ကို ဦးစားပေးရပါမယ်</h2>
+        <p class="lead">ဘန်ကောက်မှာ Budget <span class="term">2M THB</span> ဝန်းကျင်ဖြင့် ရင်းနှီးမြှုပ်နှံပါက location နှင့် project ပေါ်မူတည်ပြီး <span class="term">Rental Yield 4% - 6%</span>၊ တချို့ case တွင်ပိုမြင့်နိုင်ပါတယ်။</p>
+        <div class="stat-row">
+          <div class="stat"><b>2M</b><span>THB around starting investment budget</span></div>
+          <div class="stat"><b>4-6%</b><span>Typical rental yield expectation range</span></div>
+          <div class="stat"><b>300-500m</b><span>Preferred walkable distance to BTS/MRT</span></div>
+        </div>
+      </div>
+      <div class="photo-wrap">
+        <img class="photo" src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=1200&q=80" alt="urban condo investment building" />
+      </div>
+      <div class="footer"><span>Rental yield and station access</span><span>11</span></div>
+    </section>
+
+    <section class="slide developer-hero">
+      <div class="developer-panel">
+        <div class="eyebrow">Developer Background</div>
+        <h2 class="my-title">Developer က Project Quality နှင့် Future Value ကို သက်ရောက်စေပါတယ်</h2>
+        <p class="lead">ဘန်ကောက်မှာ brand name က စကားပြောပါတယ်။ Listed / well-known developer project များသည် buyer trust, tenant trust, resale market နှင့် <span class="term">Capital Appreciation</span> အတွက် အရေးကြီးပါတယ်။</p>
+      </div>
+      <div class="developer-proof">
+        <article class="proof-card">
+          <strong>Track Record</strong>
+          <p>Project အရေအတွက်များပြီး handover record ကောင်းတဲ့ developer များကို ဦးစားပေးစစ်ဆေးပါ။</p>
+        </article>
+        <article class="proof-card">
+          <strong>Listed Company</strong>
+          <p>SET listed developer များသည် governance, financing, buyer confidence အတွက် အားသာချက်ရှိနိုင်ပါတယ်။</p>
+        </article>
+        <article class="proof-card">
+          <strong>Management</strong>
+          <p>Property management, juristic office, after-sales service က rental နှင့် resale quality ကို သက်ရောက်စေပါတယ်။</p>
+        </article>
+        <article class="proof-card">
+          <strong>Market Trust</strong>
+          <p>နာမည်ကြီး brand condo များသည် buyer / tenant များအတွက် ယုံကြည်မှုပိုမြန်စေပါတယ်။</p>
+        </article>
+      </div>
+      <div class="footer"><span>Brand trust and resale liquidity</span><span>12</span></div>
+    </section>
+
+    <section class="slide cream">
+      <div class="pad-tight">
+        <div class="eyebrow">Buyer Checklist</div>
+        <h2 class="my-title">ဆုံးဖြတ်ချက်မချခင် စစ်ဆေးရမည့် Checklist</h2>
+        <div class="checklist">
+          <div class="check"><strong>01</strong><p>Foreign Quota confirmed?</p></div>
+          <div class="check"><strong>02</strong><p>FET / bank transfer evidence ready?</p></div>
+          <div class="check"><strong>03</strong><p>Total cost calculated?</p></div>
+          <div class="check"><strong>04</strong><p>Own stay or investment?</p></div>
+          <div class="check"><strong>05</strong><p>Location matches purpose?</p></div>
+          <div class="check"><strong>06</strong><p>Developer background checked?</p></div>
+          <div class="check"><strong>07</strong><p>Rental / resale plan realistic?</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>Before decision</span><span>13</span></div>
+    </section>
+
+    <section class="slide dark">
+      <img class="closing-photo" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80" alt="Bangkok city closing slide" />
+      <div class="pad closing-content">
+        <div class="eyebrow">Consultation</div>
+        <h1 class="my-title">Choose the right condo by structure, purpose, location, and developer.</h1>
+        <p class="lead">အခန်းလှတာတစ်ခုတည်းနဲ့ မဆုံးဖြတ်ပါနဲ့။ Freehold structure, quota, FET, cost, buying purpose, location, developer background အားလုံးကို စနစ်တကျ စစ်ပြီးမှ ဝယ်ယူသင့်ပါတယ်။</p>
+        <div class="contact-bar"><span>Bangkok Property Buyer Advisory</span><span>Myanmar Buyers</span></div>
+      </div>
+      <div class="footer"><span>Thank you</span><span>14</span></div>
+    </section>
+
+    <section class="slide service-final">
+      <div class="pad">
+        <div class="eyebrow">Cocoon Property Thailand</div>
+        <h2 class="my-title">လူကြီးမင်းတို့အတွက် End-to-End Property Service</h2>
+        <p class="service-copy">
+          Cocoon Property Thailand က လူကြီးမင်းတို့၏ ထိုင်းနိုင်ငံ အိမ်ခြံမြေ၊ ကွန်ဒိုရွေးချယ်မှုများနှင့် ပတ်သက်၍
+          <span class="term">“အခမဲ့” consultation</span> ပြုလုပ်ပေးခြင်း၊ project tour များ လိုက်လံပြသပေးခြင်း၊
+          <span class="term">After-Sales Service</span> အနေဖြင့် အမည်ပေါက် ownership transfer ရရှိသည်အထိ ဆောင်ရွက်ပေးခြင်း၊
+          investor လူကြီးမင်းတို့အတွက် <span class="term">Rental Management</span> အထိပါ ဆောင်ရွက်ပေးပါသည်။
+        </p>
+        <div class="service-strip">
+          <span class="service-pill">Free Consultation</span>
+          <span class="service-pill">Project Tour</span>
+          <span class="service-pill">Ownership Transfer</span>
+          <span class="service-pill">After-Sales Service</span>
+          <span class="service-pill">Rental Management</span>
+        </div>
+      </div>
+      <div class="footer"><span>Cocoon Property Thailand</span><span>15</span></div>
+    </section>
+  </main>
+  <button class="deck-control deck-prev" type="button" aria-label="Previous slide">&lsaquo;</button>
+  <button class="deck-control deck-next" type="button" aria-label="Next slide">&rsaquo;</button>
+  <div class="deck-status" aria-live="polite">
+    <span id="slideCurrent">01</span>
+    <div class="progress-track"><div class="progress-bar" id="slideProgress"></div></div>
+    <span id="slideTotal">15</span>
+  </div>
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const prevButton = document.querySelector(".deck-prev");
+    const nextButton = document.querySelector(".deck-next");
+    const currentLabel = document.getElementById("slideCurrent");
+    const totalLabel = document.getElementById("slideTotal");
+    const progressBar = document.getElementById("slideProgress");
+    let currentIndex = 0;
+
+    const pad = (value) => String(value).padStart(2, "0");
+
+    totalLabel.textContent = pad(slides.length);
+
+    function setSlide(index, direction = 0) {
+      const nextIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("active", slideIndex === nextIndex);
+        slide.classList.toggle("leaving-left", direction < 0 && slideIndex === currentIndex);
+      });
+      currentIndex = nextIndex;
+      currentLabel.textContent = pad(currentIndex + 1);
+      progressBar.style.width = `${((currentIndex + 1) / slides.length) * 100}%`;
+      prevButton.disabled = currentIndex === 0;
+      nextButton.disabled = currentIndex === slides.length - 1;
+      history.replaceState(null, "", `#slide-${currentIndex + 1}`);
+    }
+
+    function goTo(index) {
+      setSlide(index, index > currentIndex ? 1 : -1);
+    }
+
+    window.goTo = goTo;
+
+    prevButton.addEventListener("click", () => goTo(currentIndex - 1));
+    nextButton.addEventListener("click", () => goTo(currentIndex + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+        event.preventDefault();
+        goTo(currentIndex + 1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        goTo(currentIndex - 1);
+      }
+      if (event.key === "Home") goTo(0);
+      if (event.key === "End") goTo(slides.length - 1);
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].screenX;
+      touchStartY = event.changedTouches[0].screenY;
+    }, { passive: true });
+
+    document.addEventListener("touchend", (event) => {
+      const dx = event.changedTouches[0].screenX - touchStartX;
+      const dy = event.changedTouches[0].screenY - touchStartY;
+      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        goTo(currentIndex + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+
+    const hashMatch = location.hash.match(/slide-(\d+)/);
+    setSlide(hashMatch ? Number(hashMatch[1]) - 1 : 0);
+  </script>
+</body>
+</html>
