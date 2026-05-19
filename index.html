@@ -985,9 +985,9 @@ footer { padding: 4rem 0 2rem; background: #1D1D1F; }
 /* ========== HERO (home page) ========== */
 .hero { min-height: 100svh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: flex-start; background: #0A0A0A; }
 .hero-slides { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.hero-slide { position: absolute; inset: 0; background-image: var(--bg); background-size: cover; background-position: 15% center; opacity: 0; transition: opacity 1.8s ease; transform: scale(1.10); }
+.hero-slide { position: absolute; inset: 0; background-image: var(--bg); background-size: cover; background-position: 15% center; opacity: 0; transition: opacity 1.8s ease; transform: scale(1); will-change: opacity, transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .hero-slide.active { opacity: .88; animation: heroZoom 8s ease-out forwards; }
-@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.10); } }
+@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
 .hero-veil { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(10,10,10,.95) 0%, rgba(10,10,10,.88) 28%, rgba(10,10,10,.25) 55%, rgba(10,10,10,0) 75%), linear-gradient(to bottom, rgba(10,10,10,.75) 0%, rgba(10,10,10,0) 18%, transparent 55%, rgba(10,10,10,.8) 100%); pointer-events: none; }
 .hero-content { position: relative; z-index: 2; max-width: 1340px; width: 100%; margin: 0 auto; padding: 140px 2.5rem 100px; display: flex; flex-direction: column; align-items: flex-start; opacity: 0; animation: heroFade 1.2s 1.4s ease forwards; }
 @keyframes heroFade { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
